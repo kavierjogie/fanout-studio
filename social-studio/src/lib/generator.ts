@@ -99,23 +99,18 @@ export async function transformContent(
     const textPromise = generateForPlatform(topic, platform, tone, existingPieces)
     
     // Start image generation in parallel if supported
-    let imagePromise: Promise<{ prompt: string; url: string }> | null = null
-    if (platformSupportsImage(platform)) {
-      imagePromise = (async () => {
-        const prompt = await generateImagePrompt(topic, tone)
-        const url = getImageUrl(prompt)
-        return { prompt, url }
-      })()
-    }
+    const imagePromise = platformSupportsImage(platform) ? generateImage(topic, tone) : null
 
     const content = await textPromise
-    let imageData: { prompt: string; url: string } | null = null
+    let imageData: { prompt: string; url: string } | undefined
+    let imageError: string | undefined
 
     if (imagePromise) {
       try {
         imageData = await imagePromise
-      } catch (err) {
-        console.error('Failed to generate image prompt', err)
+      } catch (err: any) {
+        console.error('Failed to generate image', err)
+        imageError = err.message || 'Failed to generate image.'
       }
     }
 
@@ -124,6 +119,7 @@ export async function transformContent(
       content,
       imageUrl: imageData?.url,
       imagePrompt: imageData?.prompt,
+      imageError,
       imageGenerating: false
     }
   })
@@ -196,9 +192,25 @@ Return ONLY the prompt text, without any labels, quotes, intro, or explanation.
   return response.replace(/^"|"$/g, '').replace(/^(Visual Prompt:|Prompt:)\s*/i, '').trim()
 }
 
-export function getImageUrl(prompt: string): string {
-  const cleanPrompt = encodeURIComponent(prompt.trim())
-  const seed = Math.floor(Math.random() * 1000000)
-  return `https://image.pollinations.ai/prompt/${cleanPrompt}?width=1024&height=1024&nologo=true&seed=${seed}`
-}
+// Prompt via Groq, then image via /api/image (Cloudflare FLUX.1 Schnell -> Vercel Blob). Returns the Blob URL.
+export async function generateImage(topic: string, tone: string): Promise<{ prompt: string; url: string }> {
+  const prompt = await generateImagePrompt(topic, tone)
+  if (!prompt) throw new Error('Could not create an image prompt. Please try again.')
 
+  let res: Response
+  try {
+    res = await fetch('/api/image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    })
+  } catch {
+    throw new Error('Could not reach the image generation service. Check your connection and try again.')
+  }
+
+  const data = await res.json().catch(() => null)
+  if (!res.ok || !data?.url) {
+    throw new Error(data?.error || `Image generation failed with status ${res.status}`)
+  }
+  return { prompt, url: data.url }
+}

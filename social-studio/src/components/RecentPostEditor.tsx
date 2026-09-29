@@ -265,19 +265,18 @@ export default function RecentPostEditor({
     if (!onUpdateImage || !topic || !tone) return
     onUpdateImage({ imageGenerating: true, imageError: undefined })
     try {
-      const { generateImagePrompt, getImageUrl } = await import('../lib/generator')
-      const newPrompt = await generateImagePrompt(topic, tone)
-      const newUrl = getImageUrl(newPrompt)
+      const { generateImage } = await import('../lib/generator')
+      const { prompt, url } = await generateImage(topic, tone)
       onUpdateImage({
-        imageUrl: newUrl,
-        imagePrompt: newPrompt,
+        imageUrl: url,
+        imagePrompt: prompt,
         imageGenerating: false
       })
     } catch (err: any) {
       console.error(err)
       onUpdateImage({
         imageGenerating: false,
-        imageError: err.message || 'Failed to generate visual prompt.'
+        imageError: err.message || 'Failed to generate image.'
       })
     }
   }
