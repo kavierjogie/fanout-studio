@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Sparkles, Copy, Check, ChevronDown, Repeat, BookOpen, AlertTriangle, ExternalLink, Plus } from 'lucide-react'
+import { Sparkles, Copy, Check, ChevronDown, Repeat, BookOpen, Plus } from 'lucide-react'
 import Card from './ui/Card'
 import Button from './ui/Button'
 import PlatformIcon from './PlatformIcon'
@@ -63,18 +63,6 @@ export default function CreateContent({
     }
   }, [])
 
-  // API Key State
-  const envGeminiKeyExists = !!(import.meta.env.VITE_GEMINI_API_KEY && import.meta.env.VITE_GEMINI_API_KEY.trim())
-  const [localGeminiKey, setLocalGeminiKey] = useState(() => localStorage.getItem('studio.gemini_api_key') || '')
-  const hasGeminiKey = envGeminiKeyExists || !!localGeminiKey.trim()
-
-  const envGroqKeyExists = !!(import.meta.env.VITE_GROQ_API_KEY && import.meta.env.VITE_GROQ_API_KEY.trim()) || import.meta.env.VITE_GROQ_KEY_CONFIGURED === 'true'
-  const [localGroqKey, setLocalGroqKey] = useState(() => localStorage.getItem('studio.groq_api_key') || '')
-  const hasGroqKey = envGroqKeyExists || !!localGroqKey.trim()
-
-  const [showKeySettings, setShowKeySettings] = useState(false)
-  const hasApiKey = hasGeminiKey || hasGroqKey
-
   // Loading & Error States
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -90,7 +78,7 @@ export default function CreateContent({
     setSelected((cur) => (cur.includes(p) ? cur.filter((x) => x !== p) : [...cur, p]))
   }
 
-  const canGenerate = topic.trim().length > 0 && selected.length > 0 && hasApiKey && !generating
+  const canGenerate = topic.trim().length > 0 && selected.length > 0 && !generating
 
   const compiledPrompt = selectedPrompt
     ? selectedPrompt.template.replace('{topic}', topic.trim() || '[topic]')
@@ -179,190 +167,6 @@ export default function CreateContent({
           Describe what you want to create, choose where it's going, and generate every version at once.
         </p>
       </header>
-
-      {/* API Key Configuration Dropdown */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center border border-white/5 bg-white/[0.01] rounded-xl px-4 py-3">
-          <button
-            type="button"
-            onClick={() => setShowKeySettings(!showKeySettings)}
-            className="text-xs text-mist-400 hover:text-mist-100 flex items-center gap-1 transition-colors"
-          >
-            ⚙️ API Key Settings
-            <ChevronDown size={12} className={`transition-transform ${showKeySettings ? 'rotate-180' : ''}`} />
-          </button>
-          {hasApiKey ? (
-            <span className="text-xs text-emerald-400 font-mono flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              API key active
-            </span>
-          ) : (
-            <span className="text-xs text-signal-orange font-mono flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-signal-orange"></span>
-              API key required
-            </span>
-          )}
-        </div>
-
-        {showKeySettings && (
-          <div className="mt-2 p-4 rounded-xl border border-white/10 bg-white/[0.02] animate-rise space-y-4">
-            {/* Gemini API Key */}
-            <div className="space-y-2">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <label className="text-xs font-semibold text-mist-200">Google Gemini API Key (Primary)</label>
-                <a
-                  href="https://aistudio.google.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-signal-purple hover:text-signal-purpleDeep font-medium transition-colors whitespace-nowrap self-start sm:self-auto"
-                >
-                  Get Gemini Key <ExternalLink size={11} />
-                </a>
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="password"
-                  placeholder="Enter Gemini API Key..."
-                  value={localGeminiKey}
-                  onChange={(e) => {
-                    setLocalGeminiKey(e.target.value)
-                    localStorage.setItem('studio.gemini_api_key', e.target.value)
-                  }}
-                  className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs text-mist-50 focus:border-signal-purple/50 focus:outline-none"
-                />
-                {localGeminiKey && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setLocalGeminiKey('')
-                      localStorage.removeItem('studio.gemini_api_key')
-                    }}
-                    className="text-xs text-red-400 hover:text-red-300 font-medium px-2"
-                  >
-                    Clear Key
-                  </button>
-                )}
-              </div>
-              {envGeminiKeyExists && (
-                <p className="text-[10px] text-emerald-400">✓ Detected VITE_GEMINI_API_KEY in environment.</p>
-              )}
-            </div>
-
-            {/* Groq API Key */}
-            <div className="space-y-2 border-t border-white/5 pt-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <label className="text-xs font-semibold text-mist-200">Groq API Key (Fallback)</label>
-                <a
-                  href="https://console.groq.com/keys"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-signal-purple hover:text-signal-purpleDeep font-medium transition-colors whitespace-nowrap self-start sm:self-auto"
-                >
-                  Get Groq Key <ExternalLink size={11} />
-                </a>
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="password"
-                  placeholder="Enter Groq API Key..."
-                  value={localGroqKey}
-                  onChange={(e) => {
-                    setLocalGroqKey(e.target.value)
-                    localStorage.setItem('studio.groq_api_key', e.target.value)
-                  }}
-                  className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs text-mist-50 focus:border-signal-purple/50 focus:outline-none"
-                />
-                {localGroqKey && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setLocalGroqKey('')
-                      localStorage.removeItem('studio.groq_api_key')
-                    }}
-                    className="text-xs text-red-400 hover:text-red-300 font-medium px-2"
-                  >
-                    Clear Key
-                  </button>
-                )}
-              </div>
-              {envGroqKeyExists && (
-                <p className="text-[10px] text-emerald-400">✓ Detected GROQ_API_KEY in environment.</p>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Warning banner if API key is missing */}
-      {!hasApiKey && (
-        <div className="mb-6 rounded-2xl border border-signal-orange/30 bg-signal-orange/10 p-5 animate-rise flex flex-col gap-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-orange-300">
-              <AlertTriangle size={18} />
-              <h3 className="font-display text-sm font-semibold">Gemini or Groq API Key Required</h3>
-            </div>
-            <div className="flex gap-2">
-              <a
-                href="https://aistudio.google.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-orange-500/10 border border-orange-500/30 px-3.5 py-1.5 text-xs font-semibold text-orange-300 transition-all hover:bg-orange-500/20 hover:border-orange-500/50 self-start sm:self-auto"
-              >
-                Get Gemini Key <ExternalLink size={12} />
-              </a>
-              <a
-                href="https://console.groq.com/keys"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-orange-500/10 border border-orange-500/30 px-3.5 py-1.5 text-xs font-semibold text-orange-300 transition-all hover:bg-orange-500/20 hover:border-orange-500/50 self-start sm:self-auto"
-              >
-                Get Groq Key <ExternalLink size={12} />
-              </a>
-            </div>
-          </div>
-          <p className="text-xs text-mist-300 leading-relaxed">
-            Please configure at least one API Key below to activate AI content generation. The key will be stored securely in your browser's local storage. Gemini is used as the primary generator, with Groq acting as an automatic fallback.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-semibold text-mist-300 font-display">Google Gemini API Key</label>
-              <div className="flex gap-2">
-                <input
-                  type="password"
-                  placeholder="Paste Gemini API Key..."
-                  value={localGeminiKey}
-                  onChange={(e) => {
-                    setLocalGeminiKey(e.target.value)
-                    localStorage.setItem('studio.gemini_api_key', e.target.value)
-                  }}
-                  className="flex-1 rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs text-mist-50 focus:border-signal-orange/50 focus:outline-none"
-                />
-                {localGeminiKey.trim() && (
-                  <span className="text-xs text-emerald-400 self-center font-medium">✓ Active</span>
-                )}
-              </div>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-semibold text-mist-300 font-display">Groq API Key</label>
-              <div className="flex gap-2">
-                <input
-                  type="password"
-                  placeholder="Paste Groq API Key..."
-                  value={localGroqKey}
-                  onChange={(e) => {
-                    setLocalGroqKey(e.target.value)
-                    localStorage.setItem('studio.groq_api_key', e.target.value)
-                  }}
-                  className="flex-1 rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs text-mist-50 focus:border-signal-orange/50 focus:outline-none"
-                />
-                {localGroqKey.trim() && (
-                  <span className="text-xs text-emerald-400 self-center font-medium">✓ Active</span>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       <Card className="space-y-7">
         {/* Prompt Template Selector */}
@@ -501,10 +305,7 @@ export default function CreateContent({
             <Sparkles size={15} />
             {generating ? 'Generating...' : 'Generate content'}
           </Button>
-          {!hasApiKey && (
-            <span className="text-xs text-signal-orange">Please provide an API Key to generate</span>
-          )}
-          {hasApiKey && !canGenerate && !generating && (
+          {!canGenerate && !generating && (
             <span className="text-xs text-mist-400">Add a topic and at least one platform</span>
           )}
         </div>
@@ -535,7 +336,7 @@ export default function CreateContent({
           </div>
           <p className="text-xs text-red-200 leading-relaxed font-mono whitespace-pre-wrap">{error}</p>
           <p className="text-xs text-mist-400">
-            Please verify your API key configuration, network connectivity, and that your API key is active.
+            Please check your network connection and try again. If the problem persists, the AI service may be temporarily unavailable.
           </p>
         </div>
       )}

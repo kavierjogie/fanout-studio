@@ -13,27 +13,16 @@ Create one piece of content and transform it into platform-ready formats: Linked
 - **Recent content** — browse, search, filter, and edit everything you've generated, with copy, delete, and single-post refinement capabilities
 - **Content calendar** — schedule generated pieces against calendar dates to organize your publishing pipeline
 
-## AI Content Generation (Multi-Provider: Gemini & Groq)
+## AI Content Generation (Groq)
 
-Content generation is powered by a multi-provider AI architecture supporting both **Google Gemini** (`gemini-2.5-flash`) and **Groq** APIs.
-
-### Provider Routing & Fallback Logic
-- **Primary Provider**: Google Gemini is used by default.
-- **Automatic Fallback**: If Gemini is unavailable, rate-limited, or quota-exhausted, the application automatically falls back to **Groq** (if configured). Before routing traffic, it performs a standalone test request to verify Groq connectivity.
-- **Dynamic Model Selection**: When using Groq, the application fetches the list of active models via the Groq models API and selects the most capable available model (prioritizing `llama-3.1-8b-instant`, followed by `openai/gpt-oss-20b`, `openai/gpt-oss-120b`, `groq/compound`, etc.).
+All content generation runs through a server-side route, `social-studio/api/generate.ts`, which calls the **Groq** API (`openai/gpt-oss-20b` by default; override with the optional `GROQ_MODEL` env var). The browser only talks to `/api/generate`. The Groq API key is never sent to or stored in the browser.
 
 ### API Key Configuration
-You can set up API keys in two ways:
-1. **In-UI Input**: Click the settings icon in the "Create Content" dashboard to paste your API keys. They will be saved securely in your browser's local storage:
-   - Gemini Key: Saved as `studio.gemini_api_key`
-   - Groq Key: Saved as `studio.groq_api_key`
-2. **Environment Variables**: Create or modify a `.env` file in the `social-studio` directory and add:
-   ```env
-   VITE_GEMINI_API_KEY=your_gemini_api_key_here
-   VITE_GROQ_API_KEY=your_groq_api_key_here
-   # Set to true if the key is pre-configured on a server/proxy
-   VITE_GROQ_KEY_CONFIGURED=false
-   ```
+Set `GROQ_API_KEY` as a server-side environment variable (get a key at https://console.groq.com/keys):
+- **Local dev**: add `GROQ_API_KEY=your_key` to `social-studio/.env`. The Vite dev server serves `/api/generate` with the same handler.
+- **Vercel**: Project → Settings → Environment Variables → `GROQ_API_KEY`. Do **not** use a `VITE_` or `NEXT_PUBLIC_` prefix.
+
+If the key is missing, generation returns a clear error that is shown in the app.
 
 Your generated content and calendar schedules are saved to `localStorage` so they persist between sessions on the same browser.
 
@@ -76,11 +65,12 @@ npm run preview
 
 ```
 social-studio/
+  api/                  Vercel serverless functions (generate.ts → Groq)
   src/
     components/         UI components (Dashboard, CreateContent, TransformContent, RecentContent, ContentCalendar, Sidebar, etc.)
     components/ui/      Small shared primitives (Card, Button, Badge)
     data/               Prompt library templates and platform metadata
-    lib/                Gemini API integration client, localStorage persistence, and prompting rules
+    lib/                AI client (calls /api/generate), localStorage persistence, and prompting rules
     types.ts            Shared TypeScript types
     App.tsx             Layout, navigation, and state manager
     main.tsx            React entry point
@@ -99,4 +89,4 @@ To add a new platform:
 
 ## Tech stack
 
-React 18, TypeScript, Vite, Tailwind CSS, Lucide React icons, Google Gemini API, and Groq API.
+React 18, TypeScript, Vite, Tailwind CSS, Lucide React icons, Groq API via a Vercel Function.

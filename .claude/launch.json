@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "studio",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "social-studio", "run", "dev"],
+      "env": { "NODE_OPTIONS": "--use-system-ca" },
+      "port": 5173
+    }
+  ]
+}
