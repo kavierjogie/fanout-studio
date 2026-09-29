@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Copy, Check, Download, RefreshCw, AlertCircle } from 'lucide-react'
+import { Copy, Check, Download, RefreshCw, AlertCircle, Trash2 } from 'lucide-react'
 import Card from './ui/Card'
 import PlatformIcon from './PlatformIcon'
 import RefinePiece from './RefinePiece'
@@ -18,6 +18,7 @@ interface EditablePostCardProps {
   existingPieces?: GeneratedPiece[]
   onUpdate: (newContent: string) => void
   onUpdateImage?: (newFields: Partial<GeneratedPiece>) => void
+  onDelete?: () => void
   showHeaderLabel?: boolean
 }
 
@@ -164,6 +165,7 @@ export default function EditablePostCard({
   existingPieces,
   onUpdate,
   onUpdateImage,
+  onDelete,
   showHeaderLabel = false
 }: EditablePostCardProps) {
   const [copied, setCopied] = useState(false)
@@ -314,6 +316,15 @@ export default function EditablePostCard({
               </>
             )}
           </button>
+          {onDelete && (
+            <button
+              onClick={onDelete}
+              className="ml-4 flex items-center gap-1.5 text-xs font-medium text-mist-400 hover:text-red-400 transition-colors"
+            >
+              <Trash2 size={13} />
+              <span>Delete</span>
+            </button>
+          )}
         </div>
       </div>
 

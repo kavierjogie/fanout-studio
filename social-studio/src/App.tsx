@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Menu, Sparkles } from 'lucide-react'
 import Sidebar from './components/Sidebar'
 import Dashboard from './components/Dashboard'
@@ -9,6 +9,7 @@ import RecentContent from './components/RecentContent'
 import ContentCalendar from './components/ContentCalendar'
 import { ContentItem, PromptTemplate, View } from './types'
 import { loadContent, saveContent } from './lib/storage'
+import { deleteImages } from './lib/generator'
 
 export type { View }
 
@@ -19,8 +20,14 @@ export default function App() {
   const [prefillPrompt, setPrefillPrompt] = useState<PromptTemplate | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
+  // Every create/update/delete flows through `items`: diff it to remove Blob images nothing references anymore
+  const prevItems = useRef(items)
   useEffect(() => {
     saveContent(items)
+    const inUse = new Set(items.flatMap((i) => i.pieces.map((p) => p.imageUrl)))
+    const orphaned = prevItems.current.flatMap((i) => i.pieces.map((p) => p.imageUrl)).filter((u): u is string => !!u && !inUse.has(u))
+    if (orphaned.length) deleteImages([...new Set(orphaned)])
+    prevItems.current = items
   }, [items])
 
   const handleSave = (item: ContentItem) => {
@@ -73,6 +80,7 @@ export default function App() {
             <CreateContent
               onSave={handleSave}
               onUpdate={handleUpdate}
+              onDelete={handleDelete}
               prefillPrompt={prefillPrompt || undefined}
               onClearPrompt={() => setPrefillPrompt(null)}
               goToTransform={goToTransform}

@@ -5,7 +5,7 @@ import Button from './ui/Button'
 import PlatformIcon from './PlatformIcon'
 import { PLATFORMS } from '../data/platforms'
 import { PROMPTS } from '../data/prompts'
-import { Platform, ContentItem, PromptTemplate } from '../types'
+import { Platform, ContentItem, GeneratedPiece, PromptTemplate } from '../types'
 import { transformContent } from '../lib/generator'
 import { uid } from '../lib/storage'
 import RefinePiece from './RefinePiece'
@@ -22,12 +22,14 @@ const TONES = [
 export default function CreateContent({
   onSave,
   onUpdate,
+  onDelete,
   prefillPrompt,
   onClearPrompt,
   goToTransform
 }: {
   onSave: (item: ContentItem) => void
   onUpdate?: (item: ContentItem) => void
+  onDelete?: (id: string) => void
   prefillPrompt?: PromptTemplate
   onClearPrompt?: () => void
   goToTransform: (item: ContentItem) => void
@@ -38,6 +40,9 @@ export default function CreateContent({
   const [selected, setSelected] = useState<Platform[]>(['linkedin', 'instagram'])
   const [advancedOpen, setAdvancedOpen] = useState(false)
   const [result, setResult] = useState<ContentItem | null>(null)
+  // Latest result for async callbacks, so a late image/refine/add can't resurrect a deleted draft
+  const resultRef = useRef(result)
+  resultRef.current = result
   const [activeTab, setActiveTab] = useState<Platform | null>(null)
   const [copiedKey, setCopiedKey] = useState<string | null>(null)
 
@@ -129,13 +134,9 @@ export default function CreateContent({
 
     try {
       const newPieces = await transformContent(result.topic, [p], result.tone, result.pieces)
-      if (newPieces.length > 0) {
-        const updatedItem = {
-          ...result,
-          pieces: [...result.pieces, ...newPieces]
-        }
-        setResult(updatedItem)
-        if (onUpdate) onUpdate(updatedItem)
+      const latest = resultRef.current
+      if (newPieces.length > 0 && latest?.id === result.id) {
+        commit({ ...latest, pieces: [...latest.pieces, ...newPieces] })
       }
     } catch (err: any) {
       console.error(err)
@@ -144,6 +145,36 @@ export default function CreateContent({
     } finally {
       setAddingPlatform(null)
     }
+  }
+
+  const commit = (item: ContentItem) => {
+    resultRef.current = item
+    setResult(item)
+    if (onUpdate) onUpdate(item)
+  }
+
+  const updatePiece = (platform: Platform, fields: Partial<GeneratedPiece>) => {
+    const latest = resultRef.current
+    if (!latest?.pieces.some((p) => p.platform === platform)) return // draft was deleted meanwhile
+    commit({ ...latest, pieces: latest.pieces.map((p) => (p.platform === platform ? { ...p, ...fields } : p)) })
+  }
+
+  const handleDeletePiece = (platform: Platform) => {
+    const latest = resultRef.current
+    if (!latest) return
+    const label = PLATFORMS.find((p) => p.id === platform)?.label || platform
+    const remaining = latest.pieces.filter((p) => p.platform !== platform)
+    if (remaining.length === 0) {
+      if (!window.confirm(`Delete this ${label} draft? It's the last one, so the whole post will be removed.`)) return
+      resultRef.current = null
+      setResult(null)
+      setActiveTab(null)
+      if (onDelete) onDelete(latest.id)
+      return
+    }
+    if (!window.confirm(`Delete this ${label} draft? This can't be undone.`)) return
+    commit({ ...latest, pieces: remaining })
+    setActiveTab(remaining[0].platform)
   }
 
   const copy = async (key: string, text: string) => {
@@ -510,22 +541,9 @@ export default function CreateContent({
                 imageError={piece.imageError}
                 existingPieces={result.pieces}
                 showHeaderLabel={false}
-                onUpdate={(newContent) => {
-                  const updatedPieces = result.pieces.map((p) =>
-                    p.platform === piece.platform ? { ...p, content: newContent } : p
-                  )
-                  const updatedItem = { ...result, pieces: updatedPieces }
-                  setResult(updatedItem)
-                  if (onUpdate) onUpdate(updatedItem)
-                }}
-                onUpdateImage={(newFields) => {
-                  const updatedPieces = result.pieces.map((p) =>
-                    p.platform === piece.platform ? { ...p, ...newFields } : p
-                  )
-                  const updatedItem = { ...result, pieces: updatedPieces }
-                  setResult(updatedItem)
-                  if (onUpdate) onUpdate(updatedItem)
-                }}
+                onUpdate={(newContent) => updatePiece(piece.platform, { content: newContent })}
+                onUpdateImage={(newFields) => updatePiece(piece.platform, newFields)}
+                onDelete={addingPlatform ? undefined : () => handleDeletePiece(piece.platform)}
               />
             ))}
 

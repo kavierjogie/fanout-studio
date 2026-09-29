@@ -1,7 +1,8 @@
 // Vercel Function: POST /api/image { prompt } -> { url } | { error }
+//                  DELETE /api/image { urls } -> { deleted } | { error }  (removes images no longer used)
 // Generates with Cloudflare Workers AI (FLUX.1 Schnell), stores the JPEG in Vercel Blob, returns its public URL.
 // CLOUDFLARE_* and BLOB_READ_WRITE_TOKEN are read here, server-side only; they never reach the browser.
-import { put } from '@vercel/blob'
+import { del, put } from '@vercel/blob'
 
 const MODEL = '@cf/black-forest-labs/flux-1-schnell'
 const MAX_PROMPT_CHARS = 2048 // FLUX.1 Schnell's prompt limit on Workers AI
@@ -63,5 +64,38 @@ export async function POST(request: Request): Promise<Response> {
   } catch (err) {
     console.error('[Vercel Blob error]', err)
     return json({ error: 'Image was generated but could not be saved. Please try again.' }, 502)
+  }
+}
+
+// Only this app's generated images in a Vercel Blob store can be deleted
+const isGeneratedBlobUrl = (value: unknown): value is string => {
+  try {
+    const url = new URL(value as string)
+    return url.hostname.endsWith('.blob.vercel-storage.com') && url.pathname.startsWith('/generated/')
+  } catch {
+    return false
+  }
+}
+
+export async function DELETE(request: Request): Promise<Response> {
+  const blobToken = process.env.BLOB_READ_WRITE_TOKEN?.trim()
+  if (!blobToken) return json({ error: 'Image storage is not configured: BLOB_READ_WRITE_TOKEN missing on the server.' }, 500)
+
+  let urls: unknown
+  try {
+    urls = (await request.json())?.urls
+  } catch {
+    return json({ error: 'Invalid JSON body.' }, 400)
+  }
+  if (!Array.isArray(urls) || urls.length === 0 || urls.length > 100 || !urls.every(isGeneratedBlobUrl)) {
+    return json({ error: 'A list of 1-100 generated image URLs is required.' }, 400)
+  }
+
+  try {
+    await del(urls, { token: blobToken })
+    return json({ deleted: urls.length })
+  } catch (err) {
+    console.error('[Vercel Blob error]', err)
+    return json({ error: 'Could not delete images.' }, 502)
   }
 }

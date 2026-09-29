@@ -214,3 +214,14 @@ export async function generateImage(topic: string, tone: string): Promise<{ prom
   }
   return { prompt, url: data.url }
 }
+
+// Best-effort cleanup of Blob images that are no longer referenced; failures only leave an orphaned file.
+export function deleteImages(urls: string[]) {
+  const blobUrls = urls.filter((u) => u.includes('.blob.vercel-storage.com/'))
+  if (blobUrls.length === 0) return
+  fetch('/api/image', {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ urls: blobUrls })
+  }).catch((err) => console.error('Failed to delete old images', err))
+}

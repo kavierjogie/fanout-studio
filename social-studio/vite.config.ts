@@ -1,15 +1,16 @@
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
-import { POST as generate } from './api/generate'
-import { POST as image } from './api/image'
+import * as generateApi from './api/generate'
+import * as imageApi from './api/image'
 
 // Dev only: serve /api/* with the same handlers Vercel deploys from api/
 const apiDevPlugin = (): Plugin => ({
   name: 'api-dev',
   configureServer(server) {
-    for (const [path, handler] of [['/api/generate', generate], ['/api/image', image]] as const) {
+    for (const [path, api] of [['/api/generate', generateApi], ['/api/image', imageApi]] as const) {
       server.middlewares.use(path, async (req, res) => {
-        if (req.method !== 'POST') {
+        const handler = (api as Record<string, unknown>)[req.method ?? '']
+        if (typeof handler !== 'function') {
           res.statusCode = 405
           res.end()
           return
@@ -17,7 +18,7 @@ const apiDevPlugin = (): Plugin => ({
         const chunks: Buffer[] = []
         for await (const chunk of req) chunks.push(chunk as Buffer)
         const response = await handler(
-          new Request(`http://localhost${path}`, { method: 'POST', body: Buffer.concat(chunks) })
+          new Request(`http://localhost${path}`, { method: req.method, body: Buffer.concat(chunks) })
         )
         res.statusCode = response.status
         res.setHeader('Content-Type', 'application/json')
