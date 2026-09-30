@@ -1,20 +1,30 @@
-import { transform } from 'sucrase'
+import { transform, type Transform } from 'sucrase'
 import reactSrc from '../../node_modules/react/umd/react.production.min.js?raw'
 import reactDomSrc from '../../node_modules/react-dom/umd/react-dom.production.min.js?raw'
 
 // Turns a React/JSX snippet into a self-contained document body for the sandboxed runner iframe.
 // Compilation happens here (string -> string, nothing is executed); the result only ever runs inside the iframe.
-// React ships inline so the sandbox needs no network. ponytail: only react and react-dom can be imported.
+// React ships inline so the sandbox needs no network. ponytail: only react and react-dom can be imported
+// (CSS imports are ignored); add more shims in __require if generated code needs them.
 
 const inlineScript = (src: string) => src.replace(/<\/script/gi, '<\\/script')
 
-export function buildReactBody(code: string, typescript: boolean): string {
-  let js: string
+function compile(code: string): string {
+  const attempt = (transforms: Transform[]) => transform(code, { transforms, production: true }).code
   try {
-    js = transform(code, { transforms: typescript ? ['typescript', 'jsx', 'imports'] : ['jsx', 'imports'], production: true }).code
-  } catch (e) {
-    throw new Error(`Could not compile JSX: ${e instanceof Error ? e.message : String(e)}`)
+    return attempt(['jsx', 'imports'])
+  } catch (jsxError) {
+    // TypeScript syntax (interfaces, generics, `: FC<Props>`) fails the plain-JSX pass; retry with types stripped.
+    try {
+      return attempt(['typescript', 'jsx', 'imports'])
+    } catch {
+      throw new Error(`Could not compile JSX: ${jsxError instanceof Error ? jsxError.message : String(jsxError)}`)
+    }
   }
+}
+
+export function buildReactBody(code: string): string {
+  const js = compile(code)
 
   // Capitalised declarations are candidate components when the snippet has no export.
   const names = [...new Set([...code.matchAll(/\b(?:function|class|const|let|var)\s+([A-Z]\w*)/g)].map((m) => m[1]))].filter((n) => /[a-z]/.test(n))
@@ -26,9 +36,15 @@ export function buildReactBody(code: string, typescript: boolean): string {
 <script>
 window.__exports={};window.__rendered=false;
 try{var cr=ReactDOM.createRoot;ReactDOM.createRoot=function(){window.__rendered=true;return cr.apply(this,arguments)}}catch(e){}
+try{var lr=ReactDOM.render;ReactDOM.render=function(){window.__rendered=true;return lr.apply(this,arguments)}}catch(e){}
 window.__require=function(n){
   if(n==='react')return React;
   if(n==='react-dom'||n==='react-dom/client')return ReactDOM;
+  if(n==='react/jsx-runtime'||n==='react/jsx-dev-runtime'){
+    var j=function(t,p,k){return React.createElement(t,k==null?p:Object.assign({},p,{key:k}))};
+    return{jsx:j,jsxs:j,jsxDEV:j,Fragment:React.Fragment};
+  }
+  if(/\\.(css|scss|sass|less)$/.test(n))return{};
   throw new Error("Cannot import '"+n+"': only 'react' and 'react-dom' are available in the sandbox.");
 };
 </script>

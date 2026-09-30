@@ -58,7 +58,11 @@ Make it punchy, trendy, and conversational.`,
   Key Benefits/Takeaways:
   - [Benefit 1]
   - [Benefit 2]
-- Make sure it contains exactly one code block inside markdown fence blocks.`
+- Make sure it contains exactly one code block inside markdown fence blocks, always tagged with its language.
+- The snippet must run as-is in a browser preview with no network, build step or extra files:
+  - HTML/CSS/JS: one complete HTML document with inline <style> and <script>; no CDN links.
+  - React: one file using \`\`\`jsx, starting with \`import React, { useState } from 'react'\`, exporting a default component, styled with inline styles or a <style> tag; import nothing except react and react-dom.
+  - Plain JavaScript/logic examples: use console.log to show the results.`
 }
 
 

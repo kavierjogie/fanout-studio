@@ -10,19 +10,18 @@ const SETTLE_MS = 1500
 const REACT_HINT =
   /\bfrom\s+['"]react(-dom)?(\/client)?['"]|\brequire\(\s*['"]react|\bReact\.|\buse(State|Effect|Ref|Memo|Callback|Reducer|Context)\s*\(|\breturn\s*\(?\s*<[A-Za-z>]|=>\s*\(?\s*<[A-Za-z>]|\bclassName=/
 
-const isTypescript = (language: string) => /^(ts|tsx|typescript)$/i.test(language)
+const HTML_START = /^\s*(<!doctype\s+html|<html[\s>]|<head[\s>]|<body[\s>]|<style[\s>]|<script[\s>]|<svg[\s>]|<[a-z][\w-]*[\s>/])/i
 
+// Detection uses the content first and the fence label second: generated fences are often unlabelled or mislabelled.
 // html: rendered as a page. react: JSX compiled in the browser and mounted. dom: JS that touches document/window,
 // runs in the page. js: plain JS, runs in a worker.
 function runnableMode(language: string, code: string): Mode | null {
   const l = language.toLowerCase()
-  if (l === 'html' || l === 'htm') return 'html'
+  const scripty = /^(|js|javascript|mjs|jsx|tsx|ts|typescript|react)$/.test(l)
+  if (scripty && REACT_HINT.test(code)) return 'react'
   if (l === 'jsx' || l === 'tsx' || l === 'react') return 'react'
-  if (/^(js|javascript|mjs|ts|typescript)$/.test(l)) {
-    if (REACT_HINT.test(code)) return 'react'
-    if (isTypescript(l)) return null
-    return /\b(document|window|localStorage)\b/.test(code) ? 'dom' : 'js'
-  }
+  if (/^(html|htm|svg|xml)$/.test(l) || (scripty && HTML_START.test(code))) return 'html'
+  if (/^(|js|javascript|mjs)$/.test(l)) return /\b(document|window|localStorage)\b/.test(code) ? 'dom' : 'js'
   return null
 }
 
@@ -40,6 +39,7 @@ const bridge = (id: number, doneOnLoad = true) =>
   `['log','info','warn','error','debug'].forEach(function(k){console[k]=function(){send(k,f(arguments))}});` +
   `addEventListener('error',function(e){window.__failed=1;send('fatal',e.message||'Script error')});` +
   `addEventListener('unhandledrejection',function(e){send('fatal',String((e.reason&&e.reason.message)||e.reason))});` +
+  `addEventListener('securitypolicyviolation',function(e){send('warn','Blocked by the sandbox: '+(e.blockedURI||e.violatedDirective)+' (network access and external scripts are disabled)')});` +
   (doneOnLoad ? `addEventListener('load',function(){send('done')});` : '') +
   `})()</script>`
 
@@ -53,7 +53,7 @@ const jsString = (s: string) => JSON.stringify(s).replace(/</g, '\\u003c')
 async function buildDoc(mode: Mode, code: string, language: string, id: number): Promise<string> {
   if (mode === 'react') {
     const { buildReactBody } = await import('../lib/reactRunner')
-    const body = buildReactBody(code, isTypescript(language) || language.toLowerCase() === 'tsx')
+    const body = buildReactBody(code)
     return `${CSP}${bridge(id)}<body style="font-family:system-ui,sans-serif;margin:12px">${body}</body>`
   }
   if (mode === 'html') {
@@ -130,7 +130,13 @@ export default function CodeRunner({ code, language }: { code: string; language:
     return () => window.removeEventListener('message', onMessage)
   }, [run])
 
-  if (!mode) return null
+  if (!mode) {
+    return (
+      <p className="text-[11px] text-mist-400 select-none">
+        Run Code supports HTML, JavaScript and React/JSX; {language || 'this'} snippets can only be copied.
+      </p>
+    )
+  }
 
   const start = async () => {
     clearTimers()
