@@ -62,7 +62,7 @@ export default function RefinePiece({
     <div className="mt-4 border-t border-white/5 pt-4 space-y-3">
       <div className="flex flex-col gap-2">
         <p className="text-xs font-semibold text-mist-300 flex items-center gap-1.5">
-          <Sparkles size={12} className="text-signal-pink" />
+          <Sparkles size={12} className="text-signal-purple" />
           Refine post with AI
         </p>
         
@@ -88,7 +88,7 @@ export default function RefinePiece({
             onChange={(e) => setInstruction(e.target.value)}
             disabled={refining}
             placeholder="e.g., Make it punchier, write a hook, add a call-to-action..."
-            className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs text-mist-50 placeholder:text-mist-400/50 focus:border-signal-pink/50 focus:outline-none disabled:opacity-40"
+            className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs text-mist-100 placeholder:text-mist-400/50 focus:border-signal-purple/50 focus:outline-none disabled:opacity-40"
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault()
@@ -97,7 +97,7 @@ export default function RefinePiece({
             }}
           />
           <Button
-            intent="social"
+            intent="primary"
             onClick={() => handleRefine()}
             disabled={!instruction.trim() || refining}
             className="!px-3 !py-1 text-xs whitespace-nowrap"

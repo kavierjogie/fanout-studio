@@ -48,7 +48,7 @@ export default function Sidebar({
               <Sparkles size={16} className="text-white" />
             </div>
             <div>
-              <p className="font-display text-sm font-semibold leading-none text-mist-50">Studio</p>
+              <p className="font-display text-sm font-semibold leading-none text-mist-100">Studio</p>
               <p className="mt-1 text-[11px] text-mist-400">Content, everywhere</p>
             </div>
           </div>
@@ -70,13 +70,13 @@ export default function Sidebar({
                 }}
                 className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-colors ${
                   active
-                    ? 'bg-white/8 text-mist-50'
+                    ? 'bg-white/8 text-mist-100'
                     : 'text-mist-400 hover:bg-white/5 hover:text-mist-100'
                 }`}
               >
                 <span
                   className={`flex h-7 w-7 items-center justify-center rounded-lg ${
-                    active ? 'bg-grad-ai' : 'bg-white/5 group-hover:bg-white/10'
+                    active ? 'bg-signal-purpleDeep' : 'bg-white/5 group-hover:bg-white/10'
                   }`}
                 >
                   <Icon size={14} className={active ? 'text-white' : 'text-mist-300'} />

@@ -147,7 +147,7 @@ export default function PipelineSignature({
                 fill={labelColor}
                 fontFamily="Inter, sans-serif"
                 fontWeight={isActive ? "600" : "400"}
-                className="transition-all duration-300 select-none group-hover:fill-mist-50"
+                className="transition-all duration-300 select-none group-hover:fill-mist-100"
               >
                 {t.label}
               </text>

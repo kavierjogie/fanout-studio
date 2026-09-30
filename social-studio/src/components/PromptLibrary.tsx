@@ -21,7 +21,7 @@ export default function PromptLibrary({ onUse }: { onUse: (prompt: PromptTemplat
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
         <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Prompt library</p>
-        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-50 sm:text-3xl">
+        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">
           Ready-made starting points
         </h1>
         <p className="mt-2 max-w-xl text-sm text-mist-400">
@@ -36,7 +36,7 @@ export default function PromptLibrary({ onUse }: { onUse: (prompt: PromptTemplat
             onClick={() => setFilter(c)}
             className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
               filter === c
-                ? 'border-white/20 bg-white/10 text-mist-50'
+                ? 'border-white/20 bg-white/10 text-mist-100'
                 : 'border-white/10 text-mist-400 hover:text-mist-100'
             }`}
           >
@@ -50,10 +50,10 @@ export default function PromptLibrary({ onUse }: { onUse: (prompt: PromptTemplat
           <Card key={prompt.id} className="flex flex-col justify-between">
             <div>
               <Badge accent={categoryAccent(prompt.category)}>{prompt.category}</Badge>
-              <h3 className="mt-3 font-display text-base font-semibold text-mist-50">{prompt.name}</h3>
+              <h3 className="mt-3 font-display text-base font-semibold text-mist-100">{prompt.name}</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-mist-400">{prompt.description}</p>
             </div>
-            <Button intent="ai" className="mt-5 w-full" onClick={() => onUse(prompt)}>
+            <Button intent="primary" className="mt-5 w-full" onClick={() => onUse(prompt)}>
               <Wand2 size={14} />
               Use prompt
             </Button>

@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react'
 
-type Intent = 'ai' | 'social' | 'action' | 'ghost'
+type Intent = 'primary' | 'ghost'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
@@ -8,9 +8,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const intentClasses: Record<Intent, string> = {
-  ai: 'bg-grad-ai text-white shadow-glow hover:brightness-110',
-  social: 'bg-grad-social text-white shadow-glow hover:brightness-110',
-  action: 'bg-grad-action text-white shadow-glow hover:brightness-110',
+  primary: 'bg-signal-purpleDeep text-white shadow-glow hover:brightness-110',
   ghost: 'bg-white/5 text-mist-100 border border-white/10 hover:bg-white/10'
 }
 

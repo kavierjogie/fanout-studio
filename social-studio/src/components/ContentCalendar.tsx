@@ -78,8 +78,8 @@ export default function ContentCalendar({
   return (
     <div className="mx-auto max-w-4xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-widest text-signal-orange">Content calendar</p>
-        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-50 sm:text-3xl">Plan when it goes out</h1>
+        <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Content calendar</p>
+        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">Plan when it goes out</h1>
         <p className="mt-2 max-w-xl text-sm text-mist-400">Schedule pieces you've already created against a date.</p>
       </header>
 
@@ -105,7 +105,7 @@ export default function ContentCalendar({
                     setPendingId('')
                     setIsOpen(true)
                   }}
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-mist-50 placeholder-mist-400 focus:border-signal-orange/50 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-mist-100 placeholder-mist-400 focus:border-signal-purple/50 focus:outline-none"
                 />
                   <div data-open={isOpen} className="popover absolute left-0 right-0 z-50 mt-2 max-h-60 overflow-y-auto rounded-xl border border-white/10 bg-ink-900 p-1.5 shadow-2xl">
                     {filtered.length === 0 ? (
@@ -124,8 +124,8 @@ export default function ContentCalendar({
                           }}
                           className={`w-full text-left rounded-lg px-4 py-2 text-sm transition-colors hover:bg-white/5 ${
                             pendingId === item.id
-                              ? 'bg-white/10 text-mist-50 font-medium'
-                              : 'text-mist-300 hover:text-mist-50'
+                              ? 'bg-white/10 text-mist-100 font-medium'
+                              : 'text-mist-300 hover:text-mist-100'
                           }`}
                         >
                           {item.topic}
@@ -139,9 +139,9 @@ export default function ContentCalendar({
                 aria-label="Date"
                 value={pendingDate}
                 onChange={(e) => setPendingDate(e.target.value)}
-                className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-mist-50 focus:border-signal-orange/50"
+                className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-mist-100 focus:border-signal-purple/50"
               />
-              <Button intent="action" onClick={handleAdd} disabled={!pendingId || !pendingDate}>
+              <Button intent="primary" onClick={handleAdd} disabled={!pendingId || !pendingDate}>
                 <CalendarDays size={14} />
                 Add to calendar
               </Button>
@@ -169,7 +169,7 @@ export default function ContentCalendar({
                             className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left hover:bg-white/[0.01] transition-colors duration-150"
                           >
                             <div className="min-w-0">
-                              <p className="truncate font-display text-sm font-medium text-mist-50">{i.topic}</p>
+                              <p className="truncate font-display text-sm font-medium text-mist-100">{i.topic}</p>
                               <p className="mt-1 text-xs text-mist-400">
                                 {i.pieces.length} format{i.pieces.length === 1 ? '' : 's'}
                               </p>

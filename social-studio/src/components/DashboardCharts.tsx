@@ -191,7 +191,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
             <span className="flex items-center gap-1.5 text-xs text-mist-400">
               <Lightbulb size={13} className="text-signal-purple" /> Ideas created
             </span>
-            <p className="mt-2 font-display text-2xl font-semibold text-mist-50">{totalIdeas}</p>
+            <p className="mt-2 font-display text-2xl font-semibold text-mist-100">{totalIdeas}</p>
           </div>
           <div className="mt-3 h-1.5 w-full rounded-full bg-white/5 overflow-hidden">
             <div
@@ -205,16 +205,16 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
         <Card className="flex flex-col justify-between p-4 transition-all duration-300 hover:border-white/12">
           <div>
             <span className="flex items-center gap-1.5 text-xs text-mist-400">
-              <Layers size={13} className="text-signal-pink" /> Pieces generated
+              <Layers size={13} className="text-signal-purple" /> Pieces generated
             </span>
-            <p className="mt-2 font-display text-2xl font-semibold text-mist-50">{totalPieces}</p>
+            <p className="mt-2 font-display text-2xl font-semibold text-mist-100">{totalPieces}</p>
           </div>
           <div className="mt-3 flex gap-0.5">
             {Array.from({ length: 10 }).map((_, idx) => (
               <div
                 key={idx}
                 className={`h-1.5 flex-1 rounded-sm transition-all duration-500 ${
-                  idx < Math.ceil(totalPieces / 3) ? 'bg-signal-pink' : 'bg-white/5'
+                  idx < Math.ceil(totalPieces / 3) ? 'bg-signal-purple' : 'bg-white/5'
                 }`}
               />
             ))}
@@ -228,7 +228,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
               <span className="flex items-center gap-1.5 text-xs text-mist-400">
                 <CheckCircle2 size={13} className="text-emerald-400" /> Channels active
               </span>
-              <p className="mt-2 font-display text-xl font-semibold text-mist-50">
+              <p className="mt-2 font-display text-xl font-semibold text-mist-100">
                 {activePlatformsCount} <span className="text-xs font-normal text-mist-400">/ {PLATFORMS.length}</span>
               </p>
             </div>
@@ -252,7 +252,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
               </span>
             </div>
           </div>
-          <p className="mt-2 text-[11px] text-mist-500 truncate">
+          <p className="mt-2 text-[11px] text-mist-400 truncate">
             {activePlatformsCount > 0 ? 'Good channel diversification' : 'No active channels yet'}
           </p>
         </Card>
@@ -261,15 +261,15 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
         <Card className="flex flex-col justify-between p-4 transition-all duration-300 hover:border-white/12">
           <div>
             <span className="flex items-center gap-1.5 text-xs text-mist-400">
-              <Clock size={13} className="text-signal-orange" /> Scheduled queue
+              <Clock size={13} className="text-signal-purple" /> Scheduled queue
             </span>
-            <p className="mt-2 font-display text-2xl font-semibold text-mist-50">{scheduledCount}</p>
+            <p className="mt-2 font-display text-2xl font-semibold text-mist-100">{scheduledCount}</p>
           </div>
           <div className="mt-3 text-[11px] text-mist-400 truncate">
             {nextScheduledItem ? (
               <span>
                 Next:{' '}
-                <span className="text-signal-orange font-semibold">
+                <span className="text-signal-purple font-semibold">
                   {new Date(nextScheduledItem.scheduledFor + 'T00:00:00').toLocaleDateString(undefined, {
                     month: 'short',
                     day: 'numeric'
@@ -291,7 +291,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
             <div className="flex items-center justify-between">
               <h3 className="font-display text-sm font-semibold text-mist-100">Format distribution</h3>
               <span title="Percentage breakdown of generated post types" className="cursor-help">
-                <Info size={13} className="text-mist-500" />
+                <Info size={13} className="text-mist-400" />
               </span>
             </div>
             <p className="text-[11px] text-mist-400">Breakdown of generated content by platform format.</p>
@@ -338,7 +338,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                     </>
                   ) : (
                     <>
-                      <span className="font-display text-base font-bold text-mist-50">{totalPieces}</span>
+                      <span className="font-display text-base font-bold text-mist-100">{totalPieces}</span>
                       <span className="text-[11px] font-mono uppercase tracking-wider text-mist-400">Pieces</span>
                     </>
                   )}
@@ -349,13 +349,13 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
             {/* Custom Legend */}
             <div className="flex-1 space-y-1.5 max-h-[140px] overflow-y-auto pr-1">
               {donutData.length === 0 ? (
-                <p className="text-xs text-mist-500 italic">No formats created</p>
+                <p className="text-xs text-mist-400 italic">No formats created</p>
               ) : (
                 donutSlices.map((slice) => (
                   <button
                     key={slice.id}
                     className={`flex w-full items-center justify-between rounded-lg px-2 py-1 text-left text-xs transition-colors hover:bg-white/[0.04] ${
-                      hoveredDonutSlice === slice.id ? 'bg-white/[0.04] text-mist-50' : 'text-mist-300'
+                      hoveredDonutSlice === slice.id ? 'bg-white/[0.04] text-mist-100' : 'text-mist-300'
                     }`}
                     onMouseEnter={() => setHoveredDonutSlice(slice.id)}
                     onMouseLeave={() => setHoveredDonutSlice(null)}
@@ -380,7 +380,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
             <div className="flex items-center justify-between">
               <h3 className="font-display text-sm font-semibold text-mist-100">Activity timeline</h3>
               <span title="Posts created and scheduled over the last 7 days" className="cursor-help">
-                <Info size={13} className="text-mist-500" />
+                <Info size={13} className="text-mist-400" />
               </span>
             </div>
             <p className="text-[11px] text-mist-400">Created vs. scheduled activity over the last 7 days.</p>
@@ -499,7 +499,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                   minWidth: '100px'
                 }}
               >
-                <p className="text-[11px] font-bold text-mist-50">{last7DaysData[hoveredActivityIndex].dateLabel}</p>
+                <p className="text-[11px] font-bold text-mist-100">{last7DaysData[hoveredActivityIndex].dateLabel}</p>
                 <div className="mt-1 flex items-center gap-1 text-[11px] text-mist-300">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#8B5CF6]" />
                   <span>Created: {last7DaysData[hoveredActivityIndex].created}</span>
@@ -530,7 +530,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
             <div className="flex items-center justify-between">
               <h3 className="font-display text-sm font-semibold text-mist-100">Content density</h3>
               <span title="Average generated word count per platform format" className="cursor-help">
-                <Info size={13} className="text-mist-500" />
+                <Info size={13} className="text-mist-400" />
               </span>
             </div>
             <p className="text-[11px] text-mist-400">Avg. words generated per platform layout.</p>
@@ -538,7 +538,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
 
           <div className="my-3 space-y-2 max-h-[160px] overflow-y-auto pr-1">
             {depthStats.length === 0 ? (
-              <p className="text-xs text-mist-500 italic py-6 text-center">No content stats available</p>
+              <p className="text-xs text-mist-400 italic py-6 text-center">No content stats available</p>
             ) : (
               depthStats.map((stat) => {
                 const barPercent = Math.min(100, (stat.avgWords / maxWords) * 100)
@@ -556,7 +556,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                     <div className="flex items-center justify-between text-xs mb-1">
                       <div className="flex items-center gap-1.5 truncate">
                         <PlatformIcon platform={stat.id} size={12} />
-                        <span className="font-medium text-mist-200 truncate">{stat.label}</span>
+                        <span className="font-medium text-mist-300 truncate">{stat.label}</span>
                       </div>
                       <span className="font-mono text-[11px] text-mist-400 font-semibold shrink-0">
                         {stat.avgWords} words
@@ -584,7 +584,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                           minWidth: '120px'
                         }}
                       >
-                        <p className="text-[11px] font-bold text-mist-50">{stat.label}</p>
+                        <p className="text-[11px] font-bold text-mist-100">{stat.label}</p>
                         <p className="text-[11px] text-mist-300">Avg. words: {stat.avgWords}</p>
                         <p className="text-[11px] text-mist-300">Avg. chars: {stat.avgChars}</p>
                         <p className="text-[11px] text-mist-300">Total drafts: {stat.count}</p>

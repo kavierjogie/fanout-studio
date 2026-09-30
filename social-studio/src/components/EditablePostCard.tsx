@@ -135,7 +135,7 @@ function CodeTerminal({ code, language }: { code: string; language: string }) {
       {/* Terminal Content */}
       <div className="p-4 overflow-x-auto max-h-[300px] flex leading-relaxed">
         {/* Line numbers */}
-        <div className="text-mist-500/40 select-none text-right pr-4 border-r border-white/5 min-w-[2rem]">
+        <div className="text-mist-400/40 select-none text-right pr-4 border-r border-white/5 min-w-[2rem]">
           {lines.map((_, i) => (
             <div key={i}>{i + 1}</div>
           ))}
@@ -295,7 +295,7 @@ export default function EditablePostCard({
           {platform === 'code' && (
             <button
               onClick={() => setIsEditingCode(!isEditingCode)}
-              className="flex items-center gap-1.5 text-xs font-medium text-mist-400 hover:text-mist-50 transition-colors mr-4"
+              className="flex items-center gap-1.5 text-xs font-medium text-mist-400 hover:text-mist-100 transition-colors mr-4"
             >
               {isEditingCode ? <Eye size={13} /> : <Pencil size={13} />}
               {isEditingCode ? 'Preview snippet' : 'Edit markdown'}
@@ -303,12 +303,12 @@ export default function EditablePostCard({
           )}
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1.5 text-xs font-medium text-mist-300 hover:text-mist-50 transition-colors"
+            className="flex items-center gap-1.5 text-xs font-medium text-mist-300 hover:text-mist-100 transition-colors"
           >
             {copied ? (
               <>
-                <Check size={13} className="text-signal-orange" />
-                <span className="text-signal-orange">Copied</span>
+                <Check size={13} className="text-emerald-400" />
+                <span className="text-emerald-400">Copied</span>
               </>
             ) : (
               <>
@@ -340,7 +340,7 @@ export default function EditablePostCard({
           )}
           <CodeTerminal code={parsedCode.code} language={parsedCode.language} />
           {parsedCode.takeaways && (
-            <div className="text-sm leading-relaxed text-mist-200 mt-2">
+            <div className="text-sm leading-relaxed text-mist-300 mt-2">
               {parsedCode.takeaways.split('\n').map((line, i) => {
                 if (line.trim().startsWith('-') || line.trim().startsWith('*')) {
                   return (
@@ -424,7 +424,7 @@ export default function EditablePostCard({
                 {imagePrompt && (
                   <div className="bg-black/50 backdrop-blur-sm border border-white/5 rounded-lg p-2.5">
                     <p className="font-mono text-[11px] uppercase tracking-wider text-signal-purple mb-0.5">Visual prompt</p>
-                    <p className="text-xs text-mist-200 line-clamp-2 leading-relaxed">{imagePrompt}</p>
+                    <p className="text-xs text-mist-300 line-clamp-2 leading-relaxed">{imagePrompt}</p>
                   </div>
                 )}
               </div>
@@ -434,7 +434,7 @@ export default function EditablePostCard({
               <span className="text-xs text-mist-400">No image generated yet</span>
               <button
                 onClick={handleRegenerateImage}
-                className="mt-2 flex items-center gap-1 rounded-lg bg-white/5 border border-white/10 hover:border-white/10 group-hover/placeholder:border-white/20 px-3 py-1.5 text-xs font-semibold text-mist-200 transition-colors"
+                className="mt-2 flex items-center gap-1 rounded-lg bg-white/5 border border-white/10 hover:border-white/10 group-hover/placeholder:border-white/20 px-3 py-1.5 text-xs font-semibold text-mist-300 transition-colors"
               >
                 <RefreshCw size={11} className="group-hover/placeholder:rotate-180 transition-transform duration-500" />
                 Generate AI image

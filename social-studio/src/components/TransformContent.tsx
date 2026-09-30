@@ -100,8 +100,8 @@ export default function TransformContent({
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-2xl text-center">
-        <p className="font-mono text-xs uppercase tracking-widest text-signal-pink">Transform content</p>
-        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-50">Nothing to transform yet</h1>
+        <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Transform content</p>
+        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100">Nothing to transform yet</h1>
         <p className="mt-3 text-sm text-mist-400">
           Create a piece of content first, then come back here to turn it into more formats.
         </p>
@@ -112,8 +112,8 @@ export default function TransformContent({
   return (
     <div className="mx-auto max-w-4xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-widest text-signal-pink">Transform content</p>
-        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-50 sm:text-3xl">
+        <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Transform content</p>
+        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">
           One idea, more platforms
         </h1>
         <p className="mt-2 max-w-xl text-sm text-mist-400">
@@ -131,7 +131,7 @@ export default function TransformContent({
               disabled={transforming}
               aria-expanded={dropdownOpen}
               aria-labelledby="source-label"
-              className="flex items-center justify-between w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-mist-50 focus:outline-none focus:border-signal-pink/50 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center justify-between w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-mist-100 focus:outline-none focus:border-signal-purple/50 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <span className="truncate">{current?.topic ?? 'Select source content'}</span>
               <ChevronDown className={`ml-2 h-4 w-4 shrink-0 transition-transform text-mist-400 ${dropdownOpen ? 'rotate-180' : ''}`} />
@@ -146,7 +146,7 @@ export default function TransformContent({
                     aria-label="Search content"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-transparent text-sm text-mist-50 outline-none placeholder:text-mist-500"
+                    className="w-full bg-transparent text-sm text-mist-100 outline-none placeholder:text-mist-400"
                   />
                 </div>
                 <div className="max-h-60 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
@@ -164,7 +164,7 @@ export default function TransformContent({
                           setDropdownOpen(false)
                         }}
                         className={`flex items-center justify-between w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-white/[0.05] ${
-                          item.id === selectedId ? 'bg-white/[0.05] text-mist-50 font-medium' : 'text-mist-200'
+                          item.id === selectedId ? 'bg-white/[0.05] text-mist-100 font-medium' : 'text-mist-300'
                         }`}
                       >
                         <span className="truncate mr-4" title={item.topic}>{item.topic}</span>
@@ -222,7 +222,7 @@ export default function TransformContent({
                     )
                   })}
                 </div>
-                <Button intent="action" className="mt-4" onClick={handleTransform} disabled={targets.length === 0 || transforming}>
+                <Button intent="primary" className="mt-4" onClick={handleTransform} disabled={targets.length === 0 || transforming}>
                   <Repeat size={14} />
                   {transforming ? 'Transforming...' : 'Transform'}
                 </Button>
@@ -239,8 +239,8 @@ export default function TransformContent({
         <div className="mt-6 flex flex-col items-center justify-center p-12 card-surface rounded-2xl animate-rise relative overflow-hidden">
           <div className="absolute inset-0 bg-grad-panel opacity-50 blur-xl"></div>
           <div className="relative flex flex-col items-center z-10">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-signal-pink/30 border-t-signal-pink"></div>
-            <p className="mt-4 font-display text-base font-semibold text-mist-50 animate-pulse">Transforming your content...</p>
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-signal-purple/30 border-t-signal-purple"></div>
+            <p className="mt-4 font-display text-base font-semibold text-mist-100 animate-pulse">Transforming your content...</p>
             <p className="mt-1 text-xs text-mist-400">AI is rewriting the topic for new platforms</p>
           </div>
         </div>

@@ -126,8 +126,8 @@ export default function RecentContent({
   return (
     <div className="mx-auto max-w-4xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-widest text-signal-orange">Recent content</p>
-        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-50 sm:text-3xl">Everything you've made</h1>
+        <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Recent content</p>
+        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">Everything you've made</h1>
         <p className="mt-2 max-w-xl text-sm text-mist-400">
           Revisit past ideas, copy content again, or transform them into a format you haven't tried yet.
         </p>
@@ -148,7 +148,7 @@ export default function RecentContent({
                 setSearchQuery(e.target.value)
                 setLimit(8) // Reset pagination on search
               }}
-              className="w-full rounded-xl border border-white/10 bg-ink-950/40 py-2.5 pl-10 pr-9 text-sm text-mist-50 placeholder-mist-400 outline-none transition-all duration-150 focus:border-signal-purple/50 focus:bg-ink-950/60"
+              className="w-full rounded-xl border border-white/10 bg-ink-950/40 py-2.5 pl-10 pr-9 text-sm text-mist-100 placeholder-mist-400 outline-none transition-all duration-150 focus:border-signal-purple/50 focus:bg-ink-950/60"
             />
             {searchQuery && (
               <button
@@ -218,7 +218,7 @@ export default function RecentContent({
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="ml-auto flex items-center gap-1 text-xs font-medium text-signal-pink hover:text-pink-400"
+              className="ml-auto flex items-center gap-1 text-xs font-medium text-signal-purple hover:text-violet-300"
             >
               <X size={12} />
               Clear filters
@@ -236,7 +236,7 @@ export default function RecentContent({
           No content matches your active filters. Try searching for something else or clearing the filters.
           <button
             onClick={clearFilters}
-            className="mt-3 block mx-auto text-xs font-semibold text-signal-orange hover:underline"
+            className="mt-3 block mx-auto text-xs font-semibold text-signal-purple hover:underline"
           >
             Clear filters
           </button>
@@ -261,7 +261,7 @@ export default function RecentContent({
                         aria-expanded={open}
                       >
                         <div className="min-w-0">
-                          <p className="truncate font-display text-sm font-medium text-mist-50">{item.topic}</p>
+                          <p className="truncate font-display text-sm font-medium text-mist-100">{item.topic}</p>
                           <p className="mt-1 text-xs text-mist-400">
                             {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                             {'  ·  '}
@@ -316,7 +316,7 @@ export default function RecentContent({
                           <div className="mt-4 flex items-center gap-3 border-t border-white/8 pt-4">
                             <button
                               onClick={() => onTransform(item)}
-                              className="flex items-center gap-1.5 text-xs font-medium text-signal-orange hover:text-orange-300 transition-colors"
+                              className="flex items-center gap-1.5 text-xs font-medium text-signal-purple hover:text-violet-300 transition-colors"
                             >
                               <Repeat size={13} />
                               Transform further
@@ -346,7 +346,7 @@ export default function RecentContent({
               <Button
                 intent="ghost"
                 onClick={() => setLimit(prev => prev + 8)}
-                className="w-full max-w-xs border border-white/10 hover:border-signal-purple/30 hover:bg-signal-purple/5 transition-all text-mist-200"
+                className="w-full max-w-xs border border-white/10 hover:border-signal-purple/30 hover:bg-signal-purple/5 transition-all text-mist-300"
               >
                 Load more ({filteredItems.length - limit} remaining)
               </Button>

@@ -130,7 +130,7 @@ function CodeTerminal({ code, language }: { code: string; language: string }) {
       {/* Terminal Content */}
       <div className="p-4 overflow-x-auto max-h-[300px] flex leading-relaxed">
         {/* Line numbers */}
-        <div className="text-mist-500/40 select-none text-right pr-4 border-r border-white/5 min-w-[2rem]">
+        <div className="text-mist-400/40 select-none text-right pr-4 border-r border-white/5 min-w-[2rem]">
           {lines.map((_, i) => (
             <div key={i}>{i + 1}</div>
           ))}
@@ -287,18 +287,18 @@ export default function RecentPostEditor({
     
     return text.split('\n').map((line, idx) => {
       if (line.startsWith('# ')) {
-        return <h1 key={idx} className="text-lg font-bold text-mist-50 mt-2 mb-1">{line.slice(2)}</h1>;
+        return <h1 key={idx} className="text-lg font-bold text-mist-100 mt-2 mb-1">{line.slice(2)}</h1>;
       }
       if (line.startsWith('## ')) {
-        return <h2 key={idx} className="text-base font-bold text-mist-50 mt-2 mb-1">{line.slice(3)}</h2>;
+        return <h2 key={idx} className="text-base font-bold text-mist-100 mt-2 mb-1">{line.slice(3)}</h2>;
       }
       if (line.startsWith('### ')) {
-        return <h3 key={idx} className="text-sm font-bold text-mist-50 mt-2 mb-1">{line.slice(4)}</h3>;
+        return <h3 key={idx} className="text-sm font-bold text-mist-100 mt-2 mb-1">{line.slice(4)}</h3>;
       }
       if (line.trim().startsWith('- ') || line.trim().startsWith('* ')) {
         const itemContent = line.trim().slice(2);
         return (
-          <ul key={idx} className="list-disc list-inside ml-2 text-mist-200">
+          <ul key={idx} className="list-disc list-inside ml-2 text-mist-300">
             <li className="leading-relaxed text-sm inline-block">{parseInlineMarkdown(itemContent)}</li>
           </ul>
         );
@@ -307,13 +307,13 @@ export default function RecentPostEditor({
       if (numMatch) {
         const [, num, itemContent] = numMatch;
         return (
-          <ol key={idx} className="list-decimal list-inside ml-2 text-mist-200">
+          <ol key={idx} className="list-decimal list-inside ml-2 text-mist-300">
             <li className="leading-relaxed text-sm inline-block">{parseInlineMarkdown(itemContent)}</li>
           </ol>
         );
       }
       return (
-        <p key={idx} className="min-h-[1.25rem] leading-relaxed text-sm text-mist-200 font-body">
+        <p key={idx} className="min-h-[1.25rem] leading-relaxed text-sm text-mist-300 font-body">
           {parseInlineMarkdown(line)}
         </p>
       );
@@ -340,7 +340,7 @@ export default function RecentPostEditor({
     <div className="border border-white/5 rounded-xl bg-white/[0.01] hover:bg-white/[0.02] p-4 transition-all duration-200 group">
       {/* Header of the piece card */}
       <div className="flex items-center justify-between border-b border-white/5 pb-2.5 mb-3 select-none">
-        <span className="flex items-center gap-2 text-xs font-semibold text-mist-200">
+        <span className="flex items-center gap-2 text-xs font-semibold text-mist-300">
           <PlatformIcon platform={platform} size={13} />
           {meta?.label || platform}
         </span>
@@ -348,7 +348,7 @@ export default function RecentPostEditor({
           {!isEditing && platform === 'code' && (
             <button
               onClick={() => setIsEditing(true)}
-              className="text-[11px] text-mist-400 hover:text-mist-50 transition-colors"
+              className="text-[11px] text-mist-400 hover:text-mist-100 transition-colors"
             >
               ✍️ Edit Markdown
             </button>
@@ -356,7 +356,7 @@ export default function RecentPostEditor({
           {!isEditing && platform !== 'code' && (
             <button
               onClick={() => setIsEditing(true)}
-              className="flex items-center gap-1 text-[11px] text-mist-400 hover:text-mist-50 transition-colors"
+              className="flex items-center gap-1 text-[11px] text-mist-400 hover:text-mist-100 transition-colors"
             >
               <Edit2 size={11} />
               Edit
@@ -364,12 +364,12 @@ export default function RecentPostEditor({
           )}
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1 text-[11px] text-mist-400 hover:text-mist-50 transition-colors"
+            className="flex items-center gap-1 text-[11px] text-mist-400 hover:text-mist-100 transition-colors"
           >
             {copied ? (
               <>
-                <Check size={11} className="text-signal-orange" />
-                <span className="text-signal-orange">Copied</span>
+                <Check size={11} className="text-emerald-400" />
+                <span className="text-emerald-400">Copied</span>
               </>
             ) : (
               <>
@@ -425,14 +425,14 @@ export default function RecentPostEditor({
             <div className="flex items-center gap-2 select-none">
               <button
                 onClick={handleCancel}
-                className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-mist-400 hover:text-mist-200 border border-white/5 hover:border-white/10 bg-white/[0.01] hover:bg-white/[0.02] transition-colors"
+                className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-mist-400 hover:text-mist-300 border border-white/5 hover:border-white/10 bg-white/[0.01] hover:bg-white/[0.02] transition-colors"
               >
                 <X size={12} />
                 Cancel
               </button>
               <button
                 onClick={handleSave}
-                className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold text-white bg-grad-action hover:shadow-glow transition-all hover:scale-[1.02]"
+                className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold text-white bg-signal-purpleDeep hover:shadow-glow transition-all hover:scale-[1.02]"
               >
                 <Save size={12} />
                 Save Changes
@@ -450,7 +450,7 @@ export default function RecentPostEditor({
           )}
           <CodeTerminal code={parsedCode.code} language={parsedCode.language} />
           {parsedCode.takeaways && (
-            <div className="text-sm leading-relaxed text-mist-200 mt-2">
+            <div className="text-sm leading-relaxed text-mist-300 mt-2">
               {parsedCode.takeaways.split('\n').map((line, i) => {
                 if (line.trim().startsWith('-') || line.trim().startsWith('*')) {
                   return (
@@ -541,7 +541,7 @@ export default function RecentPostEditor({
                 {imagePrompt && (
                   <div className="bg-black/50 backdrop-blur-sm border border-white/5 rounded-lg p-2.5">
                     <p className="font-mono text-[9px] uppercase tracking-wider text-signal-purple mb-0.5">Visual Prompt</p>
-                    <p className="text-xs text-mist-200 line-clamp-2 leading-relaxed">{imagePrompt}</p>
+                    <p className="text-xs text-mist-300 line-clamp-2 leading-relaxed">{imagePrompt}</p>
                   </div>
                 )}
               </div>
@@ -554,7 +554,7 @@ export default function RecentPostEditor({
               >
                 <span className="text-xs text-mist-400">No image generated yet</span>
                 <button
-                  className="mt-2 flex items-center gap-1 rounded-lg bg-white/5 border border-white/10 hover:border-white/10 group-hover/placeholder:border-white/20 px-3 py-1.5 text-xs font-semibold text-mist-200 transition-colors"
+                  className="mt-2 flex items-center gap-1 rounded-lg bg-white/5 border border-white/10 hover:border-white/10 group-hover/placeholder:border-white/20 px-3 py-1.5 text-xs font-semibold text-mist-300 transition-colors"
                 >
                   <RefreshCw size={11} className="group-hover/placeholder:rotate-180 transition-transform duration-500" />
                   Generate AI Image

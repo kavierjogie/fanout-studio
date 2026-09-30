@@ -83,7 +83,7 @@ export default function App() {
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-grad-hero">
               <Sparkles size={14} className="text-white" />
             </div>
-            <span className="font-display text-sm font-semibold text-mist-50">Studio</span>
+            <span className="font-display text-sm font-semibold text-mist-100">Studio</span>
           </div>
           <button onClick={() => setSidebarOpen(true)} className="text-mist-300" aria-label="Open menu">
             <Menu size={20} />
