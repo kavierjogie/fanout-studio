@@ -1,17 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
 import { Play, RotateCcw, Copy, Check, AlertCircle } from 'lucide-react'
 
-type Mode = 'html' | 'dom' | 'js'
+type Mode = 'html' | 'dom' | 'js' | 'react'
 interface LogLine { t: string; m: string }
 
 const RUN_TIMEOUT_MS = 5000
 const SETTLE_MS = 1500
 
-// html: rendered as a page. dom: JS that touches document/window, runs in the page. js: plain JS, runs in a worker.
+const REACT_HINT =
+  /\bfrom\s+['"]react(-dom)?(\/client)?['"]|\brequire\(\s*['"]react|\bReact\.|\buse(State|Effect|Ref|Memo|Callback|Reducer|Context)\s*\(|\breturn\s*\(?\s*<[A-Za-z>]|=>\s*\(?\s*<[A-Za-z>]|\bclassName=/
+
+const isTypescript = (language: string) => /^(ts|tsx|typescript)$/i.test(language)
+
+// html: rendered as a page. react: JSX compiled in the browser and mounted. dom: JS that touches document/window,
+// runs in the page. js: plain JS, runs in a worker.
 function runnableMode(language: string, code: string): Mode | null {
   const l = language.toLowerCase()
   if (l === 'html' || l === 'htm') return 'html'
-  if (l === 'js' || l === 'javascript' || l === 'mjs') {
+  if (l === 'jsx' || l === 'tsx' || l === 'react') return 'react'
+  if (/^(js|javascript|mjs|ts|typescript)$/.test(l)) {
+    if (REACT_HINT.test(code)) return 'react'
+    if (isTypescript(l)) return null
     return /\b(document|window|localStorage)\b/.test(code) ? 'dom' : 'js'
   }
   return null
@@ -29,7 +38,7 @@ const bridge = (id: number, doneOnLoad = true) =>
   `<script>(function(){var id=${id},f=${FORMAT};` +
   `var send=window.__send=function(t,m){parent.postMessage({run:id,t:t,m:m},'*')};` +
   `['log','info','warn','error','debug'].forEach(function(k){console[k]=function(){send(k,f(arguments))}});` +
-  `addEventListener('error',function(e){send('fatal',e.message||'Script error')});` +
+  `addEventListener('error',function(e){window.__failed=1;send('fatal',e.message||'Script error')});` +
   `addEventListener('unhandledrejection',function(e){send('fatal',String((e.reason&&e.reason.message)||e.reason))});` +
   (doneOnLoad ? `addEventListener('load',function(){send('done')});` : '') +
   `})()</script>`
@@ -41,7 +50,12 @@ const WORKER_PRELUDE =
 
 const jsString = (s: string) => JSON.stringify(s).replace(/</g, '\\u003c')
 
-function buildDoc(mode: Mode, code: string, id: number): string {
+async function buildDoc(mode: Mode, code: string, language: string, id: number): Promise<string> {
+  if (mode === 'react') {
+    const { buildReactBody } = await import('../lib/reactRunner')
+    const body = buildReactBody(code, isTypescript(language) || language.toLowerCase() === 'tsx')
+    return `${CSP}${bridge(id)}<body style="font-family:system-ui,sans-serif;margin:12px">${body}</body>`
+  }
   if (mode === 'html') {
     const head = CSP + bridge(id)
     if (/<head[^>]*>/i.test(code)) return code.replace(/<head[^>]*>/i, (m) => m + head)
@@ -80,6 +94,7 @@ export default function CodeRunner({ code, language }: { code: string; language:
   }
 
   const reset = () => {
+    idRef.current++ // abandons any compile still in flight
     clearTimers()
     setRun(null)
     setLogs([])
@@ -117,13 +132,24 @@ export default function CodeRunner({ code, language }: { code: string; language:
 
   if (!mode) return null
 
-  const start = () => {
+  const start = async () => {
     clearTimers()
     const id = ++idRef.current
     setLogs([])
     setError(null)
     setRunning(true)
-    setRun({ id, mode, doc: buildDoc(mode, code, id) })
+    let doc: string
+    try {
+      doc = await buildDoc(mode, code, language, id)
+    } catch (e) {
+      if (id !== idRef.current) return
+      setRun({ id, mode, doc: null })
+      setError(e instanceof Error ? e.message : String(e))
+      setRunning(false)
+      return
+    }
+    if (id !== idRef.current) return
+    setRun({ id, mode, doc })
     timers.current.push(
       window.setTimeout(() => {
         setError(`Timed out after ${RUN_TIMEOUT_MS / 1000}s. The code may contain an infinite loop or never finish.`)
@@ -184,7 +210,7 @@ export default function CodeRunner({ code, language }: { code: string; language:
               title="Code output preview"
               sandbox="allow-scripts"
               srcDoc={run.doc}
-              className={preview ? 'block w-full h-56 sm:h-72 bg-white' : 'hidden'}
+              className={preview ? `block w-full bg-white ${run.mode === 'react' ? 'h-72 sm:h-96' : 'h-56 sm:h-72'}` : 'hidden'}
             />
           )}
 

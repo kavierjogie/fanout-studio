@@ -12,7 +12,8 @@
     "@vercel/blob": "^2.8.0",
     "lucide-react": "^0.400.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "sucrase": "^3.35.1"
   },
   "devDependencies": {
     "@types/node": "^22.20.4",
