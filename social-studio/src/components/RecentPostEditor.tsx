@@ -510,11 +510,11 @@ export default function RecentPostEditor({
               )}
             </div>
           ) : imageUrl ? (
-            <div className="relative group/img rounded-xl border border-white/10 overflow-hidden bg-black/20">
+            <div className="relative group/img w-fit max-w-full mx-auto rounded-xl border border-white/10 overflow-hidden bg-black/20">
               <img
                 src={imageUrl}
                 alt={imagePrompt || 'Generated concept'}
-                className="w-full max-h-[360px] object-contain transition-transform duration-500 group-hover/img:scale-[1.01]"
+                className="block w-auto h-auto max-w-full max-h-[min(70vh,640px)] transition-transform duration-500 group-hover/img:scale-[1.01]"
               />
               
               {/* Overlay controls */}
