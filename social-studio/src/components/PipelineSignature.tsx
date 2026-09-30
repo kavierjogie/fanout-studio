@@ -1,27 +1,29 @@
 import { Platform } from '../types'
-import { Linkedin, Instagram, Music2, AtSign, Newspaper } from 'lucide-react'
+import PlatformIcon from './PlatformIcon'
 
 interface PipelineSignatureProps {
   selectedPlatforms?: Platform[]
   onTogglePlatform?: (platform: Platform) => void
   isGenerating?: boolean
+  className?: string
 }
 
 const targets = [
-  { id: 'linkedin' as Platform, label: 'LinkedIn', Icon: Linkedin, y: 40, color: '#0A66C2' },
-  { id: 'instagram' as Platform, label: 'Instagram', Icon: Instagram, y: 100, color: '#E1306C' },
-  { id: 'tiktok' as Platform, label: 'TikTok', Icon: Music2, y: 160, color: '#25F4EE' },
-  { id: 'x' as Platform, label: 'X', Icon: AtSign, y: 220, color: '#FFFFFF' }
+  { id: 'linkedin' as Platform, label: 'LinkedIn', y: 40, color: '#0A66C2' },
+  { id: 'instagram' as Platform, label: 'Instagram', y: 100, color: '#E1306C' },
+  { id: 'tiktok' as Platform, label: 'TikTok', y: 160, color: '#25F4EE' },
+  { id: 'x' as Platform, label: 'X', y: 220, color: '#FFFFFF' }
 ]
 
 export default function PipelineSignature({
   selectedPlatforms,
   onTogglePlatform,
-  isGenerating = false
+  isGenerating = false,
+  className = ''
 }: PipelineSignatureProps) {
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl card-surface bg-grad-panel px-6 py-8">
-      <svg viewBox="0 0 640 260" className="w-full h-auto" role="img" aria-label="One idea transforming into four platform-ready formats">
+    <div className={className}>
+      <svg viewBox="14 8 436 244" className="w-full h-auto" role="img" aria-label="One idea transforming into four platform-ready formats">
         <defs>
           <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="#8B5CF6" />
@@ -44,12 +46,6 @@ export default function PipelineSignature({
             IDEA
           </text>
         </g>
-
-        <foreignObject x={60 - 11} y={130 - 11} width="22" height="22" className="pointer-events-none">
-          <div style={{ color: '#C4B5FD', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 22, height: 22 }}>
-            <Newspaper size={13} />
-          </div>
-        </foreignObject>
 
         {/* dynamic platform lines and nodes */}
         {targets.map((t, i) => {
@@ -134,7 +130,7 @@ export default function PipelineSignature({
                   className="transition-all duration-300 pointer-events-none"
                 >
                   <div style={{ color: iconColor, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 22, height: 22 }}>
-                    <t.Icon size={14} className="transition-colors duration-300 group-hover:text-signal-pink" />
+                    <PlatformIcon platform={t.id} size={14} className="transition-colors duration-300 group-hover:text-signal-pink" />
                   </div>
                 </foreignObject>
               </g>
@@ -143,7 +139,7 @@ export default function PipelineSignature({
               <text
                 x="362"
                 y={t.y + 4}
-                fontSize="12"
+                fontSize="13"
                 fill={labelColor}
                 fontFamily="Inter, sans-serif"
                 fontWeight={isActive ? "600" : "400"}

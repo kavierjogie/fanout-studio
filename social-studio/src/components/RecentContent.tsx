@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { Trash2, ChevronDown, Repeat, Search, X, SlidersHorizontal } from 'lucide-react'
+import { useState, useMemo, useEffect } from 'react'
+import { ChevronDown, Repeat, Search, X, Clock, Sparkles } from 'lucide-react'
 import Card from './ui/Card'
 import Button from './ui/Button'
 import PlatformIcon from './PlatformIcon'
@@ -7,22 +7,32 @@ import { PLATFORMS } from '../data/platforms'
 import { ContentItem, Platform } from '../types'
 import EditablePostCard from './EditablePostCard'
 import Collapse from './ui/Collapse'
+import ConfirmButton from './ui/ConfirmButton'
+import EmptyState from './ui/EmptyState'
 
 export default function RecentContent({
   items,
+  focusItemId,
   onDelete,
   onTransform,
-  onUpdate
+  onUpdate,
+  onCreate
 }: {
   items: ContentItem[]
+  focusItemId?: string | null
   onDelete: (id: string) => void
   onTransform: (item: ContentItem) => void
   onUpdate: (item: ContentItem) => void
+  onCreate: () => void
 }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedPlatforms, setSelectedPlatforms] = useState<Platform[]>([])
   const [limit, setLimit] = useState(8)
-  const [openIds, setOpenIds] = useState<Record<string, boolean>>({})
+  // Arriving from the dashboard opens the chosen item straight away
+  const [openIds, setOpenIds] = useState<Record<string, boolean>>(focusItemId ? { [focusItemId]: true } : {})
+  useEffect(() => {
+    if (focusItemId) document.getElementById(`item-${focusItemId}`)?.scrollIntoView({ block: 'start' })
+  }, [focusItemId])
 
   // Toggle platform selection
   const togglePlatform = (platform: Platform) => {
@@ -124,7 +134,7 @@ export default function RecentContent({
   const hasActiveFilters = searchQuery !== '' || selectedPlatforms.length > 0
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-5xl">
       <header className="mb-8">
         <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Recent content</p>
         <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">Everything you've made</h1>
@@ -133,12 +143,24 @@ export default function RecentContent({
         </p>
       </header>
 
-      {/* Sleek Dark Glassmorphic Search & Filter Bar */}
-      <Card className="mb-6 space-y-4 border border-white/8 bg-white/[0.02] p-4">
+      {items.length === 0 ? (
+        <EmptyState
+          icon={Clock}
+          title="Nothing here yet"
+          description="Everything you generate is saved here automatically, ready to edit, copy or transform."
+        >
+          <Button intent="primary" onClick={onCreate}>
+            <Sparkles size={15} />
+            Create content
+          </Button>
+        </EmptyState>
+      ) : (
+      <>
+      <Card className="mb-6 space-y-4 !p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Search Input */}
           <div className="relative flex-1">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-mist-400" />
+            <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-mist-400" />
             <input
               type="text"
               placeholder="Search by topic..."
@@ -148,13 +170,13 @@ export default function RecentContent({
                 setSearchQuery(e.target.value)
                 setLimit(8) // Reset pagination on search
               }}
-              className="w-full rounded-xl border border-white/10 bg-ink-950/40 py-2.5 pl-10 pr-9 text-sm text-mist-100 placeholder-mist-400 outline-none transition-all duration-150 focus:border-signal-purple/50 focus:bg-ink-950/60"
+              className="field !pl-10 !pr-9"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
                 aria-label="Clear search"
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-mist-400 hover:bg-white/10 hover:text-mist-100"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-mist-400 hover:bg-white/10 hover:text-mist-100"
               >
                 <X size={14} />
               </button>
@@ -182,22 +204,10 @@ export default function RecentContent({
 
         {/* Platform filter tags */}
         <div className="flex flex-wrap items-center gap-2 border-t border-white/5 pt-3">
-          <span className="flex items-center gap-1 text-xs font-mono text-mist-400 mr-1">
-            <SlidersHorizontal size={12} />
-            Filter by:
-          </span>
-          
+          <span className="mr-1 text-xs text-mist-400">Filter</span>
+
           {PLATFORMS.map((platform) => {
             const isSelected = selectedPlatforms.includes(platform.id)
-            const cleanLabel = platform.label
-              .replace(' post', '')
-              .replace(' caption', '')
-              .replace(' script', '')
-              .replace(' article', '')
-              .replace(' set', '')
-              .replace(' copy', '')
-              .replace(' calendar', '')
-
             return (
               <button
                 key={platform.id}
@@ -206,11 +216,11 @@ export default function RecentContent({
                 className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-all duration-150 active:scale-[0.98] ${
                   isSelected
                     ? `platform-active-${platform.id}`
-                    : 'bg-white/5 border-white/10 hover:bg-white/10 text-mist-300'
+                    : 'bg-white/[0.03] border-white/10 hover:bg-white/10 text-mist-300'
                 }`}
               >
                 <PlatformIcon platform={platform.id} size={12} />
-                {cleanLabel}
+                {platform.shortLabel}
               </button>
             )
           })}
@@ -227,36 +237,33 @@ export default function RecentContent({
         </div>
       </Card>
 
-      {items.length === 0 ? (
-        <Card className="text-center text-sm text-mist-400">
-          Nothing here yet. Content you create will show up in this list.
-        </Card>
-      ) : filteredItems.length === 0 ? (
-        <Card className="text-center text-sm text-mist-400 py-8">
-          No content matches your active filters. Try searching for something else or clearing the filters.
-          <button
-            onClick={clearFilters}
-            className="mt-3 block mx-auto text-xs font-semibold text-signal-purple hover:underline"
-          >
+      {filteredItems.length === 0 ? (
+        <EmptyState
+          icon={Search}
+          title="No matches"
+          description="Nothing matches your search and filters. Try a different topic or clear the filters."
+        >
+          <Button intent="ghost" onClick={clearFilters}>
             Clear filters
-          </button>
-        </Card>
+          </Button>
+        </EmptyState>
       ) : (
         <div className="space-y-8">
           {/* Render by Groups */}
           {groupedItems.map(([groupName, groupItems]) => (
             <div key={groupName} className="space-y-3">
-              <h2 className="font-display text-xs font-semibold tracking-wider text-mist-300 uppercase pl-1 border-l-2 border-signal-purple/50">
-                {groupName} ({groupItems.length})
+              <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-mist-400">
+                {groupName}
+                <span className="rounded-full bg-white/8 px-1.5 py-0.5 font-mono text-[11px] font-medium text-mist-300">{groupItems.length}</span>
               </h2>
               
               <div className="space-y-3">
                 {groupItems.map((item) => {
                   const open = !!openIds[item.id]
                   return (
-                    <Card key={item.id} className="!p-0 overflow-hidden">
+                    <Card key={item.id} id={`item-${item.id}`} className="!p-0 overflow-hidden scroll-mt-20 lg:scroll-mt-6">
                       <button
-                        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left hover:bg-white/[0.01] transition-colors duration-150"
+                        className="flex w-full items-center justify-between gap-4 px-4 py-4 text-left hover:bg-white/[0.03] transition-colors duration-150 sm:px-5"
                         onClick={() => toggleItemOpen(item.id)}
                         aria-expanded={open}
                       >
@@ -264,8 +271,9 @@ export default function RecentContent({
                           <p className="truncate font-display text-sm font-medium text-mist-100">{item.topic}</p>
                           <p className="mt-1 text-xs text-mist-400">
                             {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                            {'  ·  '}
+                            {' · '}
                             {item.pieces.length} format{item.pieces.length === 1 ? '' : 's'}
+                            {item.scheduledFor && ' · scheduled'}
                           </p>
                         </div>
                         <div className="flex shrink-0 items-center gap-3">
@@ -281,8 +289,8 @@ export default function RecentContent({
                       </button>
 
                       <Collapse open={open}>
-                        <div className="border-t border-white/8 px-5 py-4 bg-white/[0.005]">
-                          <div className="space-y-4">
+                        <div className="border-t border-white/8 bg-black/20 px-3 pb-4 sm:px-5">
+                          <div>
                             {item.pieces.map((p) => (
                               <EditablePostCard
                                 key={p.platform}
@@ -313,23 +321,15 @@ export default function RecentContent({
                               />
                             ))}
                           </div>
-                          <div className="mt-4 flex items-center gap-3 border-t border-white/8 pt-4">
+                          <div className="mt-4 flex items-center justify-between gap-3">
                             <button
                               onClick={() => onTransform(item)}
-                              className="flex items-center gap-1.5 text-xs font-medium text-signal-purple hover:text-violet-300 transition-colors"
+                              className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-violet-300 hover:bg-signal-purple/10 transition-colors"
                             >
                               <Repeat size={13} />
                               Transform further
                             </button>
-                            <button
-                              onClick={() => {
-                                if (window.confirm("Delete this post and all its formats? This can't be undone.")) onDelete(item.id)
-                              }}
-                              className="flex items-center gap-1.5 text-xs font-medium text-red-400 hover:text-red-300 transition-colors"
-                            >
-                              <Trash2 size={13} />
-                              Delete
-                            </button>
+                            <ConfirmButton label="Delete post" confirmLabel="Delete all formats" onConfirm={() => onDelete(item.id)} />
                           </div>
                         </div>
                       </Collapse>
@@ -353,6 +353,8 @@ export default function RecentContent({
             </div>
           )}
         </div>
+      )}
+      </>
       )}
     </div>
   )

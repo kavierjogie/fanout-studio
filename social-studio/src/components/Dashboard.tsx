@@ -8,41 +8,76 @@ import { ContentItem, View } from '../types'
 
 export default function Dashboard({
   items,
-  setView
+  setView,
+  onOpenItem
 }: {
   items: ContentItem[]
   setView: (v: View) => void
+  onOpenItem: (id: string) => void
 }) {
   const recent = items.slice().sort((a, b) => b.createdAt - a.createdAt).slice(0, 3)
 
   return (
     <div className="mx-auto max-w-5xl">
-      <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Studio</p>
-        <h1 className="mt-2 font-display text-3xl font-semibold text-mist-100 sm:text-4xl">
-          Create once. <span className="text-gradient-hero">Publish everywhere.</span>
-        </h1>
-        <p className="mt-3 max-w-xl text-sm text-mist-400">
-          Start with a single idea and generate every platform-ready format from it — no separate tools, no starting over.
-        </p>
-      </header>
+      <section className="grid items-center gap-6 overflow-hidden rounded-2xl border border-white/8 bg-grad-panel p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:gap-10">
+        <header>
+          <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Studio</p>
+          <h1 className="mt-2 font-display text-3xl font-semibold text-mist-100 sm:text-4xl">
+            Create once. <span className="text-gradient-hero">Publish everywhere.</span>
+          </h1>
+          <p className="mt-3 max-w-md text-sm leading-relaxed text-mist-300">
+            Start with a single idea and generate every platform-ready format from it — no separate tools, no starting over.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button intent="primary" onClick={() => setView('create')}>
+              <Sparkles size={15} />
+              Create content
+            </Button>
+            <Button intent="ghost" onClick={() => setView('library')}>
+              <BookMarked size={15} />
+              Browse prompt library
+            </Button>
+          </div>
+        </header>
+        <PipelineSignature className="mx-auto w-full max-w-sm lg:max-w-none" />
+      </section>
 
-      <PipelineSignature />
-
-      <div className="mt-6 flex flex-wrap gap-3">
-        <Button intent="primary" onClick={() => setView('create')}>
-          <Sparkles size={15} />
-          Create content
-        </Button>
-        <Button intent="ghost" onClick={() => setView('library')}>
-          <BookMarked size={15} />
-          Browse prompt library
-        </Button>
-      </div>
-
-      <div className="mt-10">
+      <div className="mt-8">
         <DashboardCharts items={items} />
       </div>
+
+      {recent.length > 0 && (
+        <div className="mt-10">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="font-display text-lg font-semibold text-mist-100">Pick up where you left off</h2>
+            <button onClick={() => setView('recent')} className="flex items-center gap-1 text-xs text-mist-400 hover:text-mist-100">
+              View all <ArrowRight size={12} />
+            </button>
+          </div>
+          <div className="space-y-2">
+            {recent.map((item) => (
+              <button key={item.id} onClick={() => onOpenItem(item.id)} className="block w-full text-left">
+                <Card className="flex items-center justify-between gap-4 !py-4 transition-colors hover:border-signal-purple/30">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm text-mist-100">{item.topic}</p>
+                    <p className="mt-0.5 text-xs text-mist-400">
+                      {item.pieces.length} format{item.pieces.length === 1 ? '' : 's'}
+                      {item.scheduledFor && ' · scheduled'}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 gap-1">
+                    {item.pieces.slice(0, 4).map((p) => (
+                      <span key={p.platform} className="rounded-md bg-white/5 p-1.5 text-mist-300">
+                        <PlatformIcon platform={p.platform} size={12} />
+                      </span>
+                    ))}
+                  </div>
+                </Card>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <button onClick={() => setView('transform')} className="text-left">
@@ -67,36 +102,6 @@ export default function Dashboard({
           </Card>
         </button>
       </div>
-
-      {recent.length > 0 && (
-        <div className="mt-10">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold text-mist-100">Pick up where you left off</h2>
-            <button onClick={() => setView('recent')} className="flex items-center gap-1 text-xs text-mist-400 hover:text-mist-100">
-              View all <ArrowRight size={12} />
-            </button>
-          </div>
-          <div className="space-y-2">
-            {recent.map((item) => (
-              <button key={item.id} onClick={() => setView('recent')} className="block w-full text-left">
-                <Card className="flex items-center justify-between gap-4 transition-colors hover:border-signal-purple/30">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm text-mist-100">{item.topic}</p>
-                    <p className="mt-0.5 text-xs text-mist-400">{item.pieces.length} formats</p>
-                  </div>
-                  <div className="flex shrink-0 gap-1">
-                    {item.pieces.slice(0, 4).map((p) => (
-                      <span key={p.platform} className="rounded-md bg-white/5 p-1.5 text-mist-300">
-                        <PlatformIcon platform={p.platform} size={12} />
-                      </span>
-                    ))}
-                  </div>
-                </Card>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   )
 }

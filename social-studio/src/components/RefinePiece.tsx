@@ -3,6 +3,7 @@ import { Sparkles } from 'lucide-react'
 import Button from './ui/Button'
 import { Platform, GeneratedPiece } from '../types'
 import { regenerateForPlatform } from '../lib/generator'
+import { toast } from './ui/Toast'
 
 interface RefinePieceProps {
   topic: string
@@ -50,6 +51,7 @@ export default function RefinePiece({
       )
       onSuccess(revised)
       setInstruction('')
+      toast('Draft rewritten')
     } catch (err: any) {
       console.error(err)
       setError(err.message || 'Failed to refine content.')
@@ -73,7 +75,7 @@ export default function RefinePiece({
               type="button"
               disabled={refining}
               onClick={() => handleRefine(s.instruction)}
-              className="rounded-lg bg-white/5 border border-white/5 px-2.5 py-1 text-xs text-mist-400 hover:text-mist-100 hover:border-white/10 transition-colors disabled:opacity-40"
+              className="rounded-lg bg-white/5 border border-white/8 px-2.5 py-1 text-xs text-mist-300 hover:text-mist-100 hover:border-white/20 hover:bg-white/10 transition-colors disabled:opacity-40"
             >
               {s.label}
             </button>
@@ -88,7 +90,7 @@ export default function RefinePiece({
             onChange={(e) => setInstruction(e.target.value)}
             disabled={refining}
             placeholder="e.g., Make it punchier, write a hook, add a call-to-action..."
-            className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs text-mist-100 placeholder:text-mist-400/50 focus:border-signal-purple/50 focus:outline-none disabled:opacity-40"
+            className="field min-w-0 flex-1 !py-2 !text-xs disabled:opacity-40"
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault()
@@ -102,13 +104,14 @@ export default function RefinePiece({
             disabled={!instruction.trim() || refining}
             className="!px-3 !py-1 text-xs whitespace-nowrap"
           >
-            {refining ? 'Refining...' : 'Rewrite'}
+            {refining && <span className="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />}
+            {refining ? 'Rewriting' : 'Rewrite'}
           </Button>
         </div>
       </div>
 
       {error && (
-        <p className="text-xs text-red-400 font-mono">
+        <p role="alert" className="text-xs text-red-300">
           {error}
         </p>
       )}

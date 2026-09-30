@@ -4,15 +4,19 @@ import Card from './ui/Card'
 import Button from './ui/Button'
 import Collapse from './ui/Collapse'
 import ErrorAlert from './ui/ErrorAlert'
+import GeneratingState from './ui/GeneratingState'
+import { toast } from './ui/Toast'
 import PlatformIcon from './PlatformIcon'
 import { PLATFORMS } from '../data/platforms'
-import { PROMPTS } from '../data/prompts'
+import { PROMPTS, CATEGORIES } from '../data/prompts'
 import { Platform, ContentItem, GeneratedPiece, PromptTemplate } from '../types'
 import { transformContent } from '../lib/generator'
 import { uid } from '../lib/storage'
 import RefinePiece from './RefinePiece'
 import EditablePostCard from './EditablePostCard'
 
+
+const promptsByCategory = CATEGORIES.map((category) => ({ category, prompts: PROMPTS.filter((p) => p.category === category) }))
 
 const TONES = [
   { id: 'default', label: 'Natural' },
@@ -47,6 +51,12 @@ export default function CreateContent({
   resultRef.current = result
   const [activeTab, setActiveTab] = useState<Platform | null>(null)
   const [copiedKey, setCopiedKey] = useState<string | null>(null)
+
+  // New results render below the form, so bring them into view when they arrive
+  const resultsRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (result) resultsRef.current?.scrollIntoView({ block: 'start' })
+  }, [result?.id])
 
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -117,6 +127,7 @@ export default function CreateContent({
       setResult(item)
       setActiveTab(pieces[0]?.platform ?? null)
       onSave(item)
+      toast(`${pieces.length} draft${pieces.length === 1 ? '' : 's'} ready`)
     } catch (err: any) {
       console.error(err)
       setError(err.message || 'An error occurred during content generation.')
@@ -140,6 +151,7 @@ export default function CreateContent({
       const latest = resultRef.current
       if (newPieces.length > 0 && latest?.id === result.id) {
         commit({ ...latest, pieces: [...latest.pieces, ...newPieces] })
+        toast(`${PLATFORMS.find((x) => x.id === p)?.label ?? 'Draft'} added`)
       }
     } catch (err: any) {
       console.error(err)
@@ -165,19 +177,18 @@ export default function CreateContent({
   const handleDeletePiece = (platform: Platform) => {
     const latest = resultRef.current
     if (!latest) return
-    const label = PLATFORMS.find((p) => p.id === platform)?.label || platform
     const remaining = latest.pieces.filter((p) => p.platform !== platform)
+    // Confirmation happens inline on the card's delete button
     if (remaining.length === 0) {
-      if (!window.confirm(`Delete this ${label} draft? It's the last one, so the whole post will be removed.`)) return
       resultRef.current = null
       setResult(null)
       setActiveTab(null)
       if (onDelete) onDelete(latest.id)
       return
     }
-    if (!window.confirm(`Delete this ${label} draft? This can't be undone.`)) return
     commit({ ...latest, pieces: remaining })
     setActiveTab(remaining[0].platform)
+    toast('Draft deleted')
   }
 
   const copy = async (key: string, text: string) => {
@@ -191,7 +202,7 @@ export default function CreateContent({
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-5xl">
       <header className="mb-8">
         <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Create content</p>
         <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">
@@ -202,12 +213,15 @@ export default function CreateContent({
         </p>
       </header>
 
-      <Card className="space-y-7">
+      <Card className="sm:!p-6">
+        {/* Locked while generating so the inputs always match the drafts being written */}
+        <fieldset disabled={generating} className="min-w-0 space-y-7 transition-opacity disabled:opacity-60">
         {/* Prompt Template Selector */}
         <div>
           <label htmlFor="prompt-template" className="flex items-center gap-2 font-display text-sm font-semibold text-mist-100 mb-2.5">
             <BookOpen size={16} className="text-signal-purple" />
-            Prompt library template
+            Start from a template
+            <span className="font-body text-xs font-normal text-mist-400">Optional</span>
           </label>
           <select
             id="prompt-template"
@@ -217,13 +231,17 @@ export default function CreateContent({
               setSelectedPrompt(p)
               if (!p && onClearPrompt) onClearPrompt()
             }}
-            className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-mist-100 focus:border-signal-purple/50"
+            className="field"
           >
-            <option value="" className="bg-ink-900">Custom idea (no template)</option>
-            {PROMPTS.map((p) => (
-              <option key={p.id} value={p.id} className="bg-ink-900">
-                [{p.category}] {p.name}
-              </option>
+            <option value="">Custom idea (no template)</option>
+            {promptsByCategory.map(({ category, prompts }) => (
+              <optgroup key={category} label={category}>
+                {prompts.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </div>
@@ -266,7 +284,7 @@ export default function CreateContent({
             onChange={(e) => setTopic(e.target.value)}
             placeholder={selectedPrompt ? "e.g. why companies must offer a 4-day work week" : "e.g. Why we switched to a 4-day work week"}
             rows={3}
-            className="mt-3 w-full resize-none rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-mist-100 placeholder:text-mist-400/60 focus:border-signal-purple/50"
+className="field mt-3 resize-none !py-3 leading-relaxed"
           />
           {selectedPrompt && (
             <div className="mt-3 rounded-xl border border-white/5 bg-white/[0.01] p-3 text-xs text-mist-400">
@@ -338,28 +356,29 @@ export default function CreateContent({
         </div>
 
         {/* Action Button */}
-        <div className="flex items-center gap-2 border-t border-white/8 pt-6">
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-signal-purpleDeep text-[11px] text-white">3</span>
+        <div className="flex flex-wrap items-center gap-3 border-t border-white/8 pt-6">
           <Button intent="primary" onClick={handleGenerate} disabled={!canGenerate}>
-            <Sparkles size={15} />
-            {generating ? 'Generating...' : 'Generate content'}
+            {generating ? (
+              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+            ) : (
+              <Sparkles size={15} />
+            )}
+            {generating ? 'Generating' : selected.length > 1 ? `Generate ${selected.length} drafts` : 'Generate draft'}
           </Button>
           {!canGenerate && !generating && (
-            <span className="text-xs text-mist-400">Add a topic and at least one platform</span>
+            <span className="text-xs text-mist-400">
+              {topic.trim() ? 'Choose at least one platform' : 'Add a topic to get started'}
+            </span>
           )}
         </div>
+        </fieldset>
       </Card>
 
-      {/* Loading Overlay */}
       {generating && (
-        <div className="mt-6 flex flex-col items-center justify-center p-12 card-surface rounded-2xl animate-rise relative overflow-hidden">
-          <div className="absolute inset-0 bg-grad-panel opacity-50 blur-xl"></div>
-          <div className="relative flex flex-col items-center z-10">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-signal-purple/30 border-t-signal-purple"></div>
-            <p className="mt-4 font-display text-base font-semibold text-mist-100 animate-pulse">Crafting your content...</p>
-            <p className="mt-1 text-xs text-mist-400">AI is writing platform-optimized pieces</p>
-          </div>
-        </div>
+        <GeneratingState
+          title={`Writing ${selected.length} draft${selected.length === 1 ? '' : 's'}`}
+          description="Tailoring your idea to each platform. This usually takes a few seconds."
+        />
       )}
 
       {/* Error Alert */}
@@ -367,9 +386,12 @@ export default function CreateContent({
 
       {/* Results View */}
       {result && (
-        <div className="mt-8 animate-rise">
+        <div ref={resultsRef} className="mt-8 scroll-mt-20 animate-rise lg:scroll-mt-6">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <h2 className="font-display text-lg font-semibold text-mist-100">Ready to publish</h2>
+            <div>
+              <h2 className="font-display text-lg font-semibold text-mist-100">Your drafts</h2>
+              <p className="mt-0.5 text-xs text-mist-400">Saved automatically. Edit, refine, or copy each one.</p>
+            </div>
             <Button intent="ghost" onClick={() => goToTransform(result)}>
               <Repeat size={14} />
               Transform into other formats
@@ -534,20 +556,15 @@ export default function CreateContent({
                 onUpdate={(newContent) => updatePiece(piece.platform, { content: newContent })}
                 onUpdateImage={(newFields) => updatePiece(piece.platform, newFields)}
                 onDelete={addingPlatform ? undefined : () => handleDeletePiece(piece.platform)}
+                deleteConfirmLabel={result.pieces.length === 1 ? 'Delete whole post' : 'Confirm delete'}
               />
             ))}
 
           {addingPlatform && activeTab === addingPlatform && (
-            <div className="mt-4 flex flex-col items-center justify-center p-12 card-surface rounded-2xl animate-rise relative overflow-hidden">
-              <div className="absolute inset-0 bg-grad-panel opacity-50 blur-xl animate-pulse"></div>
-              <div className="relative flex flex-col items-center z-10">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-signal-purple/30 border-t-signal-purple"></div>
-                <p className="mt-4 font-display text-sm font-semibold text-mist-100 animate-pulse">
-                  Drafting {PLATFORMS.find((p) => p.id === addingPlatform)?.label || addingPlatform} version...
-                </p>
-                <p className="mt-1 text-xs text-mist-400">AI is rewriting the topic for this platform</p>
-              </div>
-            </div>
+            <GeneratingState
+              title={`Drafting ${PLATFORMS.find((p) => p.id === addingPlatform)?.label || addingPlatform}`}
+              description="Adapting your idea for this platform."
+            />
           )}
         </div>
       )}

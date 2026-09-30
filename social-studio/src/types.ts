@@ -50,6 +50,7 @@ export type View = 'dashboard' | 'create' | 'transform' | 'library' | 'recent' |
 export interface PlatformMeta {
   id: Platform
   label: string
+  shortLabel: string
   accent: 'purple' | 'pink' | 'orange'
   charLimit?: number
   description: string

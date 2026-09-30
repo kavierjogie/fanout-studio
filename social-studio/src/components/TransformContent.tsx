@@ -1,8 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
-import { Repeat, Copy, Check, ChevronDown, Search } from 'lucide-react'
+import { Repeat, Copy, Check, ChevronDown, Search, Sparkles } from 'lucide-react'
 import Card from './ui/Card'
 import Button from './ui/Button'
 import ErrorAlert from './ui/ErrorAlert'
+import EmptyState from './ui/EmptyState'
+import GeneratingState from './ui/GeneratingState'
+import { toast } from './ui/Toast'
 import PlatformIcon from './PlatformIcon'
 import { PLATFORMS } from '../data/platforms'
 import { ContentItem, Platform } from '../types'
@@ -14,11 +17,13 @@ import EditablePostCard from './EditablePostCard'
 export default function TransformContent({
   items,
   activeItem,
-  onUpdate
+  onUpdate,
+  onCreate
 }: {
   items: ContentItem[]
   activeItem: ContentItem | null
   onUpdate: (item: ContentItem) => void
+  onCreate: () => void
 }) {
   const [selectedId, setSelectedId] = useState<string>(activeItem?.id ?? items[0]?.id ?? '')
   const [targets, setTargets] = useState<Platform[]>([])
@@ -79,6 +84,7 @@ export default function TransformContent({
       const updated: ContentItem = { ...current, pieces: [...current.pieces, ...newPieces] }
       onUpdate(updated)
       setTargets([])
+      toast(`${newPieces.length} new format${newPieces.length === 1 ? '' : 's'} added`)
     } catch (err: any) {
       console.error(err)
       setError(err.message || 'An error occurred during content transformation.')
@@ -99,18 +105,27 @@ export default function TransformContent({
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-2xl text-center">
-        <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Transform content</p>
-        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100">Nothing to transform yet</h1>
-        <p className="mt-3 text-sm text-mist-400">
-          Create a piece of content first, then come back here to turn it into more formats.
-        </p>
+      <div className="mx-auto max-w-5xl">
+        <header className="mb-8">
+          <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Transform content</p>
+          <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">One idea, more platforms</h1>
+        </header>
+        <EmptyState
+          icon={Repeat}
+          title="Nothing to transform yet"
+          description="Create a piece of content first, then come back here to turn it into more formats."
+        >
+          <Button intent="primary" onClick={onCreate}>
+            <Sparkles size={15} />
+            Create content
+          </Button>
+        </EmptyState>
       </div>
     )
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-5xl">
       <header className="mb-8">
         <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Transform content</p>
         <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">
@@ -121,9 +136,9 @@ export default function TransformContent({
         </p>
       </header>
 
-      <Card className="space-y-6">
+      <Card className="space-y-6 sm:!p-6">
         <div>
-          <p id="source-label" className="mb-2 text-sm font-semibold text-mist-100">Source content</p>
+          <p id="source-label" className="mb-2 font-display text-sm font-semibold text-mist-100">Source content</p>
           <div className="relative" ref={dropdownRef} onKeyDown={(e) => e.key === 'Escape' && setDropdownOpen(false)}>
             <button
               type="button"
@@ -131,7 +146,7 @@ export default function TransformContent({
               disabled={transforming}
               aria-expanded={dropdownOpen}
               aria-labelledby="source-label"
-              className="flex items-center justify-between w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-mist-100 focus:outline-none focus:border-signal-purple/50 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="field flex items-center justify-between text-left disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <span className="truncate">{current?.topic ?? 'Select source content'}</span>
               <ChevronDown className={`ml-2 h-4 w-4 shrink-0 transition-transform text-mist-400 ${dropdownOpen ? 'rotate-180' : ''}`} />
@@ -189,9 +204,10 @@ export default function TransformContent({
 
         {current && (
           <>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="mr-1 text-xs text-mist-400">Already has</span>
               {current.pieces.map((p) => (
-                <span key={p.platform} className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs text-mist-400">
+                <span key={p.platform} className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs text-mist-300">
                   <PlatformIcon platform={p.platform} size={12} />
                   {PLATFORMS.find((pl) => pl.id === p.platform)?.label || p.platform}
                 </span>
@@ -200,7 +216,7 @@ export default function TransformContent({
 
             {available.length > 0 ? (
               <div>
-                <p className="mb-2 text-sm font-semibold text-mist-100">Transform into</p>
+                <p className="mb-2.5 font-display text-sm font-semibold text-mist-100">Transform into</p>
                 <div className="flex flex-wrap gap-2">
                   {available.map((p) => {
                     const active = targets.includes(p.id)
@@ -222,10 +238,19 @@ export default function TransformContent({
                     )
                   })}
                 </div>
-                <Button intent="primary" className="mt-4" onClick={handleTransform} disabled={targets.length === 0 || transforming}>
-                  <Repeat size={14} />
-                  {transforming ? 'Transforming...' : 'Transform'}
-                </Button>
+                <div className="mt-5 flex flex-wrap items-center gap-3">
+                  <Button intent="primary" onClick={handleTransform} disabled={targets.length === 0 || transforming}>
+                    {transforming ? (
+                      <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    ) : (
+                      <Repeat size={14} />
+                    )}
+                    {transforming ? 'Transforming' : targets.length > 1 ? `Transform into ${targets.length} formats` : 'Transform'}
+                  </Button>
+                  {targets.length === 0 && !transforming && (
+                    <span className="text-xs text-mist-400">Choose at least one format</span>
+                  )}
+                </div>
               </div>
             ) : (
               <p className="text-sm text-mist-400">This piece already exists in every supported format.</p>
@@ -234,16 +259,11 @@ export default function TransformContent({
         )}
       </Card>
 
-      {/* Loading Overlay */}
       {transforming && (
-        <div className="mt-6 flex flex-col items-center justify-center p-12 card-surface rounded-2xl animate-rise relative overflow-hidden">
-          <div className="absolute inset-0 bg-grad-panel opacity-50 blur-xl"></div>
-          <div className="relative flex flex-col items-center z-10">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-signal-purple/30 border-t-signal-purple"></div>
-            <p className="mt-4 font-display text-base font-semibold text-mist-100 animate-pulse">Transforming your content...</p>
-            <p className="mt-1 text-xs text-mist-400">AI is rewriting the topic for new platforms</p>
-          </div>
-        </div>
+        <GeneratingState
+          title={`Writing ${targets.length} new format${targets.length === 1 ? '' : 's'}`}
+          description="Adapting your idea and its existing drafts for the new platforms."
+        />
       )}
 
       {/* Error Alert */}

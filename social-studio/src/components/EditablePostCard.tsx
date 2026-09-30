@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
-import { Copy, Check, Download, RefreshCw, AlertCircle, Trash2, Eye, Pencil, Image as ImageIcon } from 'lucide-react'
+import { Copy, Check, Download, RefreshCw, AlertCircle, Eye, Pencil, Sparkles, Image as ImageIcon } from 'lucide-react'
 import Card from './ui/Card'
 import PlatformIcon from './PlatformIcon'
 import RefinePiece from './RefinePiece'
 import CodeRunner from './CodeRunner'
+import ConfirmButton from './ui/ConfirmButton'
 import { platformMeta } from '../data/platforms'
 import { Platform, GeneratedPiece } from '../types'
 
@@ -20,6 +21,7 @@ interface EditablePostCardProps {
   onUpdate: (newContent: string) => void
   onUpdateImage?: (newFields: Partial<GeneratedPiece>) => void
   onDelete?: () => void
+  deleteConfirmLabel?: string
   showHeaderLabel?: boolean
 }
 
@@ -167,6 +169,7 @@ export default function EditablePostCard({
   onUpdate,
   onUpdateImage,
   onDelete,
+  deleteConfirmLabel,
   showHeaderLabel = false
 }: EditablePostCardProps) {
   const [copied, setCopied] = useState(false)
@@ -279,7 +282,7 @@ export default function EditablePostCard({
   const showCodePreview = platform === 'code' && parsedCode && parsedCode.code && !isEditingCode
 
   return (
-    <Card className="mt-4 flex flex-col gap-4 relative overflow-hidden">
+    <Card className="mt-4 flex flex-col gap-4 relative overflow-hidden !p-4 sm:!p-5">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-white/8 pb-3 select-none">
         {showHeaderLabel ? (
@@ -292,11 +295,11 @@ export default function EditablePostCard({
             Generated draft
           </span>
         )}
-        <div className="flex items-center">
+        <div className="-my-1 -mr-2 flex flex-wrap items-center justify-end gap-1">
           {platform === 'code' && (
             <button
               onClick={() => setIsEditingCode(!isEditingCode)}
-              className="flex items-center gap-1.5 text-xs font-medium text-mist-400 hover:text-mist-100 transition-colors mr-4"
+              className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-mist-400 hover:bg-white/5 hover:text-mist-100 transition-colors"
             >
               {isEditingCode ? <Eye size={13} /> : <Pencil size={13} />}
               {isEditingCode ? 'Preview snippet' : 'Edit markdown'}
@@ -304,7 +307,7 @@ export default function EditablePostCard({
           )}
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1.5 text-xs font-medium text-mist-300 hover:text-mist-100 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-mist-300 hover:bg-white/5 hover:text-mist-100 transition-colors"
           >
             {copied ? (
               <>
@@ -318,15 +321,7 @@ export default function EditablePostCard({
               </>
             )}
           </button>
-          {onDelete && (
-            <button
-              onClick={onDelete}
-              className="ml-4 flex items-center gap-1.5 text-xs font-medium text-mist-400 hover:text-red-400 transition-colors"
-            >
-              <Trash2 size={13} />
-              <span>Delete</span>
-            </button>
-          )}
+          {onDelete && <ConfirmButton label="Delete" confirmLabel={deleteConfirmLabel} onConfirm={onDelete} />}
         </div>
       </div>
 
@@ -364,7 +359,7 @@ export default function EditablePostCard({
           onChange={(e) => onUpdate(e.target.value)}
           aria-label={`${meta?.label || platform} draft`}
           placeholder="Edit generated draft..."
-          className="w-full bg-transparent border border-white/5 hover:border-white/10 focus:border-white/20 rounded-lg p-2 resize-none overflow-hidden outline-none focus:ring-0 font-body text-sm leading-relaxed text-mist-100 placeholder:text-mist-400/50 hover:bg-white/[0.01] focus:bg-white/[0.02] transition-colors"
+          className="w-full bg-transparent border border-white/5 hover:border-white/10 focus:border-white/20 rounded-lg p-3 resize-none overflow-hidden outline-none focus:ring-0 font-body text-sm leading-relaxed text-mist-100 placeholder:text-mist-400/50 hover:bg-white/[0.01] focus:bg-white/[0.02] transition-colors"
         />
       )}
 
@@ -373,14 +368,13 @@ export default function EditablePostCard({
         <div className="mt-3 border-t border-white/5 pt-3">
           <p className="text-xs font-semibold text-mist-300 flex items-center gap-1.5 mb-2 select-none">
             <ImageIcon size={13} />
-            AI visual asset
+            Image
           </p>
           
           {imageGenerating ? (
-            <div className="w-full aspect-[16/9] rounded-xl border border-white/10 bg-white/[0.01] flex flex-col items-center justify-center relative overflow-hidden animate-pulse select-none">
-              <div className="absolute inset-0 bg-grad-panel opacity-20 blur-xl"></div>
-              <RefreshCw size={20} className="text-signal-purple animate-spin" />
-              <span className="mt-2 text-xs text-mist-300 font-medium">Generating visual prompt & rendering...</span>
+            <div role="status" className="skeleton flex h-44 w-full flex-col items-center justify-center !rounded-xl border border-white/10 select-none">
+              <RefreshCw size={18} className="text-signal-purple animate-spin" />
+              <span className="mt-2 text-xs text-mist-300 font-medium">Generating image…</span>
             </div>
           ) : imageError ? (
             <div className="w-full p-4 rounded-xl border border-red-500/20 bg-red-500/5 flex flex-col sm:flex-row items-center justify-between gap-3 select-none">
@@ -401,45 +395,43 @@ export default function EditablePostCard({
               <img
                 src={imageUrl}
                 alt={imagePrompt || 'Generated concept'}
-                className="block w-auto h-auto max-w-full max-h-[min(70vh,640px)] transition-transform duration-500 group-hover/img:scale-[1.01]"
+                className="block w-auto h-auto max-w-full max-h-[min(70vh,640px)]"
               />
               
-              {/* Overlay controls */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/50 opacity-0 group-hover/img:opacity-100 group-focus-within/img:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-3 select-none">
-                <div className="flex justify-end gap-2">
-                  <button
-                    onClick={handleRegenerateImage}
-                    className="flex items-center gap-1 rounded-lg bg-black/70 hover:bg-black/90 border border-white/10 px-2.5 py-1.5 text-xs font-semibold text-mist-100 transition-colors"
-                  >
-                    <RefreshCw size={12} />
-                    Regenerate
-                  </button>
-                  <button
-                    onClick={handleDownloadImage}
-                    className="flex items-center gap-1 rounded-lg bg-signal-purple hover:bg-signal-purple/85 px-2.5 py-1.5 text-xs font-semibold text-white transition-colors shadow-lg"
-                  >
-                    <Download size={12} />
-                    Download
-                  </button>
-                </div>
-                
-                {imagePrompt && (
-                  <div className="bg-black/50 backdrop-blur-sm border border-white/5 rounded-lg p-2.5">
-                    <p className="font-mono text-[11px] uppercase tracking-wider text-signal-purple mb-0.5">Visual prompt</p>
-                    <p className="text-xs text-mist-300 line-clamp-2 leading-relaxed">{imagePrompt}</p>
-                  </div>
-                )}
+              {/* Actions stay visible; the prompt caption appears on hover, focus, or touch */}
+              <div className="absolute right-3 top-3 flex gap-2 select-none">
+                <button
+                  onClick={handleRegenerateImage}
+                  className="flex items-center gap-1 rounded-lg bg-black/70 hover:bg-black/90 border border-white/10 px-2.5 py-1.5 text-xs font-semibold text-mist-100 backdrop-blur-sm transition-colors"
+                >
+                  <RefreshCw size={12} />
+                  Regenerate
+                </button>
+                <button
+                  onClick={handleDownloadImage}
+                  className="flex items-center gap-1 rounded-lg bg-signal-purpleDeep hover:brightness-110 px-2.5 py-1.5 text-xs font-semibold text-white transition-all shadow-lg"
+                >
+                  <Download size={12} />
+                  Download
+                </button>
               </div>
+
+              {imagePrompt && (
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-3 pt-12 opacity-0 transition-opacity duration-200 group-hover/img:opacity-100 group-focus-within/img:opacity-100 [@media(hover:none)]:opacity-100 select-none">
+                  <p className="font-mono text-[11px] uppercase tracking-wider text-violet-300 mb-0.5">Image prompt</p>
+                  <p className="text-xs text-mist-100 line-clamp-2 leading-relaxed">{imagePrompt}</p>
+                </div>
+              )}
             </div>
           ) : (
-            <div className="w-full aspect-[16/9] rounded-xl border border-dashed border-white/15 bg-white/[0.01] flex flex-col items-center justify-center select-none group/placeholder">
-              <span className="text-xs text-mist-400">No image generated yet</span>
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-dashed border-white/15 px-4 py-3 select-none">
+              <span className="text-xs text-mist-400">No image yet. Generate one to go with this draft.</span>
               <button
                 onClick={handleRegenerateImage}
-                className="mt-2 flex items-center gap-1 rounded-lg bg-white/5 border border-white/10 hover:border-white/10 group-hover/placeholder:border-white/20 px-3 py-1.5 text-xs font-semibold text-mist-300 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-mist-100 transition-colors hover:bg-white/10"
               >
-                <RefreshCw size={11} className="group-hover/placeholder:rotate-180 transition-transform duration-500" />
-                Generate AI image
+                <Sparkles size={12} className="text-signal-purple" />
+                Generate image
               </button>
             </div>
           )}
