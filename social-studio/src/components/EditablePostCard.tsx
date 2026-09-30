@@ -3,6 +3,7 @@ import { Copy, Check, Download, RefreshCw, AlertCircle, Trash2, Eye, Pencil, Ima
 import Card from './ui/Card'
 import PlatformIcon from './PlatformIcon'
 import RefinePiece from './RefinePiece'
+import CodeRunner from './CodeRunner'
 import { platformMeta } from '../data/platforms'
 import { Platform, GeneratedPiece } from '../types'
 
@@ -339,6 +340,7 @@ export default function EditablePostCard({
             <p className="text-sm leading-relaxed text-mist-100 font-body">{parsedCode.explanation}</p>
           )}
           <CodeTerminal code={parsedCode.code} language={parsedCode.language} />
+          <CodeRunner code={parsedCode.code} language={parsedCode.language} />
           {parsedCode.takeaways && (
             <div className="text-sm leading-relaxed text-mist-300 mt-2">
               {parsedCode.takeaways.split('\n').map((line, i) => {

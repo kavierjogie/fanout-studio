@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Copy, Check, Edit2, Save, X, Download, RefreshCw, AlertCircle } from 'lucide-react'
 import PlatformIcon from './PlatformIcon'
+import CodeRunner from './CodeRunner'
 import { platformMeta } from '../data/platforms'
 import { Platform, GeneratedPiece } from '../types'
 
@@ -449,6 +450,7 @@ export default function RecentPostEditor({
             <p className="text-sm leading-relaxed text-mist-100 font-body">{parsedCode.explanation}</p>
           )}
           <CodeTerminal code={parsedCode.code} language={parsedCode.language} />
+          <CodeRunner code={parsedCode.code} language={parsedCode.language} />
           {parsedCode.takeaways && (
             <div className="text-sm leading-relaxed text-mist-300 mt-2">
               {parsedCode.takeaways.split('\n').map((line, i) => {
