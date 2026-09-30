@@ -5,7 +5,8 @@ import Button from './ui/Button'
 import PlatformIcon from './PlatformIcon'
 import { PLATFORMS } from '../data/platforms'
 import { ContentItem, Platform } from '../types'
-import RecentPostEditor from './RecentPostEditor'
+import EditablePostCard from './EditablePostCard'
+import Collapse from './ui/Collapse'
 
 export default function RecentContent({
   items,
@@ -133,7 +134,7 @@ export default function RecentContent({
       </header>
 
       {/* Sleek Dark Glassmorphic Search & Filter Bar */}
-      <Card className="mb-6 space-y-4 border border-white/8 bg-white/[0.02] p-4 backdrop-blur-md">
+      <Card className="mb-6 space-y-4 border border-white/8 bg-white/[0.02] p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Search Input */}
           <div className="relative flex-1">
@@ -141,6 +142,7 @@ export default function RecentContent({
             <input
               type="text"
               placeholder="Search by topic..."
+              aria-label="Search by topic"
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value)
@@ -151,6 +153,7 @@ export default function RecentContent({
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
                 className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-mist-400 hover:bg-white/10 hover:text-mist-100"
               >
                 <X size={14} />
@@ -165,14 +168,14 @@ export default function RecentContent({
               disabled={visibleItems.length === 0}
               className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-xs font-medium text-mist-300 transition-all hover:bg-white/10 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none"
             >
-              Expand All
+              Expand all
             </button>
             <button
               onClick={collapseAll}
               disabled={visibleItems.length === 0}
               className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-xs font-medium text-mist-300 transition-all hover:bg-white/10 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none"
             >
-              Collapse All
+              Collapse all
             </button>
           </div>
         </div>
@@ -199,6 +202,7 @@ export default function RecentContent({
               <button
                 key={platform.id}
                 onClick={() => togglePlatform(platform.id)}
+                aria-pressed={isSelected}
                 className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-all duration-150 active:scale-[0.98] ${
                   isSelected
                     ? `platform-active-${platform.id}`
@@ -254,6 +258,7 @@ export default function RecentContent({
                       <button
                         className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left hover:bg-white/[0.01] transition-colors duration-150"
                         onClick={() => toggleItemOpen(item.id)}
+                        aria-expanded={open}
                       >
                         <div className="min-w-0">
                           <p className="truncate font-display text-sm font-medium text-mist-50">{item.topic}</p>
@@ -275,11 +280,11 @@ export default function RecentContent({
                         </div>
                       </button>
 
-                      {open && (
-                        <div className="animate-rise border-t border-white/8 px-5 py-4 bg-white/[0.005]">
+                      <Collapse open={open}>
+                        <div className="border-t border-white/8 px-5 py-4 bg-white/[0.005]">
                           <div className="space-y-4">
                             {item.pieces.map((p) => (
-                              <RecentPostEditor
+                              <EditablePostCard
                                 key={p.platform}
                                 platform={p.platform}
                                 content={p.content}
@@ -289,6 +294,8 @@ export default function RecentContent({
                                 imageError={p.imageError}
                                 topic={item.topic}
                                 tone={item.tone}
+                                existingPieces={item.pieces}
+                                showHeaderLabel
                                 onUpdate={(newContent) => {
                                   const updatedPieces = item.pieces.map((piece) =>
                                     piece.platform === p.platform ? { ...piece, content: newContent } : piece
@@ -315,15 +322,17 @@ export default function RecentContent({
                               Transform further
                             </button>
                             <button
-                              onClick={() => onDelete(item.id)}
-                              className="flex items-center gap-1.5 text-xs font-medium text-mist-400 hover:text-red-400 transition-colors"
+                              onClick={() => {
+                                if (window.confirm("Delete this post and all its formats? This can't be undone.")) onDelete(item.id)
+                              }}
+                              className="flex items-center gap-1.5 text-xs font-medium text-red-400 hover:text-red-300 transition-colors"
                             >
                               <Trash2 size={13} />
                               Delete
                             </button>
                           </div>
                         </div>
-                      )}
+                      </Collapse>
                     </Card>
                   )
                 })}
@@ -339,7 +348,7 @@ export default function RecentContent({
                 onClick={() => setLimit(prev => prev + 8)}
                 className="w-full max-w-xs border border-white/10 hover:border-signal-purple/30 hover:bg-signal-purple/5 transition-all text-mist-200"
               >
-                Load More Content ({filteredItems.length - limit} remaining)
+                Load more ({filteredItems.length - limit} remaining)
               </Button>
             </div>
           )}

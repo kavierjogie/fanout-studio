@@ -78,19 +78,21 @@ export default function Dashboard({
           </div>
           <div className="space-y-2">
             {recent.map((item) => (
-              <Card key={item.id} className="flex items-center justify-between">
-                <div className="min-w-0">
-                  <p className="truncate text-sm text-mist-100">{item.topic}</p>
-                  <p className="mt-0.5 text-xs text-mist-400">{item.pieces.length} formats</p>
-                </div>
-                <div className="flex shrink-0 gap-1">
-                  {item.pieces.slice(0, 4).map((p) => (
-                    <span key={p.platform} className="rounded-md bg-white/5 p-1.5 text-mist-300">
-                      <PlatformIcon platform={p.platform} size={12} />
-                    </span>
-                  ))}
-                </div>
-              </Card>
+              <button key={item.id} onClick={() => setView('recent')} className="block w-full text-left">
+                <Card className="flex items-center justify-between gap-4 transition-colors hover:border-signal-purple/30">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm text-mist-100">{item.topic}</p>
+                    <p className="mt-0.5 text-xs text-mist-400">{item.pieces.length} formats</p>
+                  </div>
+                  <div className="flex shrink-0 gap-1">
+                    {item.pieces.slice(0, 4).map((p) => (
+                      <span key={p.platform} className="rounded-md bg-white/5 p-1.5 text-mist-300">
+                        <PlatformIcon platform={p.platform} size={12} />
+                      </span>
+                    ))}
+                  </div>
+                </Card>
+              </button>
             ))}
           </div>
         </div>

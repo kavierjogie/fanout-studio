@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { Repeat, Copy, Check, ChevronDown, Search } from 'lucide-react'
 import Card from './ui/Card'
 import Button from './ui/Button'
+import ErrorAlert from './ui/ErrorAlert'
 import PlatformIcon from './PlatformIcon'
 import { PLATFORMS } from '../data/platforms'
 import { ContentItem, Platform } from '../types'
@@ -122,25 +123,27 @@ export default function TransformContent({
 
       <Card className="space-y-6">
         <div>
-          <label className="mb-2 block text-sm font-semibold text-mist-100">Source content</label>
-          <div className="relative" ref={dropdownRef}>
+          <p id="source-label" className="mb-2 text-sm font-semibold text-mist-100">Source content</p>
+          <div className="relative" ref={dropdownRef} onKeyDown={(e) => e.key === 'Escape' && setDropdownOpen(false)}>
             <button
               type="button"
               onClick={() => setDropdownOpen(!dropdownOpen)}
               disabled={transforming}
+              aria-expanded={dropdownOpen}
+              aria-labelledby="source-label"
               className="flex items-center justify-between w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-mist-50 focus:outline-none focus:border-signal-pink/50 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <span className="truncate">{current?.topic ?? 'Select source content'}</span>
               <ChevronDown className={`ml-2 h-4 w-4 shrink-0 transition-transform text-mist-400 ${dropdownOpen ? 'rotate-180' : ''}`} />
             </button>
 
-            {dropdownOpen && (
-              <div className="absolute z-50 w-full mt-2 bg-ink-950 border border-white/10 rounded-xl shadow-2xl backdrop-blur-md overflow-hidden animate-rise">
+              <div data-open={dropdownOpen} className="popover absolute z-50 w-full mt-2 bg-ink-950 border border-white/10 rounded-xl shadow-2xl overflow-hidden">
                 <div className="flex items-center gap-2 border-b border-white/10 px-3 py-2.5">
                   <Search className="h-4 w-4 text-mist-400 shrink-0" />
                   <input
                     type="text"
                     placeholder="Search content..."
+                    aria-label="Search content"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full bg-transparent text-sm text-mist-50 outline-none placeholder:text-mist-500"
@@ -181,7 +184,6 @@ export default function TransformContent({
                   )}
                 </div>
               </div>
-            )}
           </div>
         </div>
 
@@ -198,7 +200,7 @@ export default function TransformContent({
 
             {available.length > 0 ? (
               <div>
-                <label className="mb-2 block text-sm font-semibold text-mist-100">Transform into</label>
+                <p className="mb-2 text-sm font-semibold text-mist-100">Transform into</p>
                 <div className="flex flex-wrap gap-2">
                   {available.map((p) => {
                     const active = targets.includes(p.id)
@@ -206,6 +208,7 @@ export default function TransformContent({
                       <button
                         key={p.id}
                         onClick={() => toggle(p.id)}
+                        aria-pressed={active}
                         disabled={transforming}
                         className={`flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                           active
@@ -244,19 +247,7 @@ export default function TransformContent({
       )}
 
       {/* Error Alert */}
-      {error && (
-        <div className="mt-6 border border-red-500/30 bg-red-500/10 rounded-2xl p-5 text-sm animate-rise flex flex-col gap-2">
-          <div className="flex justify-between items-center">
-            <h4 className="font-semibold text-red-300 flex items-center gap-1.5">
-              ❌ Content Transformation Failed
-            </h4>
-            <button onClick={() => setError(null)} className="text-mist-400 hover:text-mist-100" aria-label="Dismiss error">
-              ✕
-            </button>
-          </div>
-          <p className="text-xs text-red-200 leading-relaxed font-mono whitespace-pre-wrap">{error}</p>
-        </div>
-      )}
+      {error && <ErrorAlert title="Couldn't transform your content" message={error} onDismiss={() => setError(null)} />}
 
       {current && (
         <div className="mt-8 space-y-4">

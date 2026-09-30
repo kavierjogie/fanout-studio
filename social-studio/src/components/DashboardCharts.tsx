@@ -189,7 +189,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
         <Card className="flex flex-col justify-between p-4 transition-all duration-300 hover:border-white/12">
           <div>
             <span className="flex items-center gap-1.5 text-xs text-mist-400">
-              <Lightbulb size={13} className="text-signal-purple" /> Ideas Created
+              <Lightbulb size={13} className="text-signal-purple" /> Ideas created
             </span>
             <p className="mt-2 font-display text-2xl font-semibold text-mist-50">{totalIdeas}</p>
           </div>
@@ -205,7 +205,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
         <Card className="flex flex-col justify-between p-4 transition-all duration-300 hover:border-white/12">
           <div>
             <span className="flex items-center gap-1.5 text-xs text-mist-400">
-              <Layers size={13} className="text-signal-pink" /> Pieces Generated
+              <Layers size={13} className="text-signal-pink" /> Pieces generated
             </span>
             <p className="mt-2 font-display text-2xl font-semibold text-mist-50">{totalPieces}</p>
           </div>
@@ -226,7 +226,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
           <div className="flex items-start justify-between">
             <div>
               <span className="flex items-center gap-1.5 text-xs text-mist-400">
-                <CheckCircle2 size={13} className="text-emerald-400" /> Channels Active
+                <CheckCircle2 size={13} className="text-emerald-400" /> Channels active
               </span>
               <p className="mt-2 font-display text-xl font-semibold text-mist-50">
                 {activePlatformsCount} <span className="text-xs font-normal text-mist-400">/ {PLATFORMS.length}</span>
@@ -247,12 +247,12 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                   className="transition-all duration-500 ease-out"
                 />
               </svg>
-              <span className="absolute text-[9px] font-semibold text-emerald-400">
+              <span className="absolute text-[11px] font-semibold text-emerald-400">
                 {Math.round((activePlatformsCount / PLATFORMS.length) * 100)}%
               </span>
             </div>
           </div>
-          <p className="mt-2 text-[10px] text-mist-500 truncate">
+          <p className="mt-2 text-[11px] text-mist-500 truncate">
             {activePlatformsCount > 0 ? 'Good channel diversification' : 'No active channels yet'}
           </p>
         </Card>
@@ -261,11 +261,11 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
         <Card className="flex flex-col justify-between p-4 transition-all duration-300 hover:border-white/12">
           <div>
             <span className="flex items-center gap-1.5 text-xs text-mist-400">
-              <Clock size={13} className="text-signal-orange" /> Scheduled Queue
+              <Clock size={13} className="text-signal-orange" /> Scheduled queue
             </span>
             <p className="mt-2 font-display text-2xl font-semibold text-mist-50">{scheduledCount}</p>
           </div>
-          <div className="mt-3 text-[10px] text-mist-400 truncate">
+          <div className="mt-3 text-[11px] text-mist-400 truncate">
             {nextScheduledItem ? (
               <span>
                 Next:{' '}
@@ -289,7 +289,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
         <Card className="relative flex flex-col justify-between border border-white/6 hover:border-white/10 transition-all duration-300">
           <div>
             <div className="flex items-center justify-between">
-              <h3 className="font-display text-sm font-semibold text-mist-100">Format Distribution</h3>
+              <h3 className="font-display text-sm font-semibold text-mist-100">Format distribution</h3>
               <span title="Percentage breakdown of generated post types" className="cursor-help">
                 <Info size={13} className="text-mist-500" />
               </span>
@@ -332,14 +332,14 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                     <>
                       <PlatformIcon platform={hoveredSliceInfo.id} size={14} className="opacity-80" />
                       <span className="mt-0.5 text-xs font-semibold text-mist-100">{hoveredSliceInfo.count} posts</span>
-                      <span className="text-[9px] font-medium text-mist-400">
+                      <span className="text-[11px] font-medium text-mist-400">
                         {Math.round(hoveredSliceInfo.percentage * 100)}%
                       </span>
                     </>
                   ) : (
                     <>
                       <span className="font-display text-base font-bold text-mist-50">{totalPieces}</span>
-                      <span className="text-[9px] font-mono uppercase tracking-wider text-mist-400">Pieces</span>
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-mist-400">Pieces</span>
                     </>
                   )}
                 </div>
@@ -364,7 +364,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                       <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: slice.color.stroke }} />
                       <span className="truncate">{slice.label}</span>
                     </div>
-                    <span className="font-mono font-medium text-[10px] ml-2 text-mist-400">
+                    <span className="font-mono font-medium text-[11px] ml-2 text-mist-400">
                       {slice.count} ({Math.round(slice.percentage * 100)}%)
                     </span>
                   </button>
@@ -378,12 +378,12 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
         <Card className="relative flex flex-col justify-between border border-white/6 hover:border-white/10 transition-all duration-300">
           <div>
             <div className="flex items-center justify-between">
-              <h3 className="font-display text-sm font-semibold text-mist-100">Activity Timeline</h3>
+              <h3 className="font-display text-sm font-semibold text-mist-100">Activity timeline</h3>
               <span title="Posts created and scheduled over the last 7 days" className="cursor-help">
                 <Info size={13} className="text-mist-500" />
               </span>
             </div>
-            <p className="text-[11px] text-mist-400">Created vs. Scheduled activity over the last 7 days.</p>
+            <p className="text-[11px] text-mist-400">Created vs. scheduled activity over the last 7 days.</p>
           </div>
 
           <div className="relative my-4 flex h-32 w-full flex-col justify-end">
@@ -499,12 +499,12 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                   minWidth: '100px'
                 }}
               >
-                <p className="text-[10px] font-bold text-mist-50">{last7DaysData[hoveredActivityIndex].dateLabel}</p>
-                <div className="mt-1 flex items-center gap-1 text-[10px] text-mist-300">
+                <p className="text-[11px] font-bold text-mist-50">{last7DaysData[hoveredActivityIndex].dateLabel}</p>
+                <div className="mt-1 flex items-center gap-1 text-[11px] text-mist-300">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#8B5CF6]" />
                   <span>Created: {last7DaysData[hoveredActivityIndex].created}</span>
                 </div>
-                <div className="flex items-center gap-1 text-[10px] text-mist-300">
+                <div className="flex items-center gap-1 text-[11px] text-mist-300">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#F97316]" />
                   <span>Scheduled: {last7DaysData[hoveredActivityIndex].scheduled}</span>
                 </div>
@@ -514,7 +514,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
           </div>
 
           {/* Legend */}
-          <div className="flex justify-center gap-4 text-[10px] text-mist-400">
+          <div className="flex justify-center gap-4 text-[11px] text-mist-400">
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-[#8B5CF6]" /> Created
             </span>
@@ -528,7 +528,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
         <Card className="relative flex flex-col justify-between border border-white/6 hover:border-white/10 transition-all duration-300 md:col-span-2 lg:col-span-1">
           <div>
             <div className="flex items-center justify-between">
-              <h3 className="font-display text-sm font-semibold text-mist-100">Content Density</h3>
+              <h3 className="font-display text-sm font-semibold text-mist-100">Content density</h3>
               <span title="Average generated word count per platform format" className="cursor-help">
                 <Info size={13} className="text-mist-500" />
               </span>
@@ -558,7 +558,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                         <PlatformIcon platform={stat.id} size={12} />
                         <span className="font-medium text-mist-200 truncate">{stat.label}</span>
                       </div>
-                      <span className="font-mono text-[10px] text-mist-400 font-semibold shrink-0">
+                      <span className="font-mono text-[11px] text-mist-400 font-semibold shrink-0">
                         {stat.avgWords} words
                       </span>
                     </div>
@@ -584,10 +584,10 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                           minWidth: '120px'
                         }}
                       >
-                        <p className="text-[10px] font-bold text-mist-50">{stat.label}</p>
-                        <p className="text-[9px] text-mist-300">Avg. Words: {stat.avgWords}</p>
-                        <p className="text-[9px] text-mist-300">Avg. Chars: {stat.avgChars}</p>
-                        <p className="text-[9px] text-mist-300">Total Drafts: {stat.count}</p>
+                        <p className="text-[11px] font-bold text-mist-50">{stat.label}</p>
+                        <p className="text-[11px] text-mist-300">Avg. words: {stat.avgWords}</p>
+                        <p className="text-[11px] text-mist-300">Avg. chars: {stat.avgChars}</p>
+                        <p className="text-[11px] text-mist-300">Total drafts: {stat.count}</p>
                         <div className="absolute right-6 bottom-[-4px] h-2 w-2 rotate-45 border-r border-b border-white/10 bg-ink-900" />
                       </div>
                     )}

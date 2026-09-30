@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { Sparkles, Copy, Check, ChevronDown, Repeat, BookOpen, Plus } from 'lucide-react'
 import Card from './ui/Card'
 import Button from './ui/Button'
+import Collapse from './ui/Collapse'
+import ErrorAlert from './ui/ErrorAlert'
 import PlatformIcon from './PlatformIcon'
 import { PLATFORMS } from '../data/platforms'
 import { PROMPTS } from '../data/prompts'
@@ -52,13 +54,14 @@ export default function CreateContent({
   const [addingPlatform, setAddingPlatform] = useState<Platform | null>(null)
   const [addDropdownOpen, setAddDropdownOpen] = useState(false)
   const addDropdownRef = useRef<HTMLDivElement>(null)
+  const mobileAddDropdownRef = useRef<HTMLDivElement>(null) // the mobile and desktop "Add" menus are both mounted
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setDropdownOpen(false)
       }
-      if (addDropdownRef.current && !addDropdownRef.current.contains(event.target as Node)) {
+      if (![addDropdownRef, mobileAddDropdownRef].some((r) => r.current?.contains(event.target as Node))) {
         setAddDropdownOpen(false)
       }
     }
@@ -202,11 +205,12 @@ export default function CreateContent({
       <Card className="space-y-7">
         {/* Prompt Template Selector */}
         <div>
-          <label className="flex items-center gap-2 font-display text-sm font-semibold text-mist-100 mb-2.5">
+          <label htmlFor="prompt-template" className="flex items-center gap-2 font-display text-sm font-semibold text-mist-100 mb-2.5">
             <BookOpen size={16} className="text-signal-purple" />
-            Prompt Library template
+            Prompt library template
           </label>
           <select
+            id="prompt-template"
             value={selectedPrompt?.id ?? ''}
             onChange={(e) => {
               const p = PROMPTS.find((x) => x.id === e.target.value) || null
@@ -215,7 +219,7 @@ export default function CreateContent({
             }}
             className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-mist-50 focus:border-signal-purple/50"
           >
-            <option value="" className="bg-ink-900">Custom idea (No template)</option>
+            <option value="" className="bg-ink-900">Custom idea (no template)</option>
             {PROMPTS.map((p) => (
               <option key={p.id} value={p.id} className="bg-ink-900">
                 [{p.category}] {p.name}
@@ -252,11 +256,12 @@ export default function CreateContent({
 
         {/* Topic Input */}
         <div>
-          <label className="flex items-center gap-2 font-display text-sm font-semibold text-mist-100">
+          <label htmlFor="topic" className="flex items-center gap-2 font-display text-sm font-semibold text-mist-100">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-grad-ai text-[11px] text-white">1</span>
             {selectedPrompt ? 'Fill in the topic ({topic}):' : "What's your topic or idea?"}
           </label>
           <textarea
+            id="topic"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             placeholder={selectedPrompt ? "e.g. why companies must offer a 4-day work week" : "e.g. Why we switched to a 4-day work week"}
@@ -265,7 +270,7 @@ export default function CreateContent({
           />
           {selectedPrompt && (
             <div className="mt-3 rounded-xl border border-white/5 bg-white/[0.01] p-3 text-xs text-mist-400">
-              <p className="font-mono text-[9px] uppercase tracking-wider text-signal-purple">Compiled Prompt Preview</p>
+              <p className="font-mono text-[11px] uppercase tracking-wider text-signal-purple">Compiled prompt preview</p>
               <p className="mt-1 italic">"{compiledPrompt}"</p>
             </div>
           )}
@@ -273,17 +278,18 @@ export default function CreateContent({
 
         {/* Platforms */}
         <div>
-          <label className="flex items-center gap-2 font-display text-sm font-semibold text-mist-100">
+          <p className="flex items-center gap-2 font-display text-sm font-semibold text-mist-100">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-grad-social text-[11px] text-white">2</span>
             Which platforms?
-          </label>
-          <div className="flex flex-wrap gap-2">
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
             {PLATFORMS.map((p) => {
               const active = selected.includes(p.id)
               return (
                 <button
                   key={p.id}
                   onClick={() => togglePlatform(p.id)}
+                  aria-pressed={active}
                   className={`flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm transition-colors ${
                     active
                       ? `platform-active-${p.id}`
@@ -302,19 +308,21 @@ export default function CreateContent({
         <div>
           <button
             onClick={() => setAdvancedOpen((v) => !v)}
+            aria-expanded={advancedOpen}
             className="flex items-center gap-1.5 text-xs font-medium text-mist-400 hover:text-mist-100"
           >
             Advanced settings
             <ChevronDown size={14} className={`transition-transform ${advancedOpen ? 'rotate-180' : ''}`} />
           </button>
-          {advancedOpen && (
-            <div className="mt-4 animate-rise rounded-xl border border-white/8 bg-white/[0.02] p-4">
+          <Collapse open={advancedOpen}>
+            <div className="mt-4 rounded-xl border border-white/8 bg-white/[0.02] p-4">
               <p className="mb-2.5 text-xs font-medium text-mist-300">Tone of voice</p>
               <div className="flex flex-wrap gap-2">
                 {TONES.map((t) => (
                   <button
                     key={t.id}
                     onClick={() => setTone(t.id)}
+                    aria-pressed={tone === t.id}
                     className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
                       tone === t.id
                         ? 'border-signal-orange/40 bg-signal-orange/15 text-orange-200'
@@ -326,7 +334,7 @@ export default function CreateContent({
                 ))}
               </div>
             </div>
-          )}
+          </Collapse>
         </div>
 
         {/* Action Button */}
@@ -355,29 +363,14 @@ export default function CreateContent({
       )}
 
       {/* Error Alert */}
-      {error && (
-        <div className="mt-6 border border-red-500/30 bg-red-500/10 rounded-2xl p-5 text-sm animate-rise flex flex-col gap-2">
-          <div className="flex justify-between items-center">
-            <h4 className="font-semibold text-red-300 flex items-center gap-1.5">
-              ❌ Content Generation Failed
-            </h4>
-            <button onClick={() => setError(null)} className="text-mist-400 hover:text-mist-100" aria-label="Dismiss error">
-              ✕
-            </button>
-          </div>
-          <p className="text-xs text-red-200 leading-relaxed font-mono whitespace-pre-wrap">{error}</p>
-          <p className="text-xs text-mist-400">
-            Please check your network connection and try again. If the problem persists, the AI service may be temporarily unavailable.
-          </p>
-        </div>
-      )}
+      {error && <ErrorAlert title="Couldn't generate your content" message={error} onDismiss={() => setError(null)} />}
 
       {/* Results View */}
       {result && (
         <div className="mt-8 animate-rise">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-display text-lg font-semibold text-mist-50">Ready to publish</h2>
-            <Button intent="action" onClick={() => goToTransform(result)}>
+            <Button intent="ghost" onClick={() => goToTransform(result)}>
               <Repeat size={14} />
               Transform into other formats
             </Button>
@@ -389,6 +382,7 @@ export default function CreateContent({
               <button
                 type="button"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
+                aria-expanded={dropdownOpen}
                 className={`w-full flex items-center justify-between gap-2 rounded-xl border px-4 py-3 text-sm font-medium transition-all shadow-sm ${
                   activeTab ? `platform-active-${activeTab}` : 'border-white/10 bg-white/[0.03] text-mist-400'
                 }`}
@@ -396,7 +390,7 @@ export default function CreateContent({
                 <div className="flex items-center gap-2">
                   {activeTab && <PlatformIcon platform={activeTab} size={15} />}
                   <span className="font-semibold">
-                    {activeTab ? (PLATFORMS.find((p) => p.id === activeTab)?.label || activeTab) : 'Select Platform'}
+                    {activeTab ? (PLATFORMS.find((p) => p.id === activeTab)?.label || activeTab) : 'Select platform'}
                     {addingPlatform && activeTab === addingPlatform && ' (Generating...)'}
                   </span>
                 </div>
@@ -407,8 +401,7 @@ export default function CreateContent({
                 )}
               </button>
 
-              {dropdownOpen && (
-                <div className="absolute left-0 right-0 z-30 mt-2 rounded-xl border border-white/10 bg-ink-950 p-1.5 shadow-xl animate-rise">
+                <div data-open={dropdownOpen} className="popover absolute left-0 right-0 z-30 mt-2 rounded-xl border border-white/10 bg-ink-950 p-1.5 shadow-xl">
                   {result.pieces.map((piece) => {
                     const isSelected = activeTab === piece.platform;
                     return (
@@ -442,21 +435,20 @@ export default function CreateContent({
                     </div>
                   )}
                 </div>
-              )}
             </div>
 
             {availablePlatforms.length > 0 && !addingPlatform && (
-              <div className="relative" ref={addDropdownRef}>
+              <div className="relative" ref={mobileAddDropdownRef}>
                 <button
                   type="button"
                   onClick={() => setAddDropdownOpen(!addDropdownOpen)}
+                  aria-expanded={addDropdownOpen}
                   className="h-full flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/20 hover:border-white/40 px-4 text-sm font-semibold text-mist-400 hover:text-mist-200 transition-colors"
                 >
                   <Plus size={16} />
                   <span>Add</span>
                 </button>
-                {addDropdownOpen && (
-                  <div className="absolute right-0 mt-2 z-30 w-56 rounded-xl border border-white/10 bg-ink-950 p-1.5 shadow-xl animate-rise">
+                  <div data-open={addDropdownOpen} className="popover absolute right-0 mt-2 z-30 w-56 rounded-xl border border-white/10 bg-ink-950 p-1.5 shadow-xl">
                     {availablePlatforms.map((p) => (
                       <button
                         key={p.id}
@@ -468,7 +460,6 @@ export default function CreateContent({
                       </button>
                     ))}
                   </div>
-                )}
               </div>
             )}
           </div>
@@ -503,13 +494,13 @@ export default function CreateContent({
                 <button
                   type="button"
                   onClick={() => setAddDropdownOpen(!addDropdownOpen)}
+                  aria-expanded={addDropdownOpen}
                   className="flex items-center gap-1 border border-dashed border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 text-xs font-medium text-mist-400 hover:text-mist-200 transition-colors"
                 >
                   <Plus size={12} />
-                  <span>Add Platform</span>
+                  <span>Add platform</span>
                 </button>
-                {addDropdownOpen && (
-                  <div className="absolute left-0 mt-2 z-30 w-56 rounded-xl border border-white/10 bg-ink-950 p-1.5 shadow-xl animate-rise">
+                  <div data-open={addDropdownOpen} className="popover absolute left-0 mt-2 z-30 w-56 rounded-xl border border-white/10 bg-ink-950 p-1.5 shadow-xl">
                     {availablePlatforms.map((p) => (
                       <button
                         key={p.id}
@@ -521,7 +512,6 @@ export default function CreateContent({
                       </button>
                     ))}
                   </div>
-                )}
               </div>
             )}
           </div>

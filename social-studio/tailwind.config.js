@@ -13,8 +13,10 @@ export default {
           600: '#332145'
         },
         mist: {
+          500: '#857AA0',
           400: '#9C8FB5',
           300: '#B8AECB',
+          200: '#D5CDE3',
           100: '#EFE9F7',
           50: '#F7F4FB'
         },
@@ -27,6 +29,7 @@ export default {
           orangeDeep: '#C2410C'
         }
       },
+      opacity: { 6: '0.06', 8: '0.08', 12: '0.12' },
       fontFamily: {
         display: ['"Space Grotesk"', 'sans-serif'],
         body: ['"Inter"', 'sans-serif'],
@@ -57,7 +60,6 @@ export default {
         }
       },
       animation: {
-        flow: 'flow 3s linear infinite',
         'flow-fast': 'flow 1s linear infinite',
         pulseDot: 'pulseDot 2.2s ease-in-out infinite',
         rise: 'rise 0.35s ease-out both'

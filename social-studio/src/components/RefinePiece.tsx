@@ -14,10 +14,10 @@ interface RefinePieceProps {
 }
 
 const SUGGESTIONS = [
-  { label: 'Make it shorter ⏱️', instruction: 'Make it shorter and more concise' },
-  { label: 'Add emojis ✨', instruction: 'Add more relevant emojis for visual texture and readability' },
-  { label: 'Stronger hook 🪝', instruction: 'Change the hook to be much more engaging and scroll-stopping' },
-  { label: 'More professional 💼', instruction: 'Make the tone more professional and business-focused' }
+  { label: 'Make it shorter', instruction: 'Make it shorter and more concise' },
+  { label: 'Add emojis', instruction: 'Add more relevant emojis for visual texture and readability' },
+  { label: 'Stronger hook', instruction: 'Change the hook to be much more engaging and scroll-stopping' },
+  { label: 'More professional', instruction: 'Make the tone more professional and business-focused' }
 ]
 
 export default function RefinePiece({
@@ -61,10 +61,10 @@ export default function RefinePiece({
   return (
     <div className="mt-4 border-t border-white/5 pt-4 space-y-3">
       <div className="flex flex-col gap-2">
-        <label className="text-xs font-semibold text-mist-300 flex items-center gap-1.5">
+        <p className="text-xs font-semibold text-mist-300 flex items-center gap-1.5">
           <Sparkles size={12} className="text-signal-pink" />
           Refine post with AI
-        </label>
+        </p>
         
         <div className="flex flex-wrap gap-1.5">
           {SUGGESTIONS.map((s) => (
@@ -83,6 +83,7 @@ export default function RefinePiece({
         <div className="flex gap-2">
           <input
             type="text"
+            aria-label="Refine instruction"
             value={instruction}
             onChange={(e) => setInstruction(e.target.value)}
             disabled={refining}
@@ -108,7 +109,7 @@ export default function RefinePiece({
 
       {error && (
         <p className="text-xs text-red-400 font-mono">
-          ⚠️ {error}
+          {error}
         </p>
       )}
     </div>

@@ -73,7 +73,7 @@ export default function PipelineSignature({
                 stroke="url(#lineGrad)"
                 strokeWidth={isActive ? (isGenerating ? 2.5 : 1.5) : 1}
                 strokeDasharray={isActive ? (isGenerating ? "4 4" : "6 6") : undefined}
-                className={isActive ? (isGenerating ? "animate-flow-fast" : "animate-flow") : ""}
+                className={isActive && isGenerating ? "animate-flow-fast" : ""}
                 opacity={pathOpacity}
                 style={{ transition: 'all 0.3s' }}
               />
@@ -86,7 +86,7 @@ export default function PipelineSignature({
                     cy="0"
                     r="3"
                     fill={t.color}
-                    className="animate-pulseDot"
+                    className={isGenerating ? "animate-pulseDot" : ""}
                     style={{
                       transformOrigin: `-40px 0px`,
                       animationDelay: `${i * 0.3}s`

@@ -1,4 +1,5 @@
 import { LayoutGrid, Sparkles, Repeat, BookMarked, Clock, CalendarDays, X } from 'lucide-react'
+import { useEffect } from 'react'
 import { View } from '../types'
 
 const items: { id: View; label: string; icon: typeof LayoutGrid }[] = [
@@ -21,14 +22,24 @@ export default function Sidebar({
   open: boolean
   onClose: () => void
 }) {
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [open, onClose])
+
   return (
     <>
-      {open && (
-        <div className="fixed inset-0 z-30 bg-black/50 lg:hidden" onClick={onClose} />
-      )}
+      <div
+        className={`fixed inset-0 z-30 bg-black/50 transition-opacity duration-200 lg:hidden ${
+          open ? '' : 'pointer-events-none opacity-0'
+        }`}
+        onClick={onClose}
+      />
       <aside
-        className={`fixed lg:sticky top-0 z-40 h-screen w-72 shrink-0 border-r border-white/8 bg-ink-950/98 backdrop-blur px-4 py-6 transition-transform duration-200 lg:translate-x-0 ${
-          open ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed lg:sticky top-0 z-40 h-screen w-72 shrink-0 border-r border-white/8 bg-ink-950 px-4 py-6 transition-[transform,visibility] duration-200 lg:visible lg:translate-x-0 ${
+          open ? 'translate-x-0' : 'invisible -translate-x-full'
         }`}
       >
         <div className="flex items-center justify-between px-2">
@@ -52,6 +63,7 @@ export default function Sidebar({
             return (
               <button
                 key={id}
+                aria-current={active ? 'page' : undefined}
                 onClick={() => {
                   setView(id)
                   onClose()

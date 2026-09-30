@@ -13,8 +13,24 @@ import { deleteImages } from './lib/generator'
 
 export type { View }
 
+const VIEWS: View[] = ['dashboard', 'create', 'transform', 'library', 'recent', 'calendar']
+const viewFromHash = (): View => {
+  const hash = location.hash.slice(1) as View
+  return VIEWS.includes(hash) ? hash : 'dashboard'
+}
+// The URL hash is the source of truth for the view, so Back, Forward and refresh work
+const setView = (v: View) => {
+  location.hash = v
+}
+
 export default function App() {
-  const [view, setView] = useState<View>('dashboard')
+  const [view, setViewState] = useState<View>(viewFromHash)
+  useEffect(() => {
+    const onHashChange = () => setViewState(viewFromHash())
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
   const [items, setItems] = useState<ContentItem[]>(() => loadContent())
   const [activeTransformItem, setActiveTransformItem] = useState<ContentItem | null>(null)
   const [prefillPrompt, setPrefillPrompt] = useState<PromptTemplate | null>(null)

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Copy, Check, Download, RefreshCw, AlertCircle, Trash2 } from 'lucide-react'
+import { Copy, Check, Download, RefreshCw, AlertCircle, Trash2, Eye, Pencil, Image as ImageIcon } from 'lucide-react'
 import Card from './ui/Card'
 import PlatformIcon from './PlatformIcon'
 import RefinePiece from './RefinePiece'
@@ -123,12 +123,12 @@ function CodeTerminal({ code, language }: { code: string; language: string }) {
           <span className="w-3 h-3 rounded-full bg-yellow-500/85"></span>
           <span className="w-3 h-3 rounded-full bg-green-500/85"></span>
         </div>
-        <span className="text-mist-400 font-mono text-[10px] uppercase tracking-wider">{language || 'code'}</span>
+        <span className="text-mist-400 font-mono text-[11px] uppercase tracking-wider">{language || 'code'}</span>
         <button
           onClick={handleCopy}
-          className="text-mist-400 hover:text-mist-100 flex items-center gap-1 text-[10px] transition-colors"
+          className="text-mist-400 hover:text-mist-100 flex items-center gap-1 text-[11px] transition-colors"
         >
-          {copied ? 'Copied!' : 'Copy Code'}
+          {copied ? 'Copied!' : 'Copy code'}
         </button>
       </div>
 
@@ -178,7 +178,7 @@ export default function EditablePostCard({
 
   let isApproaching = false
   let isExceeded = false
-  let statusText = '✓ Within limit'
+  let statusText = 'Within limit'
   let statusColorClass = 'text-emerald-400'
   let barColorClass = 'bg-emerald-500'
 
@@ -187,15 +187,15 @@ export default function EditablePostCard({
     isApproaching = !isExceeded && currentLength >= limit * 0.85
 
     if (isExceeded) {
-      statusText = `❌ Limit exceeded by ${currentLength - limit} character${currentLength - limit === 1 ? '' : 's'}`
+      statusText = `Limit exceeded by ${currentLength - limit} character${currentLength - limit === 1 ? '' : 's'}`
       statusColorClass = 'text-red-400'
       barColorClass = 'bg-red-500'
     } else if (isApproaching) {
-      statusText = `⚠️ Approaching limit (${limit - currentLength} left)`
+      statusText = `Approaching limit (${limit - currentLength} left)`
       statusColorClass = 'text-amber-400'
       barColorClass = 'bg-amber-500'
     } else {
-      statusText = '✓ Within limit'
+      statusText = 'Within limit'
       statusColorClass = 'text-emerald-400'
       if (meta.accent === 'purple') {
         barColorClass = 'bg-signal-purple'
@@ -288,16 +288,17 @@ export default function EditablePostCard({
           </span>
         ) : (
           <span className="flex items-center gap-2 text-xs font-mono text-mist-400 uppercase tracking-wider">
-            Generated Draft
+            Generated draft
           </span>
         )}
         <div className="flex items-center">
           {platform === 'code' && (
             <button
               onClick={() => setIsEditingCode(!isEditingCode)}
-              className="text-[11px] font-medium text-mist-400 hover:text-mist-50 transition-colors mr-4"
+              className="flex items-center gap-1.5 text-xs font-medium text-mist-400 hover:text-mist-50 transition-colors mr-4"
             >
-              {isEditingCode ? '👀 Preview snippet' : '✍️ Edit Markdown'}
+              {isEditingCode ? <Eye size={13} /> : <Pencil size={13} />}
+              {isEditingCode ? 'Preview snippet' : 'Edit markdown'}
             </button>
           )}
           <button
@@ -353,31 +354,25 @@ export default function EditablePostCard({
               })}
             </div>
           )}
-          <div className="pointer-events-none absolute right-2 top-2 opacity-0 group-hover/terminal:opacity-40 transition-opacity text-[10px] text-mist-400 font-mono select-none bg-ink-950/80 px-1.5 py-0.5 rounded border border-white/5">
-            ✍️ Click content to edit raw markdown
-          </div>
         </div>
       ) : (
-        <div className="relative group">
-          <textarea
-            ref={textareaRef}
-            value={content}
-            onChange={(e) => onUpdate(e.target.value)}
-            placeholder="Edit generated draft..."
-            className="w-full bg-transparent border border-transparent hover:border-white/5 focus:border-white/10 rounded-lg p-2 -m-2 resize-none outline-none focus:ring-0 font-body text-sm leading-relaxed text-mist-100 placeholder:text-mist-400/50 hover:bg-white/[0.01] focus:bg-white/[0.02] transition-all"
-          />
-          <div className="pointer-events-none absolute right-0 bottom-0 opacity-0 group-hover:opacity-40 transition-opacity text-[10px] text-mist-400 font-mono select-none">
-            ✍️ Click to edit
-          </div>
-        </div>
+        <textarea
+          ref={textareaRef}
+          value={content}
+          onChange={(e) => onUpdate(e.target.value)}
+          aria-label={`${meta?.label || platform} draft`}
+          placeholder="Edit generated draft..."
+          className="w-full bg-transparent border border-white/5 hover:border-white/10 focus:border-white/20 rounded-lg p-2 resize-none overflow-hidden outline-none focus:ring-0 font-body text-sm leading-relaxed text-mist-100 placeholder:text-mist-400/50 hover:bg-white/[0.01] focus:bg-white/[0.02] transition-colors"
+        />
       )}
 
       {/* Image Preview Area */}
       {(isImagePlatform || imageUrl || imageGenerating || imageError) && (
         <div className="mt-3 border-t border-white/5 pt-3">
-          <label className="text-xs font-semibold text-mist-300 flex items-center gap-1.5 mb-2 select-none">
-            🎨 AI Visual Asset
-          </label>
+          <p className="text-xs font-semibold text-mist-300 flex items-center gap-1.5 mb-2 select-none">
+            <ImageIcon size={13} />
+            AI visual asset
+          </p>
           
           {imageGenerating ? (
             <div className="w-full aspect-[16/9] rounded-xl border border-white/10 bg-white/[0.01] flex flex-col items-center justify-center relative overflow-hidden animate-pulse select-none">
@@ -396,7 +391,7 @@ export default function EditablePostCard({
                 className="shrink-0 flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white bg-red-500/25 hover:bg-red-500/40 transition-all"
               >
                 <RefreshCw size={12} />
-                Retry Image
+                Retry image
               </button>
             </div>
           ) : imageUrl ? (
@@ -408,7 +403,7 @@ export default function EditablePostCard({
               />
               
               {/* Overlay controls */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/50 opacity-0 group-hover/img:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-3 select-none">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/50 opacity-0 group-hover/img:opacity-100 group-focus-within/img:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-3 select-none">
                 <div className="flex justify-end gap-2">
                   <button
                     onClick={handleRegenerateImage}
@@ -428,23 +423,21 @@ export default function EditablePostCard({
                 
                 {imagePrompt && (
                   <div className="bg-black/50 backdrop-blur-sm border border-white/5 rounded-lg p-2.5">
-                    <p className="font-mono text-[9px] uppercase tracking-wider text-signal-purple mb-0.5">Visual Prompt</p>
+                    <p className="font-mono text-[11px] uppercase tracking-wider text-signal-purple mb-0.5">Visual prompt</p>
                     <p className="text-xs text-mist-200 line-clamp-2 leading-relaxed">{imagePrompt}</p>
                   </div>
                 )}
               </div>
             </div>
           ) : (
-            <div 
-              onClick={handleRegenerateImage}
-              className="w-full aspect-[16/9] rounded-xl border border-dashed border-white/15 bg-white/[0.01] hover:bg-white/[0.02] flex flex-col items-center justify-center transition-colors cursor-pointer select-none group/placeholder"
-            >
+            <div className="w-full aspect-[16/9] rounded-xl border border-dashed border-white/15 bg-white/[0.01] flex flex-col items-center justify-center select-none group/placeholder">
               <span className="text-xs text-mist-400">No image generated yet</span>
               <button
+                onClick={handleRegenerateImage}
                 className="mt-2 flex items-center gap-1 rounded-lg bg-white/5 border border-white/10 hover:border-white/10 group-hover/placeholder:border-white/20 px-3 py-1.5 text-xs font-semibold text-mist-200 transition-colors"
               >
                 <RefreshCw size={11} className="group-hover/placeholder:rotate-180 transition-transform duration-500" />
-                Generate AI Image
+                Generate AI image
               </button>
             </div>
           )}

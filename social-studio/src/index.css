@@ -41,11 +41,42 @@ body {
   border-radius: 4px;
 }
 
+@layer base {
+  h1 {
+    letter-spacing: -0.02em;
+  }
+
+  /* Press feedback on touch-down for every control, not just hover */
+  button:not(:disabled):active {
+    opacity: 0.7;
+  }
+}
+
+/* Dropdowns stay mounted so they can animate out as well as in */
+.popover {
+  transform-origin: top;
+  transition: opacity 150ms ease-out, transform 150ms ease-out, visibility 150ms;
+}
+.popover[data-open='false'] {
+  opacity: 0;
+  transform: translateY(-4px) scale(0.98);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Spinners keep spinning: a frozen spinner reads as a hung app */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *:not(.animate-spin), *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .backdrop-blur {
+    backdrop-filter: none !important;
+    background-color: #0B0712 !important;
   }
 }
 

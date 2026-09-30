@@ -3,8 +3,9 @@ import { CalendarDays, ChevronDown, X } from 'lucide-react'
 import Card from './ui/Card'
 import Button from './ui/Button'
 import PlatformIcon from './PlatformIcon'
-import RecentPostEditor from './RecentPostEditor'
-import { ContentItem } from '../types'
+import EditablePostCard from './EditablePostCard'
+import Collapse from './ui/Collapse'
+import { ContentItem, GeneratedPiece, Platform } from '../types'
 
 export default function ContentCalendar({
   items,
@@ -63,6 +64,9 @@ export default function ContentCalendar({
     }
   }, [pendingId, items])
 
+  const updatePiece = (item: ContentItem, platform: Platform, fields: Partial<GeneratedPiece>) =>
+    onUpdate?.({ ...item, pieces: item.pieces.map((p) => (p.platform === platform ? { ...p, ...fields } : p)) })
+
   const handleAdd = () => {
     if (!pendingId || !pendingDate) return
     onSchedule(pendingId, pendingDate)
@@ -92,8 +96,10 @@ export default function ContentCalendar({
                 <input
                   type="text"
                   placeholder="Choose content…"
+                  aria-label="Content to schedule"
                   value={searchQuery}
                   onFocus={() => setIsOpen(true)}
+                  onKeyDown={(e) => e.key === 'Escape' && setIsOpen(false)}
                   onChange={(e) => {
                     setSearchQuery(e.target.value)
                     setPendingId('')
@@ -101,8 +107,7 @@ export default function ContentCalendar({
                   }}
                   className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-mist-50 placeholder-mist-400 focus:border-signal-orange/50 focus:outline-none"
                 />
-                {isOpen && (
-                  <div className="absolute left-0 right-0 z-50 mt-2 max-h-60 overflow-y-auto rounded-xl border border-white/10 bg-ink-900 p-1.5 shadow-2xl backdrop-blur-md">
+                  <div data-open={isOpen} className="popover absolute left-0 right-0 z-50 mt-2 max-h-60 overflow-y-auto rounded-xl border border-white/10 bg-ink-900 p-1.5 shadow-2xl">
                     {filtered.length === 0 ? (
                       <div className="px-4 py-2.5 text-sm text-mist-400">
                         No matching content found
@@ -128,10 +133,10 @@ export default function ContentCalendar({
                       ))
                     )}
                   </div>
-                )}
               </div>
               <input
                 type="date"
+                aria-label="Date"
                 value={pendingDate}
                 onChange={(e) => setPendingDate(e.target.value)}
                 className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-mist-50 focus:border-signal-orange/50"
@@ -156,10 +161,11 @@ export default function ContentCalendar({
                     {entries.map((i) => {
                       const isExpanded = expandedItemId === i.id
                       return (
-                        <Card key={i.id} className="!p-0 overflow-hidden border border-white/8 bg-white/[0.02] backdrop-blur-md">
+                        <Card key={i.id} className="!p-0 overflow-hidden border border-white/8 bg-white/[0.02]">
                           <button
                             type="button"
                             onClick={() => setExpandedItemId(isExpanded ? null : i.id)}
+                            aria-expanded={isExpanded}
                             className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left hover:bg-white/[0.01] transition-colors duration-150"
                           >
                             <div className="min-w-0">
@@ -185,23 +191,24 @@ export default function ContentCalendar({
                             </div>
                           </button>
 
-                          {isExpanded && (
-                            <div className="animate-rise border-t border-white/8 px-5 py-4 bg-white/[0.005]">
+                          <Collapse open={isExpanded}>
+                            <div className="border-t border-white/8 px-5 py-4 bg-white/[0.005]">
                               <div className="space-y-4">
                                 {i.pieces.map((p) => (
-                                  <RecentPostEditor
+                                  <EditablePostCard
                                     key={p.platform}
+                                    topic={i.topic}
+                                    tone={i.tone}
                                     platform={p.platform}
                                     content={p.content}
-                                    onUpdate={(newContent) => {
-                                      if (onUpdate) {
-                                        const updatedPieces = i.pieces.map((piece) =>
-                                          piece.platform === p.platform ? { ...piece, content: newContent } : piece
-                                        )
-                                        const updatedItem = { ...i, pieces: updatedPieces }
-                                        onUpdate(updatedItem)
-                                      }
-                                    }}
+                                    imageUrl={p.imageUrl}
+                                    imagePrompt={p.imagePrompt}
+                                    imageGenerating={p.imageGenerating}
+                                    imageError={p.imageError}
+                                    existingPieces={i.pieces}
+                                    showHeaderLabel
+                                    onUpdate={(content) => updatePiece(i, p.platform, { content })}
+                                    onUpdateImage={(fields) => updatePiece(i, p.platform, fields)}
                                   />
                                 ))}
                               </div>
@@ -209,14 +216,14 @@ export default function ContentCalendar({
                                 <button
                                   type="button"
                                   onClick={() => onSchedule(i.id, '')}
-                                  className="flex items-center gap-1.5 text-xs font-medium text-red-400 hover:text-red-300 transition-colors"
+                                  className="flex items-center gap-1.5 text-xs font-medium text-mist-400 hover:text-mist-100 transition-colors"
                                 >
                                   <X size={13} />
                                   Unschedule
                                 </button>
                               </div>
                             </div>
-                          )}
+                          </Collapse>
                         </Card>
                       )
                     })}
