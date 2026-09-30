@@ -399,7 +399,7 @@ export default function EditablePostCard({
               <img
                 src={imageUrl}
                 alt={imagePrompt || 'Generated concept'}
-                className="w-full max-h-[360px] object-cover transition-transform duration-500 group-hover/img:scale-[1.01]"
+                className="w-full max-h-[360px] object-contain transition-transform duration-500 group-hover/img:scale-[1.01]"
               />
               
               {/* Overlay controls */}
