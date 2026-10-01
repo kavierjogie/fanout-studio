@@ -232,8 +232,7 @@ export default function CreateContent({
           selected={selectedPrompt}
           onSelect={(p) => {
             setSelectedPrompt(p)
-            if (p) document.getElementById('topic')?.focus()
-            else if (onClearPrompt) onClearPrompt()
+            if (!p && onClearPrompt) onClearPrompt()
           }}
         />
 
