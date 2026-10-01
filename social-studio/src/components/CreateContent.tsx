@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Sparkles, Copy, Check, ChevronDown, Repeat, BookOpen, Plus } from 'lucide-react'
+import { Sparkles, Copy, Check, ChevronDown, Repeat, Plus } from 'lucide-react'
 import Card from './ui/Card'
 import Button from './ui/Button'
 import Collapse from './ui/Collapse'
@@ -8,15 +8,13 @@ import GeneratingState from './ui/GeneratingState'
 import { toast } from './ui/Toast'
 import PlatformIcon from './PlatformIcon'
 import { PLATFORMS } from '../data/platforms'
-import { PROMPTS, CATEGORIES } from '../data/prompts'
 import { Platform, ContentItem, GeneratedPiece, PromptTemplate } from '../types'
 import { transformContent } from '../lib/generator'
 import { uid } from '../lib/storage'
 import RefinePiece from './RefinePiece'
 import EditablePostCard from './EditablePostCard'
+import TemplatePicker from './TemplatePicker'
 
-
-const promptsByCategory = CATEGORIES.map((category) => ({ category, prompts: PROMPTS.filter((p) => p.category === category) }))
 
 const TONES = [
   { id: 'default', label: 'Natural' },
@@ -177,8 +175,10 @@ export default function CreateContent({
   const handleDeletePiece = (platform: Platform) => {
     const latest = resultRef.current
     if (!latest) return
+    const index = latest.pieces.findIndex((p) => p.platform === platform)
+    const removed = latest.pieces[index]
     const remaining = latest.pieces.filter((p) => p.platform !== platform)
-    // Confirmation happens inline on the card's delete button
+    // No confirm step: deletes are instant and undoable from the toast
     if (remaining.length === 0) {
       resultRef.current = null
       setResult(null)
@@ -188,7 +188,15 @@ export default function CreateContent({
     }
     commit({ ...latest, pieces: remaining })
     setActiveTab(remaining[0].platform)
-    toast('Draft deleted')
+    toast('Draft deleted', {
+      label: 'Undo',
+      onClick: () => {
+        const cur = resultRef.current
+        if (!removed || cur?.id !== latest.id || cur.pieces.some((p) => p.platform === platform)) return
+        commit({ ...cur, pieces: [...cur.pieces.slice(0, index), removed, ...cur.pieces.slice(index)] })
+        setActiveTab(platform)
+      }
+    })
   }
 
   const copy = async (key: string, text: string) => {
@@ -204,7 +212,7 @@ export default function CreateContent({
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Create content</p>
+        <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Create content</p>
         <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">
           Turn one idea into platform-ready content
         </h1>
@@ -213,70 +221,27 @@ export default function CreateContent({
         </p>
       </header>
 
-      <Card className="sm:!p-6">
+      <Card
+        className="shadow-[0_24px_60px_-30px_rgba(139,92,246,0.35)] sm:!p-7"
+        // Inline so it layers over card-surface's background shorthand
+        style={{ backgroundImage: 'radial-gradient(120% 80% at 0% 0%, rgba(139,92,246,0.10) 0%, transparent 55%), linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)' }}
+      >
         {/* Locked while generating so the inputs always match the drafts being written */}
-        <fieldset disabled={generating} className="min-w-0 space-y-7 transition-opacity disabled:opacity-60">
-        {/* Prompt Template Selector */}
-        <div>
-          <label htmlFor="prompt-template" className="flex items-center gap-2 font-display text-sm font-semibold text-mist-100 mb-2.5">
-            <BookOpen size={16} className="text-signal-purple" />
-            Start from a template
-            <span className="font-body text-xs font-normal text-mist-400">Optional</span>
-          </label>
-          <select
-            id="prompt-template"
-            value={selectedPrompt?.id ?? ''}
-            onChange={(e) => {
-              const p = PROMPTS.find((x) => x.id === e.target.value) || null
-              setSelectedPrompt(p)
-              if (!p && onClearPrompt) onClearPrompt()
-            }}
-            className="field"
-          >
-            <option value="">Custom idea (no template)</option>
-            {promptsByCategory.map(({ category, prompts }) => (
-              <optgroup key={category} label={category}>
-                {prompts.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
-        </div>
-
-        {/* Template metadata if selected */}
-        {selectedPrompt && (
-          <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 space-y-2 animate-rise">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono uppercase tracking-wider text-signal-purple">{selectedPrompt.category}</span>
-              <button
-                onClick={() => {
-                  setSelectedPrompt(null)
-                  if (onClearPrompt) onClearPrompt()
-                }}
-                className="text-[11px] text-mist-400 hover:text-mist-100"
-              >
-                Clear template
-              </button>
-            </div>
-            <h4 className="text-sm font-semibold text-mist-100">{selectedPrompt.name}</h4>
-            <p className="text-xs text-mist-400 leading-relaxed">{selectedPrompt.description}</p>
-            <div className="text-xs text-mist-300 bg-white/5 p-2 rounded-lg font-mono">
-              <span className="text-signal-purple">Template: </span>
-              {selectedPrompt.template.split('{topic}')[0]}
-              <span className="text-signal-purple font-bold font-sans">{"{topic}"}</span>
-              {selectedPrompt.template.split('{topic}')[1]}
-            </div>
-          </div>
-        )}
+        <fieldset disabled={generating} className="min-w-0 space-y-8 transition-opacity disabled:opacity-60">
+        <TemplatePicker
+          selected={selectedPrompt}
+          onSelect={(p) => {
+            setSelectedPrompt(p)
+            if (p) document.getElementById('topic')?.focus()
+            else if (onClearPrompt) onClearPrompt()
+          }}
+        />
 
         {/* Topic Input */}
         <div>
           <label htmlFor="topic" className="flex items-center gap-2 font-display text-sm font-semibold text-mist-100">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-signal-purpleDeep text-[11px] text-white">1</span>
-            {selectedPrompt ? 'Fill in the topic ({topic}):' : "What's your topic or idea?"}
+            {selectedPrompt ? 'What should this template be about?' : "What's your topic or idea?"}
           </label>
           <textarea
             id="topic"
@@ -400,12 +365,12 @@ className="field mt-3 resize-none !py-3 leading-relaxed"
 
           {/* Mobile dropdown selector */}
           <div className="flex gap-2 sm:hidden mb-6 w-full">
-            <div className="relative flex-1" ref={dropdownRef}>
+            <div className="relative flex-1" ref={dropdownRef} onKeyDown={(e) => e.key === 'Escape' && setDropdownOpen(false)}>
               <button
                 type="button"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 aria-expanded={dropdownOpen}
-                className={`w-full flex items-center justify-between gap-2 rounded-xl border px-4 py-3 text-sm font-medium transition-all shadow-sm ${
+                className={`w-full flex items-center justify-between gap-2 rounded-xl border px-4 py-3 text-sm font-medium transition shadow-sm ${
                   activeTab ? `platform-active-${activeTab}` : 'border-white/10 bg-white/[0.03] text-mist-400'
                 }`}
               >
@@ -423,7 +388,7 @@ className="field mt-3 resize-none !py-3 leading-relaxed"
                 )}
               </button>
 
-                <div data-open={dropdownOpen} className="popover absolute left-0 right-0 z-30 mt-2 rounded-xl border border-white/10 bg-ink-950 p-1.5 shadow-xl">
+                <div data-open={dropdownOpen} className="popover absolute left-0 right-0 z-30 origin-top mt-2 rounded-xl border border-white/10 bg-ink-950 p-1.5 shadow-xl">
                   {result.pieces.map((piece) => {
                     const isSelected = activeTab === piece.platform;
                     return (
@@ -460,7 +425,7 @@ className="field mt-3 resize-none !py-3 leading-relaxed"
             </div>
 
             {availablePlatforms.length > 0 && !addingPlatform && (
-              <div className="relative" ref={mobileAddDropdownRef}>
+              <div className="relative" ref={mobileAddDropdownRef} onKeyDown={(e) => e.key === 'Escape' && setAddDropdownOpen(false)}>
                 <button
                   type="button"
                   onClick={() => setAddDropdownOpen(!addDropdownOpen)}
@@ -470,7 +435,7 @@ className="field mt-3 resize-none !py-3 leading-relaxed"
                   <Plus size={16} />
                   <span>Add</span>
                 </button>
-                  <div data-open={addDropdownOpen} className="popover absolute right-0 mt-2 z-30 w-56 rounded-xl border border-white/10 bg-ink-950 p-1.5 shadow-xl">
+                  <div data-open={addDropdownOpen} className="popover absolute right-0 mt-2 origin-top-right z-30 w-56 rounded-xl border border-white/10 bg-ink-950 p-1.5 shadow-xl">
                     {availablePlatforms.map((p) => (
                       <button
                         key={p.id}
@@ -512,7 +477,7 @@ className="field mt-3 resize-none !py-3 leading-relaxed"
             )}
 
             {availablePlatforms.length > 0 && !addingPlatform && (
-              <div className="relative" ref={addDropdownRef}>
+              <div className="relative" ref={addDropdownRef} onKeyDown={(e) => e.key === 'Escape' && setAddDropdownOpen(false)}>
                 <button
                   type="button"
                   onClick={() => setAddDropdownOpen(!addDropdownOpen)}
@@ -522,7 +487,7 @@ className="field mt-3 resize-none !py-3 leading-relaxed"
                   <Plus size={12} />
                   <span>Add platform</span>
                 </button>
-                  <div data-open={addDropdownOpen} className="popover absolute left-0 mt-2 z-30 w-56 rounded-xl border border-white/10 bg-ink-950 p-1.5 shadow-xl">
+                  <div data-open={addDropdownOpen} className="popover absolute left-0 mt-2 origin-top-left z-30 w-56 rounded-xl border border-white/10 bg-ink-950 p-1.5 shadow-xl">
                     {availablePlatforms.map((p) => (
                       <button
                         key={p.id}
@@ -556,7 +521,6 @@ className="field mt-3 resize-none !py-3 leading-relaxed"
                 onUpdate={(newContent) => updatePiece(piece.platform, { content: newContent })}
                 onUpdateImage={(newFields) => updatePiece(piece.platform, newFields)}
                 onDelete={addingPlatform ? undefined : () => handleDeletePiece(piece.platform)}
-                deleteConfirmLabel={result.pieces.length === 1 ? 'Delete whole post' : 'Confirm delete'}
               />
             ))}
 

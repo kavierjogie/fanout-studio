@@ -34,8 +34,8 @@ export default function PipelineSignature({
 
         {/* source node */}
         <g className={isGenerating ? "animate-pulse" : ""} style={{ transformOrigin: '60px 130px' }}>
-          <circle cx="60" cy="130" r="34" fill="#1A1128" stroke={isGenerating ? "#EC4899" : "#8B5CF6"} strokeWidth={isGenerating ? 2.5 : 1.5} className="transition-all duration-300" />
-          <circle cx="60" cy="130" r="34" fill="url(#lineGrad)" opacity={isGenerating ? 0.35 : 0.12} className="transition-all duration-300" />
+          <circle cx="60" cy="130" r="34" fill="#1A1128" stroke={isGenerating ? "#EC4899" : "#8B5CF6"} strokeWidth={isGenerating ? 2.5 : 1.5} className="transition duration-300" />
+          <circle cx="60" cy="130" r="34" fill="url(#lineGrad)" opacity={isGenerating ? 0.35 : 0.12} className="transition duration-300" />
           {isGenerating && (
             <circle cx="60" cy="130" r="42" fill="none" stroke="#EC4899" strokeWidth="1.5" opacity="0.4" className="animate-ping" style={{ transformOrigin: '60px 130px', animationDuration: '1.5s' }} />
           )}
@@ -60,7 +60,7 @@ export default function PipelineSignature({
             <g
               key={t.id}
               onClick={() => onTogglePlatform?.(t.id)}
-              className={`transition-all duration-300 ${onTogglePlatform ? 'cursor-pointer select-none group' : ''}`}
+              className={`transition duration-300 ${onTogglePlatform ? 'cursor-pointer select-none group' : ''}`}
             >
               {/* connecting line */}
               <path
@@ -119,7 +119,7 @@ export default function PipelineSignature({
                   stroke={strokeColor}
                   strokeWidth={isActive ? 1.5 : 1}
                   opacity={nodeOpacity}
-                  className="transition-all duration-300 group-hover:stroke-signal-pink"
+                  className="transition duration-300 group-hover:stroke-signal-pink"
                 />
                 <foreignObject
                   x="-11"
@@ -127,7 +127,7 @@ export default function PipelineSignature({
                   width="22"
                   height="22"
                   opacity={nodeOpacity}
-                  className="transition-all duration-300 pointer-events-none"
+                  className="transition duration-300 pointer-events-none"
                 >
                   <div style={{ color: iconColor, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 22, height: 22 }}>
                     <PlatformIcon platform={t.id} size={14} className="transition-colors duration-300 group-hover:text-signal-pink" />
@@ -143,7 +143,7 @@ export default function PipelineSignature({
                 fill={labelColor}
                 fontFamily="Inter, sans-serif"
                 fontWeight={isActive ? "600" : "400"}
-                className="transition-all duration-300 select-none group-hover:fill-mist-100"
+                className="transition duration-300 select-none group-hover:fill-mist-100"
               >
                 {t.label}
               </text>

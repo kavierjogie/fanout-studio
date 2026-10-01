@@ -107,7 +107,7 @@ export default function TransformContent({
     return (
       <div className="mx-auto max-w-5xl">
         <header className="mb-8">
-          <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Transform content</p>
+          <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Transform content</p>
           <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">One idea, more platforms</h1>
         </header>
         <EmptyState
@@ -127,7 +127,7 @@ export default function TransformContent({
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Transform content</p>
+        <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Transform content</p>
         <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">
           One idea, more platforms
         </h1>
@@ -152,7 +152,7 @@ export default function TransformContent({
               <ChevronDown className={`ml-2 h-4 w-4 shrink-0 transition-transform text-mist-400 ${dropdownOpen ? 'rotate-180' : ''}`} />
             </button>
 
-              <div data-open={dropdownOpen} className="popover absolute z-50 w-full mt-2 bg-ink-950 border border-white/10 rounded-xl shadow-2xl overflow-hidden">
+              <div data-open={dropdownOpen} className="popover absolute z-50 w-full origin-top mt-2 bg-ink-950 border border-white/10 rounded-xl shadow-2xl overflow-hidden">
                 <div className="flex items-center gap-2 border-b border-white/10 px-3 py-2.5">
                   <Search className="h-4 w-4 text-mist-400 shrink-0" />
                   <input

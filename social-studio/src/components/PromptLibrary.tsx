@@ -3,14 +3,8 @@ import { ArrowRight } from 'lucide-react'
 import Card from './ui/Card'
 import Badge from './ui/Badge'
 import Button from './ui/Button'
-import { PROMPTS, CATEGORIES } from '../data/prompts'
+import { PROMPTS, CATEGORIES, categoryAccent } from '../data/prompts'
 import { PromptCategory, PromptTemplate } from '../types'
-
-const categoryAccent = (cat: PromptCategory) => {
-  if (['Marketing', 'Business', 'Branding'].includes(cat)) return 'purple' as const
-  if (['Social Media', 'Engagement'].includes(cat)) return 'pink' as const
-  return 'orange' as const
-}
 
 export default function PromptLibrary({ onUse }: { onUse: (prompt: PromptTemplate) => void }) {
   const [filter, setFilter] = useState<PromptCategory | 'All'>('All')
@@ -20,7 +14,7 @@ export default function PromptLibrary({ onUse }: { onUse: (prompt: PromptTemplat
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Prompt library</p>
+        <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Prompt library</p>
         <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">
           Ready-made starting points
         </h1>

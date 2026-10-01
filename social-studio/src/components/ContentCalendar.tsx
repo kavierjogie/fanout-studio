@@ -100,7 +100,7 @@ export default function ContentCalendar({
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Content calendar</p>
+        <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Content calendar</p>
         <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">Plan when it goes out</h1>
         <p className="mt-2 max-w-xl text-sm text-mist-400">Schedule pieces you've already created against a date.</p>
       </header>
@@ -136,7 +136,7 @@ export default function ContentCalendar({
                   }}
                   className="field"
                 />
-                  <div data-open={isOpen} className="popover absolute left-0 right-0 z-50 mt-2 max-h-60 overflow-y-auto rounded-xl border border-white/10 bg-ink-900 p-1.5 shadow-2xl">
+                  <div data-open={isOpen} className="popover absolute left-0 right-0 origin-top z-50 mt-2 max-h-60 overflow-y-auto rounded-xl border border-white/10 bg-ink-900 p-1.5 shadow-2xl">
                     {filtered.length === 0 ? (
                       <div className="px-4 py-2.5 text-sm text-mist-400">
                         {unscheduled.length ? 'No matching content found' : 'Nothing left to schedule'}

@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: 'class',
+  // hover: styles only on devices that can hover, so taps don't leave cards stuck lifted
+  future: { hoverOnlyWhenSupported: true },
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
@@ -51,12 +53,18 @@ export default {
         rise: {
           '0%': { opacity: '0', transform: 'translateY(6px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' }
+        },
+        // rise in reverse, so things leave along the path they arrived on
+        sink: {
+          '0%': { opacity: '1', transform: 'translateY(0)' },
+          '100%': { opacity: '0', transform: 'translateY(6px)' }
         }
       },
       animation: {
         'flow-fast': 'flow 1s linear infinite',
         pulseDot: 'pulseDot 2.2s ease-in-out infinite',
-        rise: 'rise 0.35s ease-out both'
+        rise: 'rise 0.35s ease-out both',
+        sink: 'sink 0.2s ease-in both'
       }
     }
   },

@@ -7,7 +7,7 @@ import { PLATFORMS } from '../data/platforms'
 import { ContentItem, Platform } from '../types'
 import EditablePostCard from './EditablePostCard'
 import Collapse from './ui/Collapse'
-import ConfirmButton from './ui/ConfirmButton'
+import DeleteButton from './ui/DeleteButton'
 import EmptyState from './ui/EmptyState'
 
 export default function RecentContent({
@@ -136,7 +136,7 @@ export default function RecentContent({
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-widest text-signal-purple">Recent content</p>
+        <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Recent content</p>
         <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">Everything you've made</h1>
         <p className="mt-2 max-w-xl text-sm text-mist-400">
           Revisit past ideas, copy content again, or transform them into a format you haven't tried yet.
@@ -188,14 +188,14 @@ export default function RecentContent({
             <button
               onClick={expandAll}
               disabled={visibleItems.length === 0}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-xs font-medium text-mist-300 transition-all hover:bg-white/10 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-xs font-medium text-mist-300 transition hover:bg-white/10 disabled:opacity-40 disabled:pointer-events-none"
             >
               Expand all
             </button>
             <button
               onClick={collapseAll}
               disabled={visibleItems.length === 0}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-xs font-medium text-mist-300 transition-all hover:bg-white/10 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-xs font-medium text-mist-300 transition hover:bg-white/10 disabled:opacity-40 disabled:pointer-events-none"
             >
               Collapse all
             </button>
@@ -213,7 +213,7 @@ export default function RecentContent({
                 key={platform.id}
                 onClick={() => togglePlatform(platform.id)}
                 aria-pressed={isSelected}
-                className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-all duration-150 active:scale-[0.98] ${
+                className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition duration-150 ${
                   isSelected
                     ? `platform-active-${platform.id}`
                     : 'bg-white/[0.03] border-white/10 hover:bg-white/10 text-mist-300'
@@ -329,7 +329,7 @@ export default function RecentContent({
                               <Repeat size={13} />
                               Transform further
                             </button>
-                            <ConfirmButton label="Delete post" confirmLabel="Delete all formats" onConfirm={() => onDelete(item.id)} />
+                            <DeleteButton label="Delete post" onDelete={() => onDelete(item.id)} />
                           </div>
                         </div>
                       </Collapse>
@@ -346,7 +346,7 @@ export default function RecentContent({
               <Button
                 intent="ghost"
                 onClick={() => setLimit(prev => prev + 8)}
-                className="w-full max-w-xs border border-white/10 hover:border-signal-purple/30 hover:bg-signal-purple/5 transition-all text-mist-300"
+                className="w-full max-w-xs border border-white/10 hover:border-signal-purple/30 hover:bg-signal-purple/5 transition text-mist-300"
               >
                 Load more ({filteredItems.length - limit} remaining)
               </Button>

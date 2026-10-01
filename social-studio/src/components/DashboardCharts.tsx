@@ -172,7 +172,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
               fill="none"
               strokeDasharray={87.96}
               strokeDashoffset={87.96 - (formats.length / PLATFORMS.length) * 87.96}
-              className="transition-all duration-500 ease-out"
+              className="transition-[stroke-dashoffset] duration-500 ease-out"
             />
           </svg>
         </Stat>
@@ -205,7 +205,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                       strokeDashoffset={-slice.start}
                       fill="none"
                       opacity={hoveredSlice && hoveredSlice !== slice.id ? 0.35 : 1}
-                      className="transition-all duration-200 ease-out"
+                      className="transition-opacity duration-200 ease-out"
                       onMouseEnter={() => setHoveredSlice(slice.id)}
                       onMouseLeave={() => setHoveredSlice(null)}
                     />
@@ -278,7 +278,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                       height={(value / weekAxisMax) * 80}
                       fill={fill}
                       rx="2"
-                      className="transition-all duration-300"
+                      className="transition-[height,y] duration-300"
                     />
                   )
                 return (
@@ -353,7 +353,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                     </div>
                     <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/8">
                       <div
-                        className="h-full rounded-full transition-all duration-500 ease-out"
+                        className="h-full rounded-full transition-[width] duration-500 ease-out"
                         style={{ width: `${Math.max(4, (f.avgWords / maxWords) * 100)}%`, backgroundColor: f.color }}
                       />
                     </div>

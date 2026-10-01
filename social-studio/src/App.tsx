@@ -14,6 +14,8 @@ import { Toaster, toast } from './components/ui/Toast'
 
 export type { View }
 
+const IMAGE_CLEANUP_MS = 30_000
+
 const VIEWS: View[] = ['dashboard', 'create', 'transform', 'library', 'recent', 'calendar']
 const viewFromHash = (): View => {
   const hash = location.hash.slice(1) as View
@@ -40,11 +42,21 @@ export default function App() {
 
   // Every create/update/delete flows through `items`: diff it to remove Blob images nothing references anymore
   const prevItems = useRef(items)
+  const liveItems = useRef(items)
   useEffect(() => {
     saveContent(items)
-    const inUse = new Set(items.flatMap((i) => i.pieces.map((p) => p.imageUrl)))
-    const orphaned = prevItems.current.flatMap((i) => i.pieces.map((p) => p.imageUrl)).filter((u): u is string => !!u && !inUse.has(u))
-    if (orphaned.length) deleteImages([...new Set(orphaned)])
+    liveItems.current = items
+    const imagesOf = (list: ContentItem[]) => list.flatMap((i) => i.pieces.map((p) => p.imageUrl))
+    const inUse = new Set(imagesOf(items))
+    const orphaned = [...new Set(imagesOf(prevItems.current))].filter((u): u is string => !!u && !inUse.has(u))
+    // Deferred past the Undo window, then re-checked so an undone delete keeps its images.
+    // ponytail: undo after IMAGE_CLEANUP_MS (toast hovered that long) restores a post whose images are gone
+    if (orphaned.length) {
+      setTimeout(() => {
+        const live = new Set(imagesOf(liveItems.current))
+        deleteImages(orphaned.filter((u) => !live.has(u)))
+      }, IMAGE_CLEANUP_MS)
+    }
     prevItems.current = items
   }, [items])
 
@@ -58,8 +70,14 @@ export default function App() {
   }
 
   const handleDelete = (id: string) => {
+    const index = items.findIndex((i) => i.id === id)
+    const removed = items[index]
+    if (!removed) return
     setItems((cur) => cur.filter((i) => i.id !== id))
-    toast('Post deleted')
+    toast('Post deleted', {
+      label: 'Undo',
+      onClick: () => setItems((cur) => (cur.some((i) => i.id === id) ? cur : [...cur.slice(0, index), removed, ...cur.slice(index)]))
+    })
   }
 
   const handleSchedule = (id: string, date: string) => {
@@ -89,7 +107,7 @@ export default function App() {
       <Sidebar view={view} setView={setView} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-white/8 bg-ink-950/90 px-5 py-3 backdrop-blur lg:hidden">
+        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-white/[0.06] bg-ink-950/70 px-5 py-3 backdrop-blur-xl backdrop-saturate-150 lg:hidden">
           <div className="flex items-center gap-2">
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-grad-hero">
               <Sparkles size={14} className="text-white" />

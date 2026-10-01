@@ -57,9 +57,10 @@ body {
     letter-spacing: -0.02em;
   }
 
-  /* Press feedback on touch-down for every control, not just hover */
+  /* One press effect for every control: instant on touch-down, eased on release */
   button:not(:disabled):active {
     opacity: 0.7;
+    transition-duration: 0s;
   }
 }
 
@@ -115,8 +116,8 @@ body {
 }
 
 /* Dropdowns stay mounted so they can animate out as well as in */
+/* Set origin-top-left / origin-top-right on each menu so it grows from its trigger */
 .popover {
-  transform-origin: top;
   transition: opacity 150ms ease-out, transform 150ms ease-out, visibility 150ms;
 }
 .popover[data-open='false'] {
@@ -126,17 +127,31 @@ body {
   pointer-events: none;
 }
 
-/* Spinners keep spinning: a frozen spinner reads as a hung app */
+/* Reduced motion: nothing slides, scales or loops, but fades and colour changes stay so state changes are still visible.
+   Spinners keep spinning: a frozen spinner reads as a hung app */
 @media (prefers-reduced-motion: reduce) {
   *:not(.animate-spin), *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+    transition-property: opacity, color, background-color, border-color, box-shadow, visibility !important;
   }
+  .animate-rise {
+    animation: fade-in 0.2s ease-out both !important;
+  }
+  .animate-sink {
+    animation: fade-in 0.15s ease-in reverse both !important;
+  }
+  .popover[data-open='false'] {
+    transform: none;
+  }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .backdrop-blur {
+  [class*='backdrop-blur'] {
     backdrop-filter: none !important;
     background-color: #0B0712 !important;
   }
@@ -230,3 +245,13 @@ body {
   color: #06B6D4;
 }
 
+
+/* Higher contrast: hairline borders become clearly visible edges */
+@media (prefers-contrast: more) {
+  .card-surface, .field, .popover {
+    border-color: rgba(255, 255, 255, 0.35) !important;
+  }
+  .field::placeholder {
+    opacity: 1;
+  }
+}

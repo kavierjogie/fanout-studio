@@ -4,7 +4,7 @@ import Card from './ui/Card'
 import PlatformIcon from './PlatformIcon'
 import RefinePiece from './RefinePiece'
 import CodeRunner from './CodeRunner'
-import ConfirmButton from './ui/ConfirmButton'
+import DeleteButton from './ui/DeleteButton'
 import { platformMeta } from '../data/platforms'
 import { Platform, GeneratedPiece } from '../types'
 
@@ -21,7 +21,6 @@ interface EditablePostCardProps {
   onUpdate: (newContent: string) => void
   onUpdateImage?: (newFields: Partial<GeneratedPiece>) => void
   onDelete?: () => void
-  deleteConfirmLabel?: string
   showHeaderLabel?: boolean
 }
 
@@ -169,7 +168,6 @@ export default function EditablePostCard({
   onUpdate,
   onUpdateImage,
   onDelete,
-  deleteConfirmLabel,
   showHeaderLabel = false
 }: EditablePostCardProps) {
   const [copied, setCopied] = useState(false)
@@ -321,7 +319,7 @@ export default function EditablePostCard({
               </>
             )}
           </button>
-          {onDelete && <ConfirmButton label="Delete" confirmLabel={deleteConfirmLabel} onConfirm={onDelete} />}
+          {onDelete && <DeleteButton label="Delete" onDelete={onDelete} />}
         </div>
       </div>
 
@@ -384,7 +382,7 @@ export default function EditablePostCard({
               </div>
               <button
                 onClick={handleRegenerateImage}
-                className="shrink-0 flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white bg-red-500/25 hover:bg-red-500/40 transition-all"
+                className="shrink-0 flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white bg-red-500/25 hover:bg-red-500/40 transition"
               >
                 <RefreshCw size={12} />
                 Retry image
@@ -409,7 +407,7 @@ export default function EditablePostCard({
                 </button>
                 <button
                   onClick={handleDownloadImage}
-                  className="flex items-center gap-1 rounded-lg bg-signal-purpleDeep hover:brightness-110 px-2.5 py-1.5 text-xs font-semibold text-white transition-all shadow-lg"
+                  className="flex items-center gap-1 rounded-lg bg-signal-purpleDeep hover:brightness-110 px-2.5 py-1.5 text-xs font-semibold text-white transition shadow-lg"
                 >
                   <Download size={12} />
                   Download
@@ -463,7 +461,7 @@ export default function EditablePostCard({
         {limit && (
           <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden relative">
             <div
-              className={`h-full rounded-full transition-all duration-300 ease-out ${barColorClass}`}
+              className={`h-full rounded-full transition-[width] duration-300 ease-out ${barColorClass}`}
               style={{ width: `${(Math.min(currentLength, limit) / limit) * 100}%` }}
             />
           </div>

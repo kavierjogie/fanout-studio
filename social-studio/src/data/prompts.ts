@@ -1,4 +1,4 @@
-import { PromptTemplate } from '../types'
+import { PromptCategory, PromptTemplate } from '../types'
 
 export const PROMPTS: PromptTemplate[] = [
   {
@@ -102,3 +102,9 @@ export const PROMPTS: PromptTemplate[] = [
 ]
 
 export const CATEGORIES = Array.from(new Set(PROMPTS.map((p) => p.category)))
+
+export const categoryAccent = (cat: PromptCategory) => {
+  if (['Marketing', 'Business', 'Branding'].includes(cat)) return 'purple' as const
+  if (['Social Media', 'Engagement'].includes(cat)) return 'pink' as const
+  return 'orange' as const
+}

@@ -338,7 +338,7 @@ export default function RecentPostEditor({
   const showCodePreview = platform === 'code' && parsedCode && parsedCode.code && !isEditing
 
   return (
-    <div className="border border-white/5 rounded-xl bg-white/[0.01] hover:bg-white/[0.02] p-4 transition-all duration-200 group">
+    <div className="border border-white/5 rounded-xl bg-white/[0.01] hover:bg-white/[0.02] p-4 transition duration-200 group">
       {/* Header of the piece card */}
       <div className="flex items-center justify-between border-b border-white/5 pb-2.5 mb-3 select-none">
         <span className="flex items-center gap-2 text-xs font-semibold text-mist-300">
@@ -390,7 +390,7 @@ export default function RecentPostEditor({
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
             placeholder={`Write copy for ${meta?.label || platform}...`}
-            className="w-full min-h-[100px] bg-white/[0.02] hover:bg-white/[0.03] border border-white/10 hover:border-white/15 focus:border-signal-purple/50 rounded-xl p-3 resize-none outline-none font-body text-sm leading-relaxed text-mist-100 placeholder:text-mist-400/30 transition-all focus:ring-0"
+            className="w-full min-h-[100px] bg-white/[0.02] hover:bg-white/[0.03] border border-white/10 hover:border-white/15 focus:border-signal-purple/50 rounded-xl p-3 resize-none outline-none font-body text-sm leading-relaxed text-mist-100 placeholder:text-mist-400/30 transition focus:ring-0"
           />
 
           {/* Action buttons + character limit status */}
@@ -415,7 +415,7 @@ export default function RecentPostEditor({
               {limit && (
                 <div className="w-full h-1 rounded-full bg-white/5 overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all duration-300 ${barColorClass}`}
+                    className={`h-full rounded-full transition-[width] duration-300 ${barColorClass}`}
                     style={{ width: `${(Math.min(currentLength, limit) / limit) * 100}%` }}
                   />
                 </div>
@@ -433,7 +433,7 @@ export default function RecentPostEditor({
               </button>
               <button
                 onClick={handleSave}
-                className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold text-white bg-signal-purpleDeep hover:shadow-glow transition-all hover:scale-[1.02]"
+                className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold text-white bg-signal-purpleDeep hover:shadow-glow transition hover:scale-[1.02]"
               >
                 <Save size={12} />
                 Save Changes
@@ -504,7 +504,7 @@ export default function RecentPostEditor({
               {topic && tone && onUpdateImage && (
                 <button
                   onClick={handleRegenerateImage}
-                  className="shrink-0 flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white bg-red-500/25 hover:bg-red-500/40 transition-all"
+                  className="shrink-0 flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white bg-red-500/25 hover:bg-red-500/40 transition"
                 >
                   <RefreshCw size={12} />
                   Retry Image
@@ -520,7 +520,7 @@ export default function RecentPostEditor({
               />
               
               {/* Overlay controls */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/50 opacity-0 group-hover/img:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-3 select-none">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/50 opacity-0 group-hover/img:opacity-100 group-focus-within/img:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-3 select-none">
                 <div className="flex justify-end gap-2">
                   {topic && tone && onUpdateImage && (
                     <button
