@@ -1,6 +1,6 @@
 # Fanout — one idea, every platform
 
-Create one piece of content and transform it into platform-ready formats: LinkedIn posts, Instagram captions, TikTok scripts, X posts, blog articles, promotional copy, hashtag sets, weekly content calendars, and code snippets.
+**Fanout** turns one idea into content for every platform. Create one piece of content and transform it into platform-ready formats: LinkedIn posts, Instagram captions, TikTok scripts, X posts, blog articles, promotional copy, hashtag sets, weekly content calendars, and code snippets.
 
 ## Core workflow
 
@@ -25,6 +25,16 @@ Set `GROQ_API_KEY` as a server-side environment variable (get a key at https://c
 If the key is missing, generation returns a clear error that is shown in the app.
 
 Your generated content and calendar schedules are saved to `localStorage` so they persist between sessions on the same browser.
+
+## Branding
+
+The logo mark is three post cards fanned out from one point (one idea → many platforms), in the app's purple → pink → orange gradient.
+
+- `social-studio/public/favicon.svg` — the mark on a dark rounded tile; works in light and dark browser tabs
+- `social-studio/public/logo.svg` — mark + "Fanout" wordmark, for use outside the app (docs, social banners)
+- `social-studio/src/components/Logo.tsx` — `<Logo />` (mark + wordmark, optional `tagline`) and `<LogoMark />` (mark only), used in the sidebar and mobile header
+
+Wordmark font is Space Grotesk; the tagline is "One idea, fanned out". The codebase folder is still named `social-studio` and saved data still uses the `studio.content.v1` storage key, so renaming the brand didn't touch existing content.
 
 ## Requirements
 
@@ -65,9 +75,11 @@ npm run preview
 
 ```
 social-studio/
+  public/               favicon.svg and logo.svg
   api/                  Vercel serverless functions (generate.ts → Groq)
   src/
     components/         UI components (Dashboard, CreateContent, TransformContent, RecentContent, ContentCalendar, Sidebar, etc.)
+    components/Logo.tsx Brand logo (mark + wordmark)
     components/ui/      Small shared primitives (Card, Button, Badge)
     data/               Prompt library templates and platform metadata
     lib/                AI client (calls /api/generate), localStorage persistence, and prompting rules
@@ -79,12 +91,12 @@ social-studio/
 
 ## Customizing content generation and platforms
 
-All generation prompt logic lives in [generator.ts](file:///c:/Users/Administrator/Desktop/social-media-content-studio/social-studio/src/lib/generator.ts). Each platform has its own defined prompt instructions in `PLATFORM_INSTRUCTIONS`.
+All generation prompt logic lives in [generator.ts](social-studio/src/lib/generator.ts). Each platform has its own defined prompt instructions in `PLATFORM_INSTRUCTIONS`.
 
 To add a new platform:
 1. Add it to the `Platform` type in `src/types.ts`.
 2. Add its metadata (label, default tone, limits, guidelines) to `src/data/platforms.ts`.
-3. Add its prompt guidelines to `PLATFORM_INSTRUCTIONS` and any custom handler details in [generator.ts](file:///c:/Users/Administrator/Desktop/social-media-content-studio/social-studio/src/lib/generator.ts).
+3. Add its prompt guidelines to `PLATFORM_INSTRUCTIONS` and any custom handler details in [generator.ts](social-studio/src/lib/generator.ts).
 4. Add an icon mapping in `src/components/PlatformIcon.tsx`.
 
 ## Tech stack
