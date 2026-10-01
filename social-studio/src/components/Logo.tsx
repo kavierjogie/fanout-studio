@@ -31,7 +31,7 @@ export default function Logo({ size = 28, tagline = false }: { size?: number; ta
       <LogoMark size={size} />
       <div>
         <p className="font-display text-[15px] font-semibold leading-none tracking-tight text-mist-100">Fanout</p>
-        {tagline && <p className="mt-1 text-[11px] leading-none text-mist-400">Content, everywhere</p>}
+        {tagline && <p className="mt-1 text-[11px] leading-none text-mist-400">One idea, fanned out</p>}
       </div>
     </div>
   )
