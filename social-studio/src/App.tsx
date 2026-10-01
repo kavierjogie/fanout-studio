@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { Menu, Sparkles } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import Sidebar from './components/Sidebar'
+import Logo from './components/Logo'
 import Dashboard from './components/Dashboard'
 import CreateContent from './components/CreateContent'
 import TransformContent from './components/TransformContent'
@@ -108,12 +109,7 @@ export default function App() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-20 flex items-center justify-between border-b border-white/[0.06] bg-ink-950/70 px-5 py-3 backdrop-blur-xl backdrop-saturate-150 lg:hidden">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-grad-hero">
-              <Sparkles size={14} className="text-white" />
-            </div>
-            <span className="font-display text-sm font-semibold text-mist-100">Studio</span>
-          </div>
+          <Logo size={26} />
           <button onClick={() => setSidebarOpen(true)} className="-mr-2 rounded-lg p-2 text-mist-300 hover:bg-white/5 hover:text-mist-100" aria-label="Open menu">
             <Menu size={20} />
           </button>

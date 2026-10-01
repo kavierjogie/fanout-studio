@@ -1,6 +1,7 @@
 import { LayoutGrid, Sparkles, Repeat, BookMarked, Clock, CalendarDays, X } from 'lucide-react'
 import { useEffect } from 'react'
 import { View } from '../types'
+import Logo from './Logo'
 
 const items: { id: View; label: string; icon: typeof LayoutGrid }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutGrid },
@@ -43,15 +44,7 @@ export default function Sidebar({
         }`}
       >
         <div className="flex items-center justify-between px-2">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-grad-hero">
-              <Sparkles size={16} className="text-white" />
-            </div>
-            <div>
-              <p className="font-display text-sm font-semibold leading-none text-mist-100">Studio</p>
-              <p className="mt-1 text-[11px] text-mist-400">Content, everywhere</p>
-            </div>
-          </div>
+          <Logo size={30} tagline />
           <button className="-mr-1 rounded-lg p-2 text-mist-400 hover:bg-white/5 hover:text-mist-100 lg:hidden" onClick={onClose} aria-label="Close menu">
             <X size={18} />
           </button>
