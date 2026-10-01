@@ -30,7 +30,7 @@ export default function Logo({ size = 28, tagline = false }: { size?: number; ta
     <div className="flex items-center gap-2.5">
       <LogoMark size={size} />
       <div>
-        <p className="font-display text-[15px] font-semibold leading-none tracking-tight text-mist-100">Studio</p>
+        <p className="font-display text-[15px] font-semibold leading-none tracking-tight text-mist-100">Fanout</p>
         {tagline && <p className="mt-1 text-[11px] leading-none text-mist-400">Content, everywhere</p>}
       </div>
     </div>

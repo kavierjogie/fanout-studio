@@ -21,7 +21,7 @@ export default function Dashboard({
     <div className="mx-auto max-w-5xl">
       <section className="grid items-center gap-6 overflow-hidden rounded-2xl border border-white/8 bg-grad-panel p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:gap-10">
         <header>
-          <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Studio</p>
+          <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Fanout</p>
           <h1 className="mt-2 font-display text-3xl font-semibold text-mist-100 sm:text-4xl">
             Create once. <span className="text-gradient-hero">Publish everywhere.</span>
           </h1>

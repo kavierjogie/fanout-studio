@@ -1,4 +1,4 @@
-# Studio — Social Media Content Studio
+# Fanout — one idea, every platform
 
 Create one piece of content and transform it into platform-ready formats: LinkedIn posts, Instagram captions, TikTok scripts, X posts, blog articles, promotional copy, hashtag sets, weekly content calendars, and code snippets.
 
