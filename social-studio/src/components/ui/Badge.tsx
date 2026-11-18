@@ -1,11 +1,11 @@
 import { ReactNode } from 'react'
 
-type Accent = 'purple' | 'pink' | 'orange' | 'neutral'
+type Accent = 'vermilion' | 'parchment' | 'ochre' | 'neutral'
 
 const accentClasses: Record<Accent, string> = {
-  purple: 'bg-signal-purple/15 text-violet-300 border-signal-purple/30',
-  pink: 'bg-signal-pink/15 text-pink-300 border-signal-pink/30',
-  orange: 'bg-signal-orange/15 text-orange-300 border-signal-orange/30',
+  vermilion: 'bg-accent/15 text-accent-soft border-accent/30',
+  parchment: 'bg-mist-300/10 text-mist-100 border-mist-300/30',
+  ochre: 'bg-ochre/15 text-ochre border-ochre/30',
   neutral: 'bg-white/5 text-mist-300 border-white/10'
 }
 

@@ -24,25 +24,16 @@ export default function PipelineSignature({
   return (
     <div className={className}>
       <svg viewBox="14 8 436 244" className="w-full h-auto" role="img" aria-label="One idea transforming into four platform-ready formats">
-        <defs>
-          <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#8B5CF6" />
-            <stop offset="55%" stopColor="#EC4899" />
-            <stop offset="100%" stopColor="#F97316" />
-          </linearGradient>
-        </defs>
-
         {/* source node */}
         <g className={isGenerating ? "animate-pulse" : ""} style={{ transformOrigin: '60px 130px' }}>
-          <circle cx="60" cy="130" r="34" fill="#1A1128" stroke={isGenerating ? "#EC4899" : "#8B5CF6"} strokeWidth={isGenerating ? 2.5 : 1.5} className="transition duration-300" />
-          <circle cx="60" cy="130" r="34" fill="url(#lineGrad)" opacity={isGenerating ? 0.35 : 0.12} className="transition duration-300" />
+          <circle cx="60" cy="130" r="34" fill="#26221D" stroke="#FF5A3C" strokeWidth={isGenerating ? 2.5 : 1.5} className="transition duration-300" />
           {isGenerating && (
-            <circle cx="60" cy="130" r="42" fill="none" stroke="#EC4899" strokeWidth="1.5" opacity="0.4" className="animate-ping" style={{ transformOrigin: '60px 130px', animationDuration: '1.5s' }} />
+            <circle cx="60" cy="130" r="42" fill="none" stroke="#FF5A3C" strokeWidth="1.5" opacity="0.4" className="animate-ping" style={{ transformOrigin: '60px 130px', animationDuration: '1.5s' }} />
           )}
-          <text x="60" y="126" textAnchor="middle" fontSize="11" fill="#EFE9F7" fontFamily="Space Grotesk, sans-serif" fontWeight="600" className="select-none pointer-events-none">
+          <text x="60" y="126" textAnchor="middle" fontSize="11" fill="#F3ECDF" fontFamily="IBM Plex Mono, monospace" fontWeight="500" letterSpacing="0.08em" className="select-none pointer-events-none">
             YOUR
           </text>
-          <text x="60" y="140" textAnchor="middle" fontSize="11" fill="#EFE9F7" fontFamily="Space Grotesk, sans-serif" fontWeight="600" className="select-none pointer-events-none">
+          <text x="60" y="140" textAnchor="middle" fontSize="11" fill="#F3ECDF" fontFamily="IBM Plex Mono, monospace" fontWeight="500" letterSpacing="0.08em" className="select-none pointer-events-none">
             IDEA
           </text>
         </g>
@@ -50,9 +41,9 @@ export default function PipelineSignature({
         {/* dynamic platform lines and nodes */}
         {targets.map((t, i) => {
           const isActive = selectedPlatforms ? selectedPlatforms.includes(t.id) : true
-          const strokeColor = isActive ? t.color : '#241733'
-          const labelColor = isActive ? '#EFE9F7' : '#332145'
-          const iconColor = isActive ? t.color : '#332145'
+          const strokeColor = isActive ? t.color : '#3A342C'
+          const labelColor = isActive ? '#F3ECDF' : '#4A4339'
+          const iconColor = isActive ? t.color : '#4A4339'
           const pathOpacity = isActive ? (isGenerating ? 0.95 : 0.65) : 0.15
           const nodeOpacity = isActive ? 1.0 : 0.35
 
@@ -66,7 +57,7 @@ export default function PipelineSignature({
               <path
                 d={`M94,130 C220,130 220,${t.y} 330,${t.y}`}
                 fill="none"
-                stroke="url(#lineGrad)"
+                stroke="#FF5A3C"
                 strokeWidth={isActive ? (isGenerating ? 2.5 : 1.5) : 1}
                 strokeDasharray={isActive ? (isGenerating ? "4 4" : "6 6") : undefined}
                 className={isActive && isGenerating ? "animate-flow-fast" : ""}
@@ -115,11 +106,11 @@ export default function PipelineSignature({
                 )}
                 <circle
                   r="22"
-                  fill="#120B1E"
+                  fill="#1C1915"
                   stroke={strokeColor}
                   strokeWidth={isActive ? 1.5 : 1}
                   opacity={nodeOpacity}
-                  className="transition duration-300 group-hover:stroke-signal-pink"
+                  className="transition duration-300 group-hover:stroke-accent-soft"
                 />
                 <foreignObject
                   x="-11"
@@ -130,7 +121,7 @@ export default function PipelineSignature({
                   className="transition duration-300 pointer-events-none"
                 >
                   <div style={{ color: iconColor, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 22, height: 22 }}>
-                    <PlatformIcon platform={t.id} size={14} className="transition-colors duration-300 group-hover:text-signal-pink" />
+                    <PlatformIcon platform={t.id} size={14} className="transition-colors duration-300 group-hover:text-accent-soft" />
                   </div>
                 </foreignObject>
               </g>
@@ -141,7 +132,7 @@ export default function PipelineSignature({
                 y={t.y + 4}
                 fontSize="13"
                 fill={labelColor}
-                fontFamily="Inter, sans-serif"
+                fontFamily="Inter Tight, sans-serif"
                 fontWeight={isActive ? "600" : "400"}
                 className="transition duration-300 select-none group-hover:fill-mist-100"
               >

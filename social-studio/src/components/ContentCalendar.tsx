@@ -100,8 +100,8 @@ export default function ContentCalendar({
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Content calendar</p>
-        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">Plan when it goes out</h1>
+        <p className="font-mono text-xs uppercase tracking-wider text-accent">Content calendar</p>
+        <h1 className="mt-2 font-display text-4xl leading-tight text-mist-100 sm:text-5xl">Plan when it goes out</h1>
         <p className="mt-2 max-w-xl text-sm text-mist-400">Schedule pieces you've already created against a date.</p>
       </header>
 
@@ -119,7 +119,7 @@ export default function ContentCalendar({
       ) : (
         <>
           <Card className="relative z-10 mb-4 sm:!p-6">
-            <p className="mb-3 font-display text-sm font-semibold text-mist-100">Schedule a piece</p>
+            <p className="mb-3 text-sm font-semibold text-mist-100">Schedule a piece</p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <div ref={containerRef} className="relative flex-1">
                 <input
@@ -180,7 +180,7 @@ export default function ContentCalendar({
 
           <Card className="mb-8 !p-4 sm:!p-6">
             <div className="mb-4 flex items-center justify-between">
-              <p className="font-display text-sm font-semibold text-mist-100" aria-live="polite">{monthLabel}</p>
+              <p className="text-sm font-semibold text-mist-100" aria-live="polite">{monthLabel}</p>
               <div className="flex items-center gap-1">
                 {(month.y !== now.getFullYear() || month.m !== now.getMonth()) && (
                   <button
@@ -224,16 +224,16 @@ export default function ContentCalendar({
                     onClick={() => setPendingDate(selected ? '' : date)}
                     className={`flex h-12 flex-col items-start justify-between rounded-lg border p-1.5 text-left text-xs transition-colors sm:h-16 sm:p-2 ${
                       selected
-                        ? 'border-signal-purple bg-signal-purple/20 text-mist-100'
+                        ? 'border-accent bg-accent/20 text-mist-100'
                         : date === today
-                          ? 'border-signal-purple/50 bg-white/[0.03] text-mist-100'
+                          ? 'border-accent/50 bg-white/[0.03] text-mist-100'
                           : 'border-transparent bg-white/[0.03] text-mist-300'
                     } ${isPast ? 'opacity-50' : 'hover:border-white/20 hover:bg-white/[0.07]'}`}
                   >
-                    <span className={date === today ? 'font-semibold text-violet-300' : ''}>{i + 1}</span>
+                    <span className={date === today ? 'font-semibold text-accent-soft' : ''}>{i + 1}</span>
                     {count > 0 && (
-                      <span className="flex items-center gap-1 rounded-full bg-signal-orange/20 px-1.5 text-[11px] font-medium leading-4 text-orange-300">
-                        <span className="h-1.5 w-1.5 rounded-full bg-signal-orange" />
+                      <span className="flex items-center gap-1 rounded-full bg-ochre/20 px-1.5 text-[11px] font-medium leading-4 text-ochre">
+                        <span className="h-1.5 w-1.5 rounded-full bg-ochre" />
                         {count}
                         <span className="hidden sm:inline">{count === 1 ? 'post' : 'posts'}</span>
                       </span>
@@ -245,7 +245,7 @@ export default function ContentCalendar({
             <p className="mt-3 text-xs text-mist-400">Pick a day to fill in the date above.</p>
           </Card>
 
-          <h2 className="mb-3 font-display text-lg font-semibold text-mist-100">Scheduled</h2>
+          <h2 className="mb-3 font-display text-2xl text-mist-100">Scheduled</h2>
           {grouped.length === 0 ? (
             <EmptyState
               icon={CalendarDays}
@@ -258,7 +258,7 @@ export default function ContentCalendar({
                 <div key={date}>
                   <p className={`mb-2 text-sm font-medium ${date < today ? 'text-mist-400' : 'text-mist-300'}`}>
                     {new Date(date + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
-                    {date === today && <span className="ml-2 text-xs text-violet-300">Today</span>}
+                    {date === today && <span className="ml-2 text-xs text-accent-soft">Today</span>}
                     {date < today && <span className="ml-2 text-xs">Past</span>}
                   </p>
                   <div className="space-y-2">
@@ -273,7 +273,7 @@ export default function ContentCalendar({
                             className="flex w-full items-center justify-between gap-4 px-4 py-4 text-left hover:bg-white/[0.03] transition-colors duration-150 sm:px-5"
                           >
                             <div className="min-w-0">
-                              <p className="truncate font-display text-sm font-medium text-mist-100">{i.topic}</p>
+                              <p className="truncate text-sm font-semibold text-mist-100">{i.topic}</p>
                               <p className="mt-1 text-xs text-mist-400">
                                 {i.pieces.length} format{i.pieces.length === 1 ? '' : 's'}
                               </p>

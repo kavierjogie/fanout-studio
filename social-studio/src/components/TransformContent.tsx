@@ -107,8 +107,8 @@ export default function TransformContent({
     return (
       <div className="mx-auto max-w-5xl">
         <header className="mb-8">
-          <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Transform content</p>
-          <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">One idea, more platforms</h1>
+          <p className="font-mono text-xs uppercase tracking-wider text-accent">Transform content</p>
+          <h1 className="mt-2 font-display text-4xl leading-tight text-mist-100 sm:text-5xl">One idea, more platforms</h1>
         </header>
         <EmptyState
           icon={Repeat}
@@ -127,8 +127,8 @@ export default function TransformContent({
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Transform content</p>
-        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">
+        <p className="font-mono text-xs uppercase tracking-wider text-accent">Transform content</p>
+        <h1 className="mt-2 font-display text-4xl leading-tight text-mist-100 sm:text-5xl">
           One idea, more platforms
         </h1>
         <p className="mt-2 max-w-xl text-sm text-mist-400">
@@ -138,7 +138,7 @@ export default function TransformContent({
 
       <Card className="space-y-6 sm:!p-6">
         <div>
-          <p id="source-label" className="mb-2 font-display text-sm font-semibold text-mist-100">Source content</p>
+          <p id="source-label" className="mb-2 text-sm font-semibold text-mist-100">Source content</p>
           <div className="relative" ref={dropdownRef} onKeyDown={(e) => e.key === 'Escape' && setDropdownOpen(false)}>
             <button
               type="button"
@@ -216,7 +216,7 @@ export default function TransformContent({
 
             {available.length > 0 ? (
               <div>
-                <p className="mb-2.5 font-display text-sm font-semibold text-mist-100">Transform into</p>
+                <p className="mb-2.5 text-sm font-semibold text-mist-100">Transform into</p>
                 <div className="flex flex-wrap gap-2">
                   {available.map((p) => {
                     const active = targets.includes(p.id)

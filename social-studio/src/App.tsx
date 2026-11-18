@@ -104,7 +104,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex min-h-screen bg-ink-950 text-mist-100">
+    <div className="flex min-h-screen text-mist-100">
       <Sidebar view={view} setView={setView} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex min-w-0 flex-1 flex-col">

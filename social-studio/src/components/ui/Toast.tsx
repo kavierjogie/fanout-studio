@@ -73,7 +73,7 @@ function Toast({ item, onDone }: { item: ToastItem; onDone: () => void }) {
             item.action!.onClick()
             setLeaving(true)
           }}
-          className="-my-1 -mr-2 ml-2 rounded-lg px-2.5 py-1 text-sm font-semibold text-violet-300 transition-colors hover:bg-white/5 hover:text-violet-200"
+          className="-my-1 -mr-2 ml-2 rounded-lg px-2.5 py-1 text-sm font-semibold text-accent-soft transition-colors hover:bg-white/5 hover:text-mist-100"
         >
           {item.action.label}
         </button>

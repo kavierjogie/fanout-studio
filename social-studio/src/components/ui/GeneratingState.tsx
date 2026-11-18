@@ -10,9 +10,9 @@ export default function GeneratingState({ title, description }: { title: string;
   return (
     <div ref={ref} role="status" className="card-surface mt-6 scroll-mb-6 animate-rise rounded-2xl p-5">
       <div className="flex items-center gap-3">
-        <div className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-signal-purple/30 border-t-signal-purple" />
+        <div className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-accent/30 border-t-accent" />
         <div>
-          <p className="font-display text-sm font-semibold text-mist-100">{title}</p>
+          <p className="text-sm font-semibold text-mist-100">{title}</p>
           <p className="mt-0.5 text-xs text-mist-400">{description}</p>
         </div>
       </div>

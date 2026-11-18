@@ -51,7 +51,7 @@ export interface PlatformMeta {
   id: Platform
   label: string
   shortLabel: string
-  accent: 'purple' | 'pink' | 'orange'
+  accent: 'vermilion' | 'parchment' | 'ochre'
   charLimit?: number
   description: string
 }

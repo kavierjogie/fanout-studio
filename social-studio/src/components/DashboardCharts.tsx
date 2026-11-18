@@ -6,7 +6,7 @@ import { ContentItem, Platform } from '../types'
 import { PLATFORMS } from '../data/platforms'
 
 const BRAND_COLORS: Record<Platform, string> = {
-  blog: '#8B5CF6',
+  blog: '#C9BFAE',
   linkedin: '#0A66C2',
   instagram: '#E1306C',
   tiktok: '#25F4EE',
@@ -44,10 +44,10 @@ function Stat({
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="flex items-center gap-1.5 text-xs text-mist-400">
-            <Icon size={13} className="shrink-0 text-signal-purple" />
+            <Icon size={13} className="shrink-0 text-accent" />
             <span className="truncate">{label}</span>
           </p>
-          <p className="mt-2 font-display text-2xl font-semibold leading-none text-mist-100">{value}</p>
+          <p className="mt-2 text-3xl font-semibold leading-none tabular-nums text-mist-100">{value}</p>
         </div>
         {children}
       </div>
@@ -59,7 +59,7 @@ function Stat({
 function ChartCard({ title, description, children }: { title: string; description: string; children: ReactNode }) {
   return (
     <Card className="flex h-full flex-col">
-      <h3 className="font-display text-sm font-semibold text-mist-100">{title}</h3>
+      <h3 className="text-sm font-semibold text-mist-100">{title}</h3>
       <p className="mt-0.5 text-xs text-mist-400">{description}</p>
       <div className="mt-5 flex flex-1 flex-col justify-center">{children}</div>
     </Card>
@@ -166,7 +166,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
               cx="18"
               cy="18"
               r="14"
-              stroke="#8B5CF6"
+              stroke="#FF5A3C"
               strokeWidth="3"
               strokeLinecap="round"
               fill="none"
@@ -212,7 +212,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                   ))}
                 </svg>
                 <div className="pointer-events-none absolute flex flex-col items-center text-center">
-                  <span className="font-display text-lg font-semibold leading-none text-mist-100">
+                  <span className="text-xl font-semibold leading-none tabular-nums text-mist-100">
                     {activeSlice ? `${Math.round(activeSlice.share * 100)}%` : totalPieces}
                   </span>
                   <span className="mt-1 text-[11px] text-mist-400">{activeSlice ? activeSlice.label : 'drafts'}</span>
@@ -291,12 +291,12 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                       rx="4"
                       fill={hovered ? 'rgba(255,255,255,0.04)' : 'transparent'}
                     />
-                    {bar(d.created, xCenter - 11, '#8B5CF6')}
-                    {bar(d.scheduled, xCenter + 1, '#F97316')}
+                    {bar(d.created, xCenter - 11, '#FF5A3C')}
+                    {bar(d.scheduled, xCenter + 1, '#E9C46A')}
                     <text
                       x={xCenter}
                       y="111"
-                      fill={d.isToday || hovered ? '#EFE9F7' : 'rgba(255,255,255,0.55)'}
+                      fill={d.isToday || hovered ? '#F3ECDF' : 'rgba(255,255,255,0.55)'}
                       fontSize="9"
                       fontWeight={d.isToday ? 600 : 400}
                       textAnchor="middle"
@@ -315,11 +315,11 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
               >
                 <p className="font-semibold text-mist-100">{week[hoveredDay].dateLabel}</p>
                 <p className="mt-1 flex items-center gap-1.5 text-mist-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-signal-purple" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />
                   {week[hoveredDay].created} created
                 </p>
                 <p className="flex items-center gap-1.5 text-mist-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-signal-orange" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-ochre" />
                   {week[hoveredDay].scheduled} scheduled
                 </p>
               </div>
@@ -328,10 +328,10 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
 
           <div className="mt-3 flex justify-center gap-4 text-[11px] text-mist-400">
             <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-sm bg-signal-purple" /> Created
+              <span className="h-2 w-2 rounded-sm bg-accent" /> Created
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-sm bg-signal-orange" /> Scheduled
+              <span className="h-2 w-2 rounded-sm bg-ochre" /> Scheduled
             </span>
           </div>
         </ChartCard>

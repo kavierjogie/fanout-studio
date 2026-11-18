@@ -28,13 +28,19 @@ Your generated content and calendar schedules are saved to `localStorage` so the
 
 ## Branding
 
-The logo mark is three post cards fanned out from one point (one idea → many platforms), in the app's purple → pink → orange gradient.
+The visual identity is **Proof Sheet**: an editor's desk at night. Warm charcoal "paper", cream ink, and one proofreader's vermilion for the next action.
+
+- **Colour** (tokens in `social-studio/tailwind.config.js`): page `ink-950` #14120F, card `ink-900` #1C1915, rule `ink-700` #3A342C; text `mist-100` #F3ECDF / `mist-300` #C9BFAE / `mist-400` #9C907F; `accent` #FF5A3C is the only interactive colour (primary buttons, focus, active nav), with `accent-soft` #FF8F78 for accent text on tinted backgrounds and `accent-ink` for text on solid accent. `ochre` #E9C46A labels categories and "scheduled". Platform brand colours stay on platform glyphs only. Every text pair meets WCAG AA (lowest 5.05:1).
+- **Type**: Instrument Serif for page titles and large headings only (it has a single weight and is weak below 24px), Inter Tight for UI and drafts, IBM Plex Mono for labels, counts and dates.
+- **Shape**: flat surfaces with hairline rules, no gradients or glows; 4–8px corners; numbered index navigation.
+
+The logo mark is three post cards fanned out from one point (one idea → many platforms): vermilion in front, ochre and parchment behind.
 
 - `social-studio/public/favicon.svg` — the mark on a dark rounded tile; works in light and dark browser tabs
 - `social-studio/public/logo.svg` — mark + "Fanout" wordmark, for use outside the app (docs, social banners)
 - `social-studio/src/components/Logo.tsx` — `<Logo />` (mark + wordmark, optional `tagline`) and `<LogoMark />` (mark only), used in the sidebar and mobile header
 
-Wordmark font is Space Grotesk; the tagline is "One idea, fanned out". The codebase folder is still named `social-studio` and saved data still uses the `studio.content.v1` storage key, so renaming the brand didn't touch existing content.
+Wordmark font is Instrument Serif; the tagline is "One idea, fanned out". The codebase folder is still named `social-studio` and saved data still uses the `studio.content.v1` storage key, so renaming the brand didn't touch existing content.
 
 ## Requirements
 

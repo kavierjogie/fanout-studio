@@ -185,7 +185,7 @@ export default function CodeRunner({ code, language }: { code: string; language:
         <button
           onClick={start}
           disabled={running}
-          className={`${btn} border-transparent bg-signal-purple hover:bg-signal-purple/85 text-white shadow-lg`}
+          className={`${btn} border-transparent bg-accent hover:bg-accent/85 text-accent-ink shadow-lg`}
         >
           <Play size={12} />
           {running ? 'Running…' : run ? 'Run Again' : 'Run Code'}

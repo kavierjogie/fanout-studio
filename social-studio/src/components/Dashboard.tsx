@@ -1,4 +1,4 @@
-import { Sparkles, Repeat, BookMarked, Clock, CalendarDays, ArrowRight } from 'lucide-react'
+import { PenLine, Repeat, BookMarked, Clock, CalendarDays, ArrowRight } from 'lucide-react'
 import Card from './ui/Card'
 import Button from './ui/Button'
 import PlatformIcon from './PlatformIcon'
@@ -19,18 +19,18 @@ export default function Dashboard({
 
   return (
     <div className="mx-auto max-w-5xl">
-      <section className="grid items-center gap-6 overflow-hidden rounded-2xl border border-white/8 bg-grad-panel p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:gap-10">
+      <section className="grid items-center gap-6 overflow-hidden rounded-2xl border border-ink-700 bg-ink-900 p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:gap-10">
         <header>
-          <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Fanout</p>
-          <h1 className="mt-2 font-display text-3xl font-semibold text-mist-100 sm:text-4xl">
-            Create once. <span className="text-gradient-hero">Publish everywhere.</span>
+          <p className="font-mono text-xs uppercase tracking-wider text-accent">Fanout</p>
+          <h1 className="mt-2 font-display text-5xl leading-[1.02] text-mist-100 sm:text-6xl">
+            Create once. <em className="text-accent">Publish everywhere.</em>
           </h1>
           <p className="mt-3 max-w-md text-sm leading-relaxed text-mist-300">
             Start with a single idea and generate every platform-ready format from it — no separate tools, no starting over.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button intent="primary" onClick={() => setView('create')}>
-              <Sparkles size={15} />
+              <PenLine size={15} />
               Create content
             </Button>
             <Button intent="ghost" onClick={() => setView('library')}>
@@ -49,7 +49,7 @@ export default function Dashboard({
       {recent.length > 0 && (
         <div className="mt-10">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold text-mist-100">Pick up where you left off</h2>
+            <h2 className="font-display text-2xl text-mist-100">Pick up where you left off</h2>
             <button onClick={() => setView('recent')} className="flex items-center gap-1 text-xs text-mist-400 hover:text-mist-100">
               View all <ArrowRight size={12} />
             </button>
@@ -57,7 +57,7 @@ export default function Dashboard({
           <div className="space-y-2">
             {recent.map((item) => (
               <button key={item.id} onClick={() => onOpenItem(item.id)} className="block w-full text-left">
-                <Card className="flex items-center justify-between gap-4 !py-4 transition-colors hover:border-signal-purple/30">
+                <Card className="flex items-center justify-between gap-4 !py-4 transition-colors hover:border-accent/30">
                   <div className="min-w-0">
                     <p className="truncate text-sm text-mist-100">{item.topic}</p>
                     <p className="mt-0.5 text-xs text-mist-400">
@@ -81,23 +81,23 @@ export default function Dashboard({
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <button onClick={() => setView('transform')} className="text-left">
-          <Card className="h-full transition-colors hover:border-signal-purple/30">
-            <Repeat size={18} className="text-signal-purple" />
-            <p className="mt-3 font-display text-sm font-semibold text-mist-100">Transform content</p>
+          <Card className="h-full transition-colors hover:border-accent/30">
+            <Repeat size={18} className="text-accent" />
+            <p className="mt-3 text-sm font-semibold text-mist-100">Transform content</p>
             <p className="mt-1 text-xs text-mist-400">Expand something you've made into new formats.</p>
           </Card>
         </button>
         <button onClick={() => setView('recent')} className="text-left">
-          <Card className="h-full transition-colors hover:border-signal-purple/30">
-            <Clock size={18} className="text-signal-purple" />
-            <p className="mt-3 font-display text-sm font-semibold text-mist-100">Recent content</p>
+          <Card className="h-full transition-colors hover:border-accent/30">
+            <Clock size={18} className="text-accent" />
+            <p className="mt-3 text-sm font-semibold text-mist-100">Recent content</p>
             <p className="mt-1 text-xs text-mist-400">Pick up where you left off.</p>
           </Card>
         </button>
         <button onClick={() => setView('calendar')} className="text-left">
-          <Card className="h-full transition-colors hover:border-signal-purple/30">
-            <CalendarDays size={18} className="text-signal-purple" />
-            <p className="mt-3 font-display text-sm font-semibold text-mist-100">Content calendar</p>
+          <Card className="h-full transition-colors hover:border-accent/30">
+            <CalendarDays size={18} className="text-accent" />
+            <p className="mt-3 text-sm font-semibold text-mist-100">Content calendar</p>
             <p className="mt-1 text-xs text-mist-400">See what's scheduled and what's next.</p>
           </Card>
         </button>

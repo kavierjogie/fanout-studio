@@ -82,13 +82,13 @@ function highlightCode(line: string, language: string): React.ReactNode[] {
 
   return parts.map((part, index) => {
     if (part.type === 'keyword') {
-      return <span key={index} className="text-signal-pink font-semibold">{part.text}</span>
+      return <span key={index} className="text-accent-soft font-semibold">{part.text}</span>
     }
     if (part.type === 'string') {
       return <span key={index} className="text-amber-300">{part.text}</span>
     }
     if (part.type === 'number') {
-      return <span key={index} className="text-signal-orange">{part.text}</span>
+      return <span key={index} className="text-ochre">{part.text}</span>
     }
     return <span key={index}>{part.text}</span>
   })
@@ -191,12 +191,12 @@ export default function RecentPostEditor({
     } else {
       statusText = '✓ Within limit'
       statusColorClass = 'text-emerald-400'
-      if (meta.accent === 'purple') {
-        barColorClass = 'bg-signal-purple'
-      } else if (meta.accent === 'pink') {
-        barColorClass = 'bg-signal-pink'
-      } else if (meta.accent === 'orange') {
-        barColorClass = 'bg-signal-orange'
+      if (meta.accent === 'vermilion') {
+        barColorClass = 'bg-accent'
+      } else if (meta.accent === 'parchment') {
+        barColorClass = 'bg-mist-300'
+      } else if (meta.accent === 'ochre') {
+        barColorClass = 'bg-ochre'
       }
     }
   }
@@ -390,7 +390,7 @@ export default function RecentPostEditor({
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
             placeholder={`Write copy for ${meta?.label || platform}...`}
-            className="w-full min-h-[100px] bg-white/[0.02] hover:bg-white/[0.03] border border-white/10 hover:border-white/15 focus:border-signal-purple/50 rounded-xl p-3 resize-none outline-none font-body text-sm leading-relaxed text-mist-100 placeholder:text-mist-400/30 transition focus:ring-0"
+            className="w-full min-h-[100px] bg-white/[0.02] hover:bg-white/[0.03] border border-white/10 hover:border-white/15 focus:border-accent/50 rounded-xl p-3 resize-none outline-none font-body text-sm leading-relaxed text-mist-100 placeholder:text-mist-400/30 transition focus:ring-0"
           />
 
           {/* Action buttons + character limit status */}
@@ -433,7 +433,7 @@ export default function RecentPostEditor({
               </button>
               <button
                 onClick={handleSave}
-                className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold text-white bg-signal-purpleDeep hover:shadow-glow transition hover:scale-[1.02]"
+                className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold text-accent-ink bg-accent transition hover:scale-[1.02]"
               >
                 <Save size={12} />
                 Save Changes
@@ -457,7 +457,7 @@ export default function RecentPostEditor({
                 if (line.trim().startsWith('-') || line.trim().startsWith('*')) {
                   return (
                     <div key={i} className="flex gap-2 items-start mt-1 pl-1">
-                      <span className="text-signal-purple">•</span>
+                      <span className="text-accent">•</span>
                       <span>{line.replace(/^[-*]\s*/, '')}</span>
                     </div>
                   )
@@ -491,8 +491,7 @@ export default function RecentPostEditor({
           
           {imageGenerating ? (
             <div className="w-full aspect-[16/9] rounded-xl border border-white/10 bg-white/[0.01] flex flex-col items-center justify-center relative overflow-hidden animate-pulse select-none">
-              <div className="absolute inset-0 bg-grad-panel opacity-20 blur-xl"></div>
-              <RefreshCw size={20} className="text-signal-purple animate-spin" />
+              <RefreshCw size={20} className="text-accent animate-spin" />
               <span className="mt-2 text-xs text-mist-300 font-medium">Generating visual prompt & rendering...</span>
             </div>
           ) : imageError ? (
@@ -533,7 +532,7 @@ export default function RecentPostEditor({
                   )}
                   <button
                     onClick={handleDownloadImage}
-                    className="flex items-center gap-1 rounded-lg bg-signal-purple hover:bg-signal-purple/85 px-2.5 py-1.5 text-xs font-semibold text-white transition-colors shadow-lg"
+                    className="flex items-center gap-1 rounded-lg bg-accent hover:bg-accent/85 px-2.5 py-1.5 text-xs font-semibold text-accent-ink transition-colors shadow-lg"
                   >
                     <Download size={12} />
                     Download
@@ -542,7 +541,7 @@ export default function RecentPostEditor({
                 
                 {imagePrompt && (
                   <div className="bg-black/50 backdrop-blur-sm border border-white/5 rounded-lg p-2.5">
-                    <p className="font-mono text-[9px] uppercase tracking-wider text-signal-purple mb-0.5">Visual Prompt</p>
+                    <p className="font-mono text-[9px] uppercase tracking-wider text-accent mb-0.5">Visual Prompt</p>
                     <p className="text-xs text-mist-300 line-clamp-2 leading-relaxed">{imagePrompt}</p>
                   </div>
                 )}

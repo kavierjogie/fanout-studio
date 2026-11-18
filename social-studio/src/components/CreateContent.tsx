@@ -212,8 +212,8 @@ export default function CreateContent({
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Create content</p>
-        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">
+        <p className="font-mono text-xs uppercase tracking-wider text-accent">Create content</p>
+        <h1 className="mt-2 font-display text-4xl leading-tight text-mist-100 sm:text-5xl">
           Turn one idea into platform-ready content
         </h1>
         <p className="mt-2 max-w-xl text-sm text-mist-400">
@@ -221,11 +221,7 @@ export default function CreateContent({
         </p>
       </header>
 
-      <Card
-        className="shadow-[0_24px_60px_-30px_rgba(139,92,246,0.35)] sm:!p-7"
-        // Inline so it layers over card-surface's background shorthand
-        style={{ backgroundImage: 'radial-gradient(120% 80% at 0% 0%, rgba(139,92,246,0.10) 0%, transparent 55%), linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)' }}
-      >
+      <Card className="sm:!p-7">
         {/* Locked while generating so the inputs always match the drafts being written */}
         <fieldset disabled={generating} className="min-w-0 space-y-8 transition-opacity disabled:opacity-60">
         <TemplatePicker
@@ -238,8 +234,8 @@ export default function CreateContent({
 
         {/* Topic Input */}
         <div>
-          <label htmlFor="topic" className="flex items-center gap-2 font-display text-sm font-semibold text-mist-100">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-signal-purpleDeep text-[11px] text-white">1</span>
+          <label htmlFor="topic" className="flex items-center gap-2 text-sm font-semibold text-mist-100">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[11px] text-accent-ink">1</span>
             {selectedPrompt ? 'What should this template be about?' : "What's your topic or idea?"}
           </label>
           <textarea
@@ -252,7 +248,7 @@ className="field mt-3 resize-none !py-3 leading-relaxed"
           />
           {selectedPrompt && (
             <div className="mt-3 rounded-xl border border-white/5 bg-white/[0.01] p-3 text-xs text-mist-400">
-              <p className="font-mono text-[11px] uppercase tracking-wider text-signal-purple">Compiled prompt preview</p>
+              <p className="font-mono text-[11px] uppercase tracking-wider text-accent">Compiled prompt preview</p>
               <p className="mt-1 italic">"{compiledPrompt}"</p>
             </div>
           )}
@@ -260,8 +256,8 @@ className="field mt-3 resize-none !py-3 leading-relaxed"
 
         {/* Platforms */}
         <div>
-          <p className="flex items-center gap-2 font-display text-sm font-semibold text-mist-100">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-signal-purpleDeep text-[11px] text-white">2</span>
+          <p className="flex items-center gap-2 text-sm font-semibold text-mist-100">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[11px] text-accent-ink">2</span>
             Which platforms?
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -307,7 +303,7 @@ className="field mt-3 resize-none !py-3 leading-relaxed"
                     aria-pressed={tone === t.id}
                     className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
                       tone === t.id
-                        ? 'border-signal-purple/40 bg-signal-purple/15 text-violet-200'
+                        ? 'border-accent/40 bg-accent/15 text-accent-soft'
                         : 'border-white/10 text-mist-400 hover:text-mist-100'
                     }`}
                   >
@@ -353,7 +349,7 @@ className="field mt-3 resize-none !py-3 leading-relaxed"
         <div ref={resultsRef} className="mt-8 scroll-mt-20 animate-rise lg:scroll-mt-6">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="font-display text-lg font-semibold text-mist-100">Your drafts</h2>
+              <h2 className="font-display text-2xl text-mist-100">Your drafts</h2>
               <p className="mt-0.5 text-xs text-mist-400">Saved automatically. Edit, refine, or copy each one.</p>
             </div>
             <Button intent="ghost" onClick={() => goToTransform(result)}>

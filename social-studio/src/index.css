@@ -12,8 +12,8 @@
 }
 
 html, body {
-  background: #0B0712;
-  color: #EFE9F7;
+  background: #14120F;
+  color: #F3ECDF;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -23,12 +23,14 @@ html, body {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  background-image: radial-gradient(rgba(243, 236, 223, 0.035) 1px, transparent 1px);
+  background-size: 3px 3px;
+  font-family: 'Inter Tight', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: rgba(139, 92, 246, 0.35);
+  background: rgba(255, 90, 60, 0.35);
 }
 
 ::-webkit-scrollbar {
@@ -39,15 +41,15 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #241733;
+  background: #3A342C;
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #332145;
+  background: #4A4339;
 }
 
 :focus-visible {
-  outline: 2px solid #8B5CF6;
+  outline: 2px solid #FF5A3C;
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -55,6 +57,12 @@ body {
 @layer base {
   h1 {
     letter-spacing: -0.02em;
+  }
+
+  /* Instrument Serif has a single 400 weight; a synthesised bold looks smeared */
+  .font-display {
+    font-weight: 400 !important;
+    font-synthesis: none;
   }
 
   /* One press effect for every control: instant on touch-down, eased on release */
@@ -92,24 +100,24 @@ body {
     background-color: rgba(255,255,255,0.03);
     padding: 0.625rem 1rem;
     font-size: 0.875rem;
-    color: #EFE9F7;
+    color: #F3ECDF;
     transition: border-color 150ms ease-out, background-color 150ms ease-out;
   }
   .field::placeholder {
-    color: #9C8FB5;
-    opacity: 0.75;
+    color: #9C907F;
+    opacity: 1;
   }
   .field:hover {
     border-color: rgba(255,255,255,0.16);
   }
   .field:focus {
-    border-color: rgba(139, 92, 246, 0.6);
+    border-color: rgba(255, 90, 60, 0.6);
     background-color: rgba(255,255,255,0.05);
   }
   select.field {
     appearance: none;
     padding-right: 2.5rem;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239C8FB5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239C907F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.875rem center;
   }
@@ -153,20 +161,14 @@ body {
 @media (prefers-reduced-transparency: reduce) {
   [class*='backdrop-blur'] {
     backdrop-filter: none !important;
-    background-color: #0B0712 !important;
+    background-color: #14120F !important;
   }
 }
 
-.text-gradient-hero {
-  background: linear-gradient(120deg, #C4B5FD 0%, #F5A8CE 55%, #FDBA74 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
+/* Proof Sheet surfaces: flat card on charcoal, separated by a hairline rule (no gradients, no glow) */
 .card-surface {
-  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: #1C1915;
+  border: 1px solid #3A342C;
 }
 
 /* Active platform buttons & selectors */
@@ -191,9 +193,9 @@ body {
   color: #FFFFFF !important;
 }
 .platform-active-blog {
-  border-color: rgba(139, 92, 246, 0.5) !important;
-  background-color: rgba(139, 92, 246, 0.12) !important;
-  color: #C4B5FD !important;
+  border-color: rgba(201, 191, 174, 0.5) !important;
+  background-color: rgba(201, 191, 174, 0.12) !important;
+  color: #F3ECDF !important;
 }
 .platform-active-promo {
   border-color: rgba(16, 185, 129, 0.5) !important;
@@ -230,7 +232,7 @@ body {
   color: #FFFFFF;
 }
 .platform-icon-blog {
-  color: #8B5CF6;
+  color: #C9BFAE;
 }
 .platform-icon-promo {
   color: #10B981;

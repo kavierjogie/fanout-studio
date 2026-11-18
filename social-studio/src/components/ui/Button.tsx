@@ -8,7 +8,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const intentClasses: Record<Intent, string> = {
-  primary: 'bg-signal-purpleDeep text-white shadow-glow hover:brightness-110',
+  primary: 'bg-accent text-accent-ink hover:brightness-110',
   ghost: 'bg-white/5 text-mist-100 border border-white/10 hover:bg-white/10'
 }
 

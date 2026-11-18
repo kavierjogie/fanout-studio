@@ -88,13 +88,13 @@ function highlightCode(line: string, language: string): React.ReactNode[] {
 
   return parts.map((part, index) => {
     if (part.type === 'keyword') {
-      return <span key={index} className="text-signal-pink font-semibold">{part.text}</span>
+      return <span key={index} className="text-accent-soft font-semibold">{part.text}</span>
     }
     if (part.type === 'string') {
       return <span key={index} className="text-amber-300">{part.text}</span>
     }
     if (part.type === 'number') {
-      return <span key={index} className="text-signal-orange">{part.text}</span>
+      return <span key={index} className="text-ochre">{part.text}</span>
     }
     return <span key={index}>{part.text}</span>
   })
@@ -199,12 +199,12 @@ export default function EditablePostCard({
     } else {
       statusText = 'Within limit'
       statusColorClass = 'text-emerald-400'
-      if (meta.accent === 'purple') {
-        barColorClass = 'bg-signal-purple'
-      } else if (meta.accent === 'pink') {
-        barColorClass = 'bg-signal-pink'
-      } else if (meta.accent === 'orange') {
-        barColorClass = 'bg-signal-orange'
+      if (meta.accent === 'vermilion') {
+        barColorClass = 'bg-accent'
+      } else if (meta.accent === 'parchment') {
+        barColorClass = 'bg-mist-300'
+      } else if (meta.accent === 'ochre') {
+        barColorClass = 'bg-ochre'
       }
     }
   }
@@ -340,7 +340,7 @@ export default function EditablePostCard({
                 if (line.trim().startsWith('-') || line.trim().startsWith('*')) {
                   return (
                     <div key={i} className="flex gap-2 items-start mt-1 pl-1">
-                      <span className="text-signal-purple">•</span>
+                      <span className="text-accent">•</span>
                       <span>{line.replace(/^[-*]\s*/, '')}</span>
                     </div>
                   )
@@ -371,7 +371,7 @@ export default function EditablePostCard({
           
           {imageGenerating ? (
             <div role="status" className="skeleton flex h-44 w-full flex-col items-center justify-center !rounded-xl border border-white/10 select-none">
-              <RefreshCw size={18} className="text-signal-purple animate-spin" />
+              <RefreshCw size={18} className="text-accent animate-spin" />
               <span className="mt-2 text-xs text-mist-300 font-medium">Generating image…</span>
             </div>
           ) : imageError ? (
@@ -407,7 +407,7 @@ export default function EditablePostCard({
                 </button>
                 <button
                   onClick={handleDownloadImage}
-                  className="flex items-center gap-1 rounded-lg bg-signal-purpleDeep hover:brightness-110 px-2.5 py-1.5 text-xs font-semibold text-white transition shadow-lg"
+                  className="flex items-center gap-1 rounded-lg bg-accent hover:brightness-110 px-2.5 py-1.5 text-xs font-semibold text-accent-ink transition shadow-lg"
                 >
                   <Download size={12} />
                   Download
@@ -416,7 +416,7 @@ export default function EditablePostCard({
 
               {imagePrompt && (
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-3 pt-12 opacity-0 transition-opacity duration-200 group-hover/img:opacity-100 group-focus-within/img:opacity-100 [@media(hover:none)]:opacity-100 select-none">
-                  <p className="font-mono text-[11px] uppercase tracking-wider text-violet-300 mb-0.5">Image prompt</p>
+                  <p className="font-mono text-[11px] uppercase tracking-wider text-accent-soft mb-0.5">Image prompt</p>
                   <p className="text-xs text-mist-100 line-clamp-2 leading-relaxed">{imagePrompt}</p>
                 </div>
               )}
@@ -428,7 +428,7 @@ export default function EditablePostCard({
                 onClick={handleRegenerateImage}
                 className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-mist-100 transition-colors hover:bg-white/10"
               >
-                <Sparkles size={12} className="text-signal-purple" />
+                <Sparkles size={12} className="text-accent" />
                 Generate image
               </button>
             </div>

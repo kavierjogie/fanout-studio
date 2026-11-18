@@ -64,7 +64,7 @@ export default function RefinePiece({
     <div className="mt-4 border-t border-white/5 pt-4 space-y-3">
       <div className="flex flex-col gap-2">
         <p className="text-xs font-semibold text-mist-300 flex items-center gap-1.5">
-          <Sparkles size={12} className="text-signal-purple" />
+          <Sparkles size={12} className="text-accent" />
           Refine post with AI
         </p>
         

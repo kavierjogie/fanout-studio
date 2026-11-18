@@ -6,40 +6,36 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      // Proof Sheet: warm charcoal "paper", cream ink, one proofreader's vermilion
       colors: {
         ink: {
-          950: '#0B0712',
-          900: '#120B1E',
-          800: '#1A1128',
-          700: '#241733',
-          600: '#332145'
+          950: '#14120F', // page
+          900: '#1C1915', // card
+          800: '#26221D', // raised / hover
+          700: '#3A342C', // rule
+          600: '#4A4339' // strong rule
         },
-        // Three text levels: primary, secondary, tertiary
+        // Three text levels: primary, secondary, tertiary (all >= 4.5:1 on ink-950 and ink-900)
         mist: {
-          400: '#9C8FB5',
-          300: '#B8AECB',
-          100: '#EFE9F7'
+          400: '#9C907F',
+          300: '#C9BFAE',
+          100: '#F3ECDF'
         },
-        // Purple is the one interactive accent; pink and orange only label categories
-        signal: {
-          purple: '#8B5CF6',
-          purpleDeep: '#6D28D9',
-          pink: '#EC4899',
-          orange: '#F97316'
-        }
+        // Vermilion is the one interactive accent (next action, focus, live). Ochre only labels categories.
+        accent: {
+          DEFAULT: '#FF5A3C',
+          soft: '#FF8F78', // accent-coloured text on tinted backgrounds
+          ink: '#14120F' // text on solid accent
+        },
+        ochre: '#E9C46A'
       },
       opacity: { 6: '0.06', 8: '0.08', 12: '0.12' },
+      // Proof Sheet corners: crisp, print-like. Tightens every rounded-lg/xl/2xl in one place
+      borderRadius: { lg: '4px', xl: '6px', '2xl': '8px' },
       fontFamily: {
-        display: ['"Space Grotesk"', 'sans-serif'],
-        body: ['"Inter"', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'monospace']
-      },
-      backgroundImage: {
-        'grad-hero': 'linear-gradient(120deg, #8B5CF6 0%, #EC4899 55%, #F97316 100%)',
-        'grad-panel': 'radial-gradient(120% 120% at 0% 0%, rgba(139,92,246,0.16) 0%, rgba(18,11,30,0) 55%)'
-      },
-      boxShadow: {
-        glow: '0 0 0 1px rgba(255,255,255,0.06), 0 12px 40px -12px rgba(139,92,246,0.35)'
+        display: ['"Instrument Serif"', 'Georgia', 'serif'],
+        body: ['"Inter Tight"', 'system-ui', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace']
       },
       keyframes: {
         flow: {

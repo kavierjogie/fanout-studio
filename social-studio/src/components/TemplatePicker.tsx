@@ -77,10 +77,10 @@ export default function TemplatePicker({
   return (
     <div>
       <div className="mb-3 flex items-center gap-2">
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-signal-purple/15 text-signal-purple">
+        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/15 text-accent">
           <BookOpen size={15} />
         </span>
-        <span id="template-label" className="font-display text-sm font-semibold text-mist-100">
+        <span id="template-label" className="text-sm font-semibold text-mist-100">
           Start from a template
         </span>
         <span className="rounded-full border border-white/10 px-2 py-0.5 text-[11px] text-mist-400">Optional</span>
@@ -105,7 +105,7 @@ export default function TemplatePicker({
           onClick={() => (open ? setOpen(false) : openMenu())}
           onKeyDown={onKeyDown}
           className={`field flex items-center justify-between gap-3 text-left ${
-            selected || open ? '!border-signal-purple/50 !bg-signal-purple/[0.06]' : ''
+            selected || open ? '!border-accent/50 !bg-accent/[0.06]' : ''
           }`}
         >
           <span className={`truncate ${selected ? 'text-mist-100' : 'text-mist-400'}`}>
@@ -142,18 +142,18 @@ export default function TemplatePicker({
                   onMouseDown={(e) => e.preventDefault()} // keep focus on the trigger
                   onClick={() => choose(p)}
                   className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
-                    i === active ? 'bg-signal-purple/15 text-mist-100' : 'text-mist-300'
+                    i === active ? 'bg-accent/15 text-mist-100' : 'text-mist-300'
                   }`}
                 >
                   <span className="min-w-0 flex-1">
-                    <span className={`block truncate ${isSelected ? 'font-medium text-violet-200' : ''}`}>
+                    <span className={`block truncate ${isSelected ? 'font-medium text-accent-soft' : ''}`}>
                       {p ? p.name : 'No template'}
                     </span>
                     <span className="block truncate text-xs text-mist-400">
                       {p ? p.description : 'Write your own idea from scratch'}
                     </span>
                   </span>
-                  {isSelected && <Check size={15} className="shrink-0 text-signal-purple" />}
+                  {isSelected && <Check size={15} className="shrink-0 text-accent" />}
                 </div>
               </div>
             )
@@ -166,7 +166,7 @@ export default function TemplatePicker({
           <Badge accent={categoryAccent(selected.category)}>{selected.category}</Badge>
           <p className="pt-0.5 text-xs leading-relaxed text-mist-300">
             {before}
-            <span className="rounded bg-signal-purple/20 px-1 font-medium text-violet-200">your topic</span>
+            <span className="rounded bg-accent/20 px-1 font-medium text-accent-soft">your topic</span>
             {after}
           </p>
         </div>

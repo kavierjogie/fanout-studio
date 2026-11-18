@@ -136,8 +136,8 @@ export default function RecentContent({
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-wider text-signal-purple">Recent content</p>
-        <h1 className="mt-2 font-display text-2xl font-semibold text-mist-100 sm:text-3xl">Everything you've made</h1>
+        <p className="font-mono text-xs uppercase tracking-wider text-accent">Recent content</p>
+        <h1 className="mt-2 font-display text-4xl leading-tight text-mist-100 sm:text-5xl">Everything you've made</h1>
         <p className="mt-2 max-w-xl text-sm text-mist-400">
           Revisit past ideas, copy content again, or transform them into a format you haven't tried yet.
         </p>
@@ -228,7 +228,7 @@ export default function RecentContent({
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="ml-auto flex items-center gap-1 text-xs font-medium text-signal-purple hover:text-violet-300"
+              className="ml-auto flex items-center gap-1 text-xs font-medium text-accent-soft hover:text-mist-100"
             >
               <X size={12} />
               Clear filters
@@ -268,7 +268,7 @@ export default function RecentContent({
                         aria-expanded={open}
                       >
                         <div className="min-w-0">
-                          <p className="truncate font-display text-sm font-medium text-mist-100">{item.topic}</p>
+                          <p className="truncate text-sm font-semibold text-mist-100">{item.topic}</p>
                           <p className="mt-1 text-xs text-mist-400">
                             {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                             {' · '}
@@ -324,7 +324,7 @@ export default function RecentContent({
                           <div className="mt-4 flex items-center justify-between gap-3">
                             <button
                               onClick={() => onTransform(item)}
-                              className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-violet-300 hover:bg-signal-purple/10 transition-colors"
+                              className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-accent-soft hover:bg-accent/10 transition-colors"
                             >
                               <Repeat size={13} />
                               Transform further
@@ -346,7 +346,7 @@ export default function RecentContent({
               <Button
                 intent="ghost"
                 onClick={() => setLimit(prev => prev + 8)}
-                className="w-full max-w-xs border border-white/10 hover:border-signal-purple/30 hover:bg-signal-purple/5 transition text-mist-300"
+                className="w-full max-w-xs border border-white/10 hover:border-accent/30 hover:bg-accent/5 transition text-mist-300"
               >
                 Load more ({filteredItems.length - limit} remaining)
               </Button>
