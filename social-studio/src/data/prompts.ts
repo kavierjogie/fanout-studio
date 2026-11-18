@@ -104,7 +104,7 @@ export const PROMPTS: PromptTemplate[] = [
 export const CATEGORIES = Array.from(new Set(PROMPTS.map((p) => p.category)))
 
 export const categoryAccent = (cat: PromptCategory) => {
-  if (['Marketing', 'Business', 'Branding'].includes(cat)) return 'vermilion' as const
-  if (['Social Media', 'Engagement'].includes(cat)) return 'parchment' as const
+  if (['Marketing', 'Business', 'Branding'].includes(cat)) return 'accent' as const
+  if (['Social Media', 'Engagement'].includes(cat)) return 'muted' as const
   return 'ochre' as const
 }

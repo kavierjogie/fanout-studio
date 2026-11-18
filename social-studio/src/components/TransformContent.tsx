@@ -107,7 +107,7 @@ export default function TransformContent({
     return (
       <div className="mx-auto max-w-5xl">
         <header className="mb-8">
-          <p className="font-mono text-xs uppercase tracking-wider text-accent">Transform content</p>
+          <p className="text-sm font-medium text-mist-300">Transform content</p>
           <h1 className="mt-2 font-display text-4xl leading-tight text-mist-100 sm:text-5xl">One idea, more platforms</h1>
         </header>
         <EmptyState
@@ -127,7 +127,7 @@ export default function TransformContent({
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-wider text-accent">Transform content</p>
+        <p className="text-sm font-medium text-mist-300">Transform content</p>
         <h1 className="mt-2 font-display text-4xl leading-tight text-mist-100 sm:text-5xl">
           One idea, more platforms
         </h1>

@@ -5,17 +5,7 @@ import PlatformIcon from './PlatformIcon'
 import { ContentItem, Platform } from '../types'
 import { PLATFORMS } from '../data/platforms'
 
-const BRAND_COLORS: Record<Platform, string> = {
-  blog: '#C9BFAE',
-  linkedin: '#0A66C2',
-  instagram: '#E1306C',
-  tiktok: '#25F4EE',
-  x: '#FFFFFF',
-  promo: '#10B981',
-  hashtags: '#F59E0B',
-  calendar: '#F97316',
-  code: '#06B6D4'
-}
+const BRAND_COLORS = Object.fromEntries(PLATFORMS.map((p) => [p.id, p.color])) as Record<Platform, string>
 
 const DONUT_R = 32
 const DONUT_C = 2 * Math.PI * DONUT_R
@@ -166,7 +156,7 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
               cx="18"
               cy="18"
               r="14"
-              stroke="#FF5A3C"
+              stroke="#F4F4F2"
               strokeWidth="3"
               strokeLinecap="round"
               fill="none"
@@ -291,12 +281,12 @@ export default function DashboardCharts({ items }: { items: ContentItem[] }) {
                       rx="4"
                       fill={hovered ? 'rgba(255,255,255,0.04)' : 'transparent'}
                     />
-                    {bar(d.created, xCenter - 11, '#FF5A3C')}
-                    {bar(d.scheduled, xCenter + 1, '#E9C46A')}
+                    {bar(d.created, xCenter - 11, '#F4F4F2')}
+                    {bar(d.scheduled, xCenter + 1, '#FFC94A')}
                     <text
                       x={xCenter}
                       y="111"
-                      fill={d.isToday || hovered ? '#F3ECDF' : 'rgba(255,255,255,0.55)'}
+                      fill={d.isToday || hovered ? '#F4F4F2' : 'rgba(255,255,255,0.55)'}
                       fontSize="9"
                       fontWeight={d.isToday ? 600 : 400}
                       textAnchor="middle"

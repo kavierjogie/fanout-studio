@@ -28,19 +28,20 @@ Your generated content and calendar schedules are saved to `localStorage` so the
 
 ## Branding
 
-The visual identity is **Proof Sheet**: an editor's desk at night. Warm charcoal "paper", cream ink, and one proofreader's vermilion for the next action.
+The visual identity is **Wayfinder**: Fanout as a transit map. Your idea is the station and each platform is a coloured line leaving it. The interface itself is quiet graphite and white, like good signage, so colour always means one thing: which platform.
 
-- **Colour** (tokens in `social-studio/tailwind.config.js`): page `ink-950` #14120F, card `ink-900` #1C1915, rule `ink-700` #3A342C; text `mist-100` #F3ECDF / `mist-300` #C9BFAE / `mist-400` #9C907F; `accent` #FF5A3C is the only interactive colour (primary buttons, focus, active nav), with `accent-soft` #FF8F78 for accent text on tinted backgrounds and `accent-ink` for text on solid accent. `ochre` #E9C46A labels categories and "scheduled". Platform brand colours stay on platform glyphs only. Every text pair meets WCAG AA (lowest 5.05:1).
-- **Type**: Instrument Serif for page titles and large headings only (it has a single weight and is weak below 24px), Inter Tight for UI and drafts, IBM Plex Mono for labels, counts and dates.
-- **Shape**: flat surfaces with hairline rules, no gradients or glows; 4–8px corners; numbered index navigation.
+- **Colour** (tokens in `social-studio/tailwind.config.js`, values as CSS variables in `social-studio/src/index.css`): page `ink-950` #111214, card `ink-900` #18191C, rule `ink-700` #34363B; text `mist-100` #F4F4F2 / `mist-300` #C2C3C0 / `mist-400` #95979A. `accent` #F4F4F2 (white) is the only interactive colour: primary buttons, focus rings, the current page; `accent-ink` is text on it. `ochre` #FFC94A marks "scheduled". Platform brand colours (`color` in `src/data/platforms.ts`) appear only on platform glyphs, the fan-out lines and the left edge of each draft card, never as text. Every text pair meets WCAG AA (lowest 5.8:1, on every background option).
+- **Type**: Barlow Condensed 600 for page titles only, Barlow for UI and drafts, IBM Plex Mono for counts and dates. Labels are sentence case, not small uppercase.
+- **Shape**: flat surfaces, no textures or glows; 4–8px corners; station-line navigation (the current page is a filled station).
+- **Reading preferences** (sidebar → Reading preferences): optional font (Arial, Verdana, Atkinson Hyperlegible), text size, line, letter and word spacing, reading width, paragraph spacing, dimmer or warm-grey background, and reduced motion. Off by default, saved per browser under `fanout.reading.v1`, with a reset. The system reduced-motion setting is always followed.
 
-The logo mark is three post cards fanned out from one point (one idea → many platforms): vermilion in front, ochre and parchment behind.
+The logo mark is three post cards fanned out from one point (one idea → many platforms): white in front, amber and grey behind.
 
 - `social-studio/public/favicon.svg` — the mark on a dark rounded tile; works in light and dark browser tabs
 - `social-studio/public/logo.svg` — mark + "Fanout" wordmark, for use outside the app (docs, social banners)
 - `social-studio/src/components/Logo.tsx` — `<Logo />` (mark + wordmark, optional `tagline`) and `<LogoMark />` (mark only), used in the sidebar and mobile header
 
-Wordmark font is Instrument Serif; the tagline is "One idea, fanned out". The codebase folder is still named `social-studio` and saved data still uses the `studio.content.v1` storage key, so renaming the brand didn't touch existing content.
+Wordmark font is Barlow Condensed; the tagline is "One idea, fanned out". The codebase folder is still named `social-studio` and saved data still uses the `studio.content.v1` storage key, so renaming the brand didn't touch existing content.
 
 ## Requirements
 

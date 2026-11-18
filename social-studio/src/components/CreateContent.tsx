@@ -212,7 +212,7 @@ export default function CreateContent({
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-wider text-accent">Create content</p>
+        <p className="text-sm font-medium text-mist-300">Create content</p>
         <h1 className="mt-2 font-display text-4xl leading-tight text-mist-100 sm:text-5xl">
           Turn one idea into platform-ready content
         </h1>
@@ -248,7 +248,7 @@ className="field mt-3 resize-none !py-3 leading-relaxed"
           />
           {selectedPrompt && (
             <div className="mt-3 rounded-xl border border-white/5 bg-white/[0.01] p-3 text-xs text-mist-400">
-              <p className="font-mono text-[11px] uppercase tracking-wider text-accent">Compiled prompt preview</p>
+              <p className="text-xs font-medium text-accent">Compiled prompt preview</p>
               <p className="mt-1 italic">"{compiledPrompt}"</p>
             </div>
           )}

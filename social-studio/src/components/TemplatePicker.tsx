@@ -129,7 +129,7 @@ export default function TemplatePicker({
                 {startsGroup && (
                   <p
                     role="presentation"
-                    className="mt-2 border-t border-white/5 px-3 pb-1 pt-3 font-mono text-[10px] uppercase tracking-wider text-mist-400"
+                    className="mt-2 border-t border-white/5 px-3 pb-1 pt-3 text-xs font-medium text-mist-400"
                   >
                     {p.category}
                   </p>

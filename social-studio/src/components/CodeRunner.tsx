@@ -203,7 +203,7 @@ export default function CodeRunner({ code, language }: { code: string; language:
       {run && (
         <div className="rounded-xl border border-white/10 bg-ink-950/80 overflow-hidden text-xs" role="region" aria-label="Code output">
           <div className="flex items-center justify-between px-4 py-2.5 bg-white/[0.03] border-b border-white/5 select-none">
-            <span className="font-mono text-[11px] uppercase tracking-wider text-mist-400">Output</span>
+            <span className="text-xs font-medium text-mist-400">Output</span>
             <span className={`text-[11px] ${running ? 'text-amber-300' : error ? 'text-red-400' : 'text-emerald-400'}`}>
               {running ? 'Running…' : error ? 'Failed' : 'Finished'}
             </span>

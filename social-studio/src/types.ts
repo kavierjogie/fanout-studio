@@ -51,7 +51,7 @@ export interface PlatformMeta {
   id: Platform
   label: string
   shortLabel: string
-  accent: 'vermilion' | 'parchment' | 'ochre'
+  color: string // brand colour: platform glyphs, lane edges and limit meters only, never text
   charLimit?: number
   description: string
 }

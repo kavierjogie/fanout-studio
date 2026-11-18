@@ -125,7 +125,7 @@ function CodeTerminal({ code, language }: { code: string; language: string }) {
           <span className="w-3 h-3 rounded-full bg-yellow-500/85"></span>
           <span className="w-3 h-3 rounded-full bg-green-500/85"></span>
         </div>
-        <span className="text-mist-400 font-mono text-[11px] uppercase tracking-wider">{language || 'code'}</span>
+        <span className="text-mist-400 text-xs font-medium">{language || 'code'}</span>
         <button
           onClick={handleCopy}
           className="text-mist-400 hover:text-mist-100 flex items-center gap-1 text-[11px] transition-colors"
@@ -199,13 +199,6 @@ export default function EditablePostCard({
     } else {
       statusText = 'Within limit'
       statusColorClass = 'text-emerald-400'
-      if (meta.accent === 'vermilion') {
-        barColorClass = 'bg-accent'
-      } else if (meta.accent === 'parchment') {
-        barColorClass = 'bg-mist-300'
-      } else if (meta.accent === 'ochre') {
-        barColorClass = 'bg-ochre'
-      }
     }
   }
 
@@ -280,7 +273,8 @@ export default function EditablePostCard({
   const showCodePreview = platform === 'code' && parsedCode && parsedCode.code && !isEditingCode
 
   return (
-    <Card className="mt-4 flex flex-col gap-4 relative overflow-hidden !p-4 sm:!p-5">
+    // Lane: the platform's line colour on the left edge, matching the Wayfinder fan-out
+    <Card className="mt-4 flex flex-col gap-4 relative overflow-hidden !p-4 sm:!p-5" style={{ borderLeft: `3px solid ${meta.color}` }}>
       {/* Header */}
       <div className="flex items-center justify-between border-b border-white/8 pb-3 select-none">
         {showHeaderLabel ? (
@@ -289,7 +283,7 @@ export default function EditablePostCard({
             {meta?.label || platform}
           </span>
         ) : (
-          <span className="flex items-center gap-2 text-xs font-mono text-mist-400 uppercase tracking-wider">
+          <span className="flex items-center gap-2 text-xs font-medium text-mist-400">
             Generated draft
           </span>
         )}
@@ -416,7 +410,7 @@ export default function EditablePostCard({
 
               {imagePrompt && (
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-3 pt-12 opacity-0 transition-opacity duration-200 group-hover/img:opacity-100 group-focus-within/img:opacity-100 [@media(hover:none)]:opacity-100 select-none">
-                  <p className="font-mono text-[11px] uppercase tracking-wider text-accent-soft mb-0.5">Image prompt</p>
+                  <p className="text-xs font-medium text-accent-soft mb-0.5">Image prompt</p>
                   <p className="text-xs text-mist-100 line-clamp-2 leading-relaxed">{imagePrompt}</p>
                 </div>
               )}

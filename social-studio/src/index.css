@@ -9,11 +9,30 @@
 /* Native controls (date picker, select menus, scrollbars) follow the dark theme */
 :root {
   color-scheme: dark;
+  /* Wayfinder tokens as RGB channels (Tailwind ink-* / mist-* read these) */
+  --ink-950: 17 18 20;   /* #111214 page */
+  --ink-900: 24 25 28;   /* #18191C card */
+  --ink-800: 34 35 39;   /* #222327 raised */
+  --ink-700: 52 54 59;   /* #34363B rule */
+  --ink-600: 69 71 77;   /* #45474D strong rule */
+  --mist-100: 244 244 242; /* #F4F4F2 primary text */
+  --mist-300: 194 195 192; /* #C2C3C0 secondary */
+  --mist-400: 149 151 154; /* #95979A tertiary */
+}
+
+/* Reading preferences: comfort backgrounds (all text pairs stay >= 5.7:1) */
+:root[data-rp-surface='dim'] {
+  --ink-950: 30 31 34; --ink-900: 37 39 42; --ink-800: 46 48 52; --ink-700: 66 68 73; --ink-600: 82 84 90;
+  --mist-100: 220 220 216; --mist-300: 189 190 186; --mist-400: 160 161 163;
+}
+:root[data-rp-surface='warm'] {
+  --ink-950: 35 32 27; --ink-900: 43 39 34; --ink-800: 53 48 42; --ink-700: 74 68 59; --ink-600: 90 83 72;
+  --mist-100: 236 228 214; --mist-300: 210 200 183; --mist-400: 176 165 146;
 }
 
 html, body {
-  background: #14120F;
-  color: #F3ECDF;
+  background: rgb(var(--ink-950));
+  color: rgb(var(--mist-100));
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -23,14 +42,12 @@ html, body {
 }
 
 body {
-  background-image: radial-gradient(rgba(243, 236, 223, 0.035) 1px, transparent 1px);
-  background-size: 3px 3px;
-  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-family: Barlow, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: rgba(255, 90, 60, 0.35);
+  background: rgba(244, 244, 242, 0.35);
 }
 
 ::-webkit-scrollbar {
@@ -41,27 +58,27 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #3A342C;
+  background: #34363B;
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4A4339;
+  background: #45474D;
 }
 
 :focus-visible {
-  outline: 2px solid #FF5A3C;
+  outline: 2px solid #F4F4F2;
   outline-offset: 2px;
   border-radius: 4px;
 }
 
 @layer base {
   h1 {
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
   }
 
-  /* Instrument Serif has a single 400 weight; a synthesised bold looks smeared */
+  /* Barlow Condensed is loaded at 600 only (titles); never synthesise other weights */
   .font-display {
-    font-weight: 400 !important;
+    font-weight: 600 !important;
     font-synthesis: none;
   }
 
@@ -100,24 +117,24 @@ body {
     background-color: rgba(255,255,255,0.03);
     padding: 0.625rem 1rem;
     font-size: 0.875rem;
-    color: #F3ECDF;
+    color: rgb(var(--mist-100));
     transition: border-color 150ms ease-out, background-color 150ms ease-out;
   }
   .field::placeholder {
-    color: #9C907F;
+    color: rgb(var(--mist-400));
     opacity: 1;
   }
   .field:hover {
     border-color: rgba(255,255,255,0.16);
   }
   .field:focus {
-    border-color: rgba(255, 90, 60, 0.6);
+    border-color: rgba(244, 244, 242, 0.6);
     background-color: rgba(255,255,255,0.05);
   }
   select.field {
     appearance: none;
     padding-right: 2.5rem;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239C907F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2395979A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.875rem center;
   }
@@ -161,14 +178,14 @@ body {
 @media (prefers-reduced-transparency: reduce) {
   [class*='backdrop-blur'] {
     backdrop-filter: none !important;
-    background-color: #14120F !important;
+    background-color: rgb(var(--ink-950)) !important;
   }
 }
 
-/* Proof Sheet surfaces: flat card on charcoal, separated by a hairline rule (no gradients, no glow) */
+/* Wayfinder surfaces: flat graphite panel, hairline rule, no texture behind text */
 .card-surface {
-  background: #1C1915;
-  border: 1px solid #3A342C;
+  background: rgb(var(--ink-900));
+  border: 1px solid rgb(var(--ink-700));
 }
 
 /* Active platform buttons & selectors */
@@ -193,9 +210,9 @@ body {
   color: #FFFFFF !important;
 }
 .platform-active-blog {
-  border-color: rgba(201, 191, 174, 0.5) !important;
-  background-color: rgba(201, 191, 174, 0.12) !important;
-  color: #F3ECDF !important;
+  border-color: rgba(194, 195, 192, 0.5) !important;
+  background-color: rgba(194, 195, 192, 0.12) !important;
+  color: rgb(var(--mist-100)) !important;
 }
 .platform-active-promo {
   border-color: rgba(16, 185, 129, 0.5) !important;
@@ -232,7 +249,7 @@ body {
   color: #FFFFFF;
 }
 .platform-icon-blog {
-  color: #C9BFAE;
+  color: #C2C3C0;
 }
 .platform-icon-promo {
   color: #10B981;
@@ -257,3 +274,27 @@ body {
     opacity: 1;
   }
 }
+
+/* ---------- Reading preferences (optional, set by ReadingPreferences.tsx on <html>) ---------- */
+/* Text size: Tailwind sizes and spacing are rem, so scaling the root reflows the whole app */
+:root[data-rp-size] { font-size: var(--rp-size); }
+:root[data-rp-font] body, :root[data-rp-font] .font-body, :root[data-rp-font] .font-mono,
+:root[data-rp-font] input, :root[data-rp-font] textarea, :root[data-rp-font] select, :root[data-rp-font] button {
+  font-family: var(--rp-font) !important;
+}
+/* Same knobs as WCAG 1.4.12 text spacing; headings keep their own leading */
+:root[data-rp-line] body :not(h1, h2, h3, h1 *, h2 *, h3 *, svg, svg *) { line-height: var(--rp-line) !important; }
+:root[data-rp-letter] body * { letter-spacing: 0.04em !important; }
+:root[data-rp-word] body * { word-spacing: 0.16em !important; }
+:root[data-rp-width] main p, :root[data-rp-width] main textarea { max-width: 60ch; }
+:root[data-rp-para] main p + p { margin-top: 1em; }
+:root[data-rp-motion] *:not(.animate-spin), :root[data-rp-motion] *::before, :root[data-rp-motion] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-property: opacity, color, background-color, border-color, box-shadow, visibility !important;
+  scroll-behavior: auto !important;
+}
+
+/* The preferences panel: a side sheet that leaves the app visible so changes preview live */
+.rp-dialog { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; width: min(360px, 100vw); padding: 0; border: 0; border-left: 1px solid rgb(var(--ink-700)); background: rgb(var(--ink-900)); color: rgb(var(--mist-100)); }
+.rp-dialog::backdrop { background: rgb(0 0 0 / 0.25); }

@@ -14,7 +14,7 @@ export default function PromptLibrary({ onUse }: { onUse: (prompt: PromptTemplat
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-wider text-accent">Prompt library</p>
+        <p className="text-sm font-medium text-mist-300">Prompt library</p>
         <h1 className="mt-2 font-display text-4xl leading-tight text-mist-100 sm:text-5xl">
           Ready-made starting points
         </h1>

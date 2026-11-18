@@ -1,15 +1,16 @@
-import { LayoutGrid, PenLine, Repeat, BookMarked, Clock, CalendarDays, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useEffect } from 'react'
 import { View } from '../types'
 import Logo from './Logo'
+import ReadingPreferences from './ReadingPreferences'
 
-const items: { id: View; label: string; icon: typeof LayoutGrid }[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutGrid },
-  { id: 'create', label: 'Create content', icon: PenLine },
-  { id: 'transform', label: 'Transform content', icon: Repeat },
-  { id: 'library', label: 'Prompt library', icon: BookMarked },
-  { id: 'recent', label: 'Recent content', icon: Clock },
-  { id: 'calendar', label: 'Content calendar', icon: CalendarDays }
+const items: { id: View; label: string }[] = [
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'create', label: 'Create content' },
+  { id: 'transform', label: 'Transform content' },
+  { id: 'library', label: 'Prompt library' },
+  { id: 'recent', label: 'Recent content' },
+  { id: 'calendar', label: 'Content calendar' }
 ]
 
 export default function Sidebar({
@@ -50,8 +51,9 @@ export default function Sidebar({
           </button>
         </div>
 
-        <nav className="mt-8 flex flex-col gap-1">
-          {items.map(({ id, label, icon: Icon }, i) => {
+        {/* Station line: each page is a stop; the current one is a filled station */}
+        <nav aria-label="Main" className="relative mt-8 flex flex-col gap-1 before:absolute before:inset-y-4 before:left-[19px] before:w-0.5 before:bg-ink-700">
+          {items.map(({ id, label }) => {
             const active = view === id
             return (
               <button
@@ -61,22 +63,26 @@ export default function Sidebar({
                   setView(id)
                   onClose()
                 }}
-                className={`group relative flex items-center gap-3 rounded px-3 py-2 text-left text-sm transition-colors ${
-                  active
-                    ? 'bg-white/[0.04] font-medium text-mist-100 before:absolute before:inset-y-1.5 before:-left-px before:w-0.5 before:bg-accent'
-                    : 'text-mist-300 hover:bg-white/[0.03] hover:text-mist-100'
+                className={`group relative flex items-center rounded py-2 pl-10 pr-3 text-left text-sm transition-colors ${
+                  active ? 'bg-white/[0.06] font-semibold text-mist-100' : 'text-mist-300 hover:bg-white/[0.03] hover:text-mist-100'
                 }`}
               >
-                {/* Numbered index, like a contents page; the icon stays for quick recognition */}
-                <span className={`w-5 font-mono text-[11px] ${active ? 'text-accent' : 'text-mist-400'}`}>{String(i + 1).padStart(2, '0')}</span>
-                <Icon size={15} className={active ? 'text-mist-100' : 'text-mist-400 group-hover:text-mist-300'} />
+                <span
+                  aria-hidden="true"
+                  className={`absolute left-[14px] top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-2 ${
+                    active ? 'border-accent bg-accent' : 'border-mist-400 bg-ink-950 group-hover:border-mist-300'
+                  }`}
+                />
                 {label}
               </button>
             )
           })}
         </nav>
 
-        <div className="mt-auto px-3 pt-8 text-xs leading-relaxed text-mist-400">
+        <div className="mt-auto pt-8">
+          <ReadingPreferences />
+        </div>
+        <div className="px-3 pt-4 text-xs leading-relaxed text-mist-400">
           <p className="flex items-center gap-2 text-mist-300">
             <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             Saved in this browser

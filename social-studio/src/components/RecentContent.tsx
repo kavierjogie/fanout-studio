@@ -136,7 +136,7 @@ export default function RecentContent({
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-wider text-accent">Recent content</p>
+        <p className="text-sm font-medium text-mist-300">Recent content</p>
         <h1 className="mt-2 font-display text-4xl leading-tight text-mist-100 sm:text-5xl">Everything you've made</h1>
         <p className="mt-2 max-w-xl text-sm text-mist-400">
           Revisit past ideas, copy content again, or transform them into a format you haven't tried yet.
@@ -252,7 +252,7 @@ export default function RecentContent({
           {/* Render by Groups */}
           {groupedItems.map(([groupName, groupItems]) => (
             <div key={groupName} className="space-y-3">
-              <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-mist-400">
+              <h2 className="flex items-center gap-2 text-sm font-semibold text-mist-400">
                 {groupName}
                 <span className="rounded-full bg-white/8 px-1.5 py-0.5 font-mono text-[11px] font-medium text-mist-300">{groupItems.length}</span>
               </h2>

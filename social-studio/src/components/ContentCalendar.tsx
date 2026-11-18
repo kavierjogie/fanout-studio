@@ -100,7 +100,7 @@ export default function ContentCalendar({
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-8">
-        <p className="font-mono text-xs uppercase tracking-wider text-accent">Content calendar</p>
+        <p className="text-sm font-medium text-mist-300">Content calendar</p>
         <h1 className="mt-2 font-display text-4xl leading-tight text-mist-100 sm:text-5xl">Plan when it goes out</h1>
         <p className="mt-2 max-w-xl text-sm text-mist-400">Schedule pieces you've already created against a date.</p>
       </header>
@@ -201,7 +201,7 @@ export default function ContentCalendar({
 
             <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
               {WEEKDAYS.map((d) => (
-                <p key={d} className="pb-1 text-center text-[11px] font-medium uppercase tracking-wider text-mist-400">
+                <p key={d} className="pb-1 text-center text-xs font-medium text-mist-400">
                   {d}
                 </p>
               ))}

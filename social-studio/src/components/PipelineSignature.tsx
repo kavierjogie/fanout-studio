@@ -26,25 +26,25 @@ export default function PipelineSignature({
       <svg viewBox="14 8 436 244" className="w-full h-auto" role="img" aria-label="One idea transforming into four platform-ready formats">
         {/* source node */}
         <g className={isGenerating ? "animate-pulse" : ""} style={{ transformOrigin: '60px 130px' }}>
-          <circle cx="60" cy="130" r="34" fill="#26221D" stroke="#FF5A3C" strokeWidth={isGenerating ? 2.5 : 1.5} className="transition duration-300" />
+          <circle cx="60" cy="130" r="34" fill="#222327" stroke="#F4F4F2" strokeWidth={isGenerating ? 2.5 : 1.5} className="transition duration-300" />
           {isGenerating && (
-            <circle cx="60" cy="130" r="42" fill="none" stroke="#FF5A3C" strokeWidth="1.5" opacity="0.4" className="animate-ping" style={{ transformOrigin: '60px 130px', animationDuration: '1.5s' }} />
+            <circle cx="60" cy="130" r="42" fill="none" stroke="#F4F4F2" strokeWidth="1.5" opacity="0.4" className="animate-ping" style={{ transformOrigin: '60px 130px', animationDuration: '1.5s' }} />
           )}
-          <text x="60" y="126" textAnchor="middle" fontSize="11" fill="#F3ECDF" fontFamily="IBM Plex Mono, monospace" fontWeight="500" letterSpacing="0.08em" className="select-none pointer-events-none">
-            YOUR
+          <text x="60" y="126" textAnchor="middle" fontSize="11" fill="#F4F4F2" fontFamily="Barlow, sans-serif" fontWeight="600" className="select-none pointer-events-none">
+            Your
           </text>
-          <text x="60" y="140" textAnchor="middle" fontSize="11" fill="#F3ECDF" fontFamily="IBM Plex Mono, monospace" fontWeight="500" letterSpacing="0.08em" className="select-none pointer-events-none">
-            IDEA
+          <text x="60" y="140" textAnchor="middle" fontSize="11" fill="#F4F4F2" fontFamily="Barlow, sans-serif" fontWeight="600" className="select-none pointer-events-none">
+            idea
           </text>
         </g>
 
         {/* dynamic platform lines and nodes */}
         {targets.map((t, i) => {
           const isActive = selectedPlatforms ? selectedPlatforms.includes(t.id) : true
-          const strokeColor = isActive ? t.color : '#3A342C'
-          const labelColor = isActive ? '#F3ECDF' : '#4A4339'
-          const iconColor = isActive ? t.color : '#4A4339'
-          const pathOpacity = isActive ? (isGenerating ? 0.95 : 0.65) : 0.15
+          const strokeColor = isActive ? t.color : '#34363B'
+          const labelColor = isActive ? '#F4F4F2' : '#45474D'
+          const iconColor = isActive ? t.color : '#45474D'
+          const pathOpacity = isActive ? 1 : 0.35 // solid transit lines; dashes only while generating
           const nodeOpacity = isActive ? 1.0 : 0.35
 
           return (
@@ -57,9 +57,9 @@ export default function PipelineSignature({
               <path
                 d={`M94,130 C220,130 220,${t.y} 330,${t.y}`}
                 fill="none"
-                stroke="#FF5A3C"
-                strokeWidth={isActive ? (isGenerating ? 2.5 : 1.5) : 1}
-                strokeDasharray={isActive ? (isGenerating ? "4 4" : "6 6") : undefined}
+                stroke={strokeColor}
+                strokeWidth={isActive ? 3 : 1.5}
+                strokeDasharray={isActive && isGenerating ? "6 6" : undefined}
                 className={isActive && isGenerating ? "animate-flow-fast" : ""}
                 opacity={pathOpacity}
                 style={{ transition: 'all 0.3s' }}
@@ -106,7 +106,7 @@ export default function PipelineSignature({
                 )}
                 <circle
                   r="22"
-                  fill="#1C1915"
+                  fill="#18191C"
                   stroke={strokeColor}
                   strokeWidth={isActive ? 1.5 : 1}
                   opacity={nodeOpacity}
@@ -132,7 +132,7 @@ export default function PipelineSignature({
                 y={t.y + 4}
                 fontSize="13"
                 fill={labelColor}
-                fontFamily="Inter Tight, sans-serif"
+                fontFamily="Barlow, sans-serif"
                 fontWeight={isActive ? "600" : "400"}
                 className="transition duration-300 select-none group-hover:fill-mist-100"
               >

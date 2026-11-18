@@ -6,35 +6,36 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      // Proof Sheet: warm charcoal "paper", cream ink, one proofreader's vermilion
+      // Wayfinder: quiet graphite signage; colour only means "which platform"
       colors: {
+        // Surfaces and text are CSS variables (src/index.css) so reading preferences can swap the comfort background
         ink: {
-          950: '#14120F', // page
-          900: '#1C1915', // card
-          800: '#26221D', // raised / hover
-          700: '#3A342C', // rule
-          600: '#4A4339' // strong rule
+          950: 'rgb(var(--ink-950) / <alpha-value>)', // page
+          900: 'rgb(var(--ink-900) / <alpha-value>)', // card
+          800: 'rgb(var(--ink-800) / <alpha-value>)', // raised / hover
+          700: 'rgb(var(--ink-700) / <alpha-value>)', // rule
+          600: 'rgb(var(--ink-600) / <alpha-value>)' // strong rule
         },
-        // Three text levels: primary, secondary, tertiary (all >= 4.5:1 on ink-950 and ink-900)
+        // Three text levels: primary, secondary, tertiary (all >= 4.5:1 on ink-950 and ink-900, on every surface)
         mist: {
-          400: '#9C907F',
-          300: '#C9BFAE',
-          100: '#F3ECDF'
+          400: 'rgb(var(--mist-400) / <alpha-value>)',
+          300: 'rgb(var(--mist-300) / <alpha-value>)',
+          100: 'rgb(var(--mist-100) / <alpha-value>)'
         },
-        // Vermilion is the one interactive accent (next action, focus, live). Ochre only labels categories.
+        // White is the one interactive accent (primary action, focus, current page). Amber (`ochre` token) only marks "scheduled".
         accent: {
-          DEFAULT: '#FF5A3C',
-          soft: '#FF8F78', // accent-coloured text on tinted backgrounds
-          ink: '#14120F' // text on solid accent
+          DEFAULT: '#F4F4F2',
+          soft: '#FFFFFF', // accent text on tinted backgrounds
+          ink: '#111214' // text on solid accent
         },
-        ochre: '#E9C46A'
+        ochre: '#FFC94A'
       },
       opacity: { 6: '0.06', 8: '0.08', 12: '0.12' },
-      // Proof Sheet corners: crisp, print-like. Tightens every rounded-lg/xl/2xl in one place
+      // Wayfinder corners: signage panels. Sets every rounded-lg/xl/2xl in one place
       borderRadius: { lg: '4px', xl: '6px', '2xl': '8px' },
       fontFamily: {
-        display: ['"Instrument Serif"', 'Georgia', 'serif'],
-        body: ['"Inter Tight"', 'system-ui', 'sans-serif'],
+        display: ['"Barlow Condensed"', '"Arial Narrow"', 'sans-serif'],
+        body: ['Barlow', 'system-ui', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace']
       },
       keyframes: {

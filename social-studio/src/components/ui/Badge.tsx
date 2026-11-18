@@ -1,10 +1,10 @@
 import { ReactNode } from 'react'
 
-type Accent = 'vermilion' | 'parchment' | 'ochre' | 'neutral'
+type Accent = 'accent' | 'muted' | 'ochre' | 'neutral'
 
 const accentClasses: Record<Accent, string> = {
-  vermilion: 'bg-accent/15 text-accent-soft border-accent/30',
-  parchment: 'bg-mist-300/10 text-mist-100 border-mist-300/30',
+  accent: 'bg-accent/15 text-accent-soft border-accent/30',
+  muted: 'bg-mist-300/10 text-mist-100 border-mist-300/30',
   ochre: 'bg-ochre/15 text-ochre border-ochre/30',
   neutral: 'bg-white/5 text-mist-300 border-white/10'
 }

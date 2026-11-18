@@ -19,11 +19,11 @@ export default function Dashboard({
 
   return (
     <div className="mx-auto max-w-5xl">
-      <section className="grid items-center gap-6 overflow-hidden rounded-2xl border border-ink-700 bg-ink-900 p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:gap-10">
+      <section className="grid grid-cols-[minmax(0,1fr)] items-center gap-6 overflow-hidden rounded-2xl border border-ink-700 bg-ink-900 p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:gap-10">
         <header>
-          <p className="font-mono text-xs uppercase tracking-wider text-accent">Fanout</p>
-          <h1 className="mt-2 font-display text-5xl leading-[1.02] text-mist-100 sm:text-6xl">
-            Create once. <em className="text-accent">Publish everywhere.</em>
+          <p className="text-sm font-medium text-mist-300">Fanout</p>
+          <h1 className="mt-2 break-words font-display text-4xl leading-[1.02] text-mist-100 sm:text-6xl">
+            Create once. <span className="text-mist-300">Publish everywhere.</span>
           </h1>
           <p className="mt-3 max-w-md text-sm leading-relaxed text-mist-300">
             Start with a single idea and generate every platform-ready format from it — no separate tools, no starting over.

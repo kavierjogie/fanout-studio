@@ -119,7 +119,7 @@ function CodeTerminal({ code, language }: { code: string; language: string }) {
           <span className="w-3 h-3 rounded-full bg-yellow-500/85"></span>
           <span className="w-3 h-3 rounded-full bg-green-500/85"></span>
         </div>
-        <span className="text-mist-400 font-mono text-[10px] uppercase tracking-wider">{language || 'code'}</span>
+        <span className="text-mist-400 text-xs font-medium">{language || 'code'}</span>
         <button
           onClick={handleCopy}
           className="text-mist-400 hover:text-mist-100 flex items-center gap-1 text-[10px] transition-colors"
@@ -191,13 +191,6 @@ export default function RecentPostEditor({
     } else {
       statusText = '✓ Within limit'
       statusColorClass = 'text-emerald-400'
-      if (meta.accent === 'vermilion') {
-        barColorClass = 'bg-accent'
-      } else if (meta.accent === 'parchment') {
-        barColorClass = 'bg-mist-300'
-      } else if (meta.accent === 'ochre') {
-        barColorClass = 'bg-ochre'
-      }
     }
   }
 
@@ -541,7 +534,7 @@ export default function RecentPostEditor({
                 
                 {imagePrompt && (
                   <div className="bg-black/50 backdrop-blur-sm border border-white/5 rounded-lg p-2.5">
-                    <p className="font-mono text-[9px] uppercase tracking-wider text-accent mb-0.5">Visual Prompt</p>
+                    <p className="text-xs font-medium text-accent mb-0.5">Visual Prompt</p>
                     <p className="text-xs text-mist-300 line-clamp-2 leading-relaxed">{imagePrompt}</p>
                   </div>
                 )}
